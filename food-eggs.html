@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eggs, You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#faf9f6;--bg2:#f3f1ec;--surface:#ffffff;--border:#e2dfd7;--border-strong:#c8c4ba;--ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;--amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;--green:#1e6b3e;--green-bg:#eef7f2;--green-border:#a8d4bc;--green-text:#1a5c35;--yellow:#7a6010;--yellow-bg:#fdf8eb;--yellow-border:#e0cc88;--yellow-text:#6b5210;--red:#8b2e2e;--red-bg:#fdf0f0;--red-border:#daa8a8;--red-text:#7a2828;--serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{font-size:.82rem;font-weight:400;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color .15s}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+  .breadcrumb{max-width:1100px;margin:0 auto;padding:1.25rem 2.5rem 0;display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-4)}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none} .breadcrumb a:hover{color:var(--ink-3)} .breadcrumb-sep{color:var(--border-strong)}
+  .page-wrap{max-width:1100px;margin:0 auto;padding:2rem 2.5rem 6rem;display:grid;grid-template-columns:1fr 300px;gap:4rem;align-items:start}
+  .food-hero{margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border);animation:fadeUp .4s ease both}
+  .food-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap}
+  h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.1;color:var(--ink)}
+  .evidence-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:2px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;margin-top:.4rem}
+  .pill-emerging{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border)}
+  .pill-limited{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border)}
+  .pill-dot{width:7px;height:7px;border-radius:50%}
+  .pill-emerging .pill-dot{background:#c9a020} .pill-limited .pill-dot{background:var(--red)}
+  .food-summary{font-size:1.05rem;font-weight:300;color:var(--ink-2);line-height:1.85;margin-bottom:1.25rem}
+  .food-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+  .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.05em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:2px}
+  .content-section{margin-bottom:2.75rem;padding-bottom:2.75rem;border-bottom:1px solid var(--border)}
+  .content-section:last-of-type{border-bottom:none;margin-bottom:0}
+  .section-heading{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+  .section-heading h2{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink)}
+  .section-num{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 7px;border-radius:2px}
+  .body-text{font-size:.95rem;color:var(--ink-2);line-height:1.9;margin-bottom:1rem}
+  .cite{font-family:var(--mono);font-size:.62rem;color:var(--amber);text-decoration:none;vertical-align:super;line-height:0;margin-left:1px}
+  .effects-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .effect-row{background:var(--surface);padding:1.1rem 1.5rem;display:flex;align-items:flex-start;gap:1rem}
+  .effect-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px}
+  .ei-green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+  .ei-yellow{background:var(--yellow-bg);border:1px solid var(--yellow-border);color:var(--yellow)}
+  .ei-red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+  .ei-neutral{background:var(--bg2);border:1px solid var(--border);color:var(--ink-4)}
+  .effect-content h3{font-family:var(--serif);font-size:.98rem;font-weight:400;color:var(--ink);margin-bottom:.25rem}
+  .effect-content p{font-size:.84rem;color:var(--ink-3);line-height:1.65}
+  .mechanism-steps{display:flex;flex-direction:column}
+  .mechanism-step{display:flex;gap:1.25rem;padding:0 0 1.75rem}
+  .mechanism-step:last-child{padding-bottom:0}
+  .step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+  .step-num-circle{width:30px;height:30px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;color:var(--ink-3)}
+  .step-line{width:1px;background:var(--border);flex:1;margin-top:4px}
+  .mechanism-step:last-child .step-line{display:none}
+  .step-content{padding-top:4px}
+  .step-content h3{font-family:var(--serif);font-size:.98rem;font-weight:400;color:var(--ink);margin-bottom:.3rem}
+  .step-content p{font-size:.84rem;color:var(--ink-3);line-height:1.65}
+  .caveat-list{display:flex;flex-direction:column;gap:.75rem}
+  .caveat-item{display:flex;align-items:flex-start;gap:.85rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem}
+  .caveat-marker{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px}
+  .caveat-item p{font-size:.85rem;color:var(--ink-3);line-height:1.65}
+  .callout{margin:1.25rem 0;border:1px solid var(--yellow-border);border-left:3px solid #c9a020;background:var(--yellow-bg);padding:1rem 1.25rem;border-radius:0 3px 3px 0}
+  .callout-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:.4rem}
+  .callout p{font-size:.85rem;color:var(--ink-2);line-height:1.65;margin:0}
+  .callout-red{border-color:var(--red-border);border-left-color:var(--red);background:var(--red-bg)}
+  .callout-red .callout-label{color:var(--red-text)}
+  .callout-red p{color:var(--red-text)}
+  .callout-green{border-color:var(--green-border);border-left-color:var(--green);background:var(--green-bg)}
+  .callout-green .callout-label{color:var(--green-text)}
+  .callout-green p{color:var(--green-text)}
+  .citations-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .citation-row{background:var(--surface);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start}
+  .citation-num{font-family:var(--mono);font-size:.7rem;color:var(--amber);flex-shrink:0;min-width:20px;margin-top:2px}
+  .citation-content{flex:1}
+  .citation-title{font-size:.85rem;color:var(--ink-2);line-height:1.6;margin-bottom:.25rem}
+  .citation-meta{font-family:var(--mono);font-size:.68rem;color:var(--ink-4);display:flex;gap:1rem;flex-wrap:wrap}
+  .citation-link{color:var(--amber);text-decoration:none;font-family:var(--mono);font-size:.68rem}
+  .citation-link:hover{text-decoration:underline}
+  .study-type-badge{font-family:var(--mono);font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;padding:1px 6px;border-radius:2px;background:var(--bg2);color:var(--ink-4);border:1px solid var(--border)}
+  .sidebar{position:sticky;top:80px}
+  .sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+  .sidebar-card-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 1.25rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4)}
+  .sidebar-card-body{padding:1.25rem}
+  .score-rows{display:flex;flex-direction:column;gap:.85rem}
+  .score-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+  .score-row-label{font-size:.8rem;color:var(--ink-3)}
+  .score-row-val{font-family:var(--mono);font-size:.75rem;color:var(--ink-2)}
+  .score-bar{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden}
+  .score-fill{height:100%;border-radius:2px}
+  .sf-high{background:var(--green)} .sf-mid{background:#c9a020} .sf-low{background:var(--red)}
+  .overall-verdict{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .verdict-label{font-size:.8rem;color:var(--ink-3)}
+  .quick-facts{display:flex;flex-direction:column}
+  .fact-row{display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border);gap:.75rem}
+  .fact-row:last-child{border-bottom:none;padding-bottom:0} .fact-row:first-child{padding-top:0}
+  .fact-label{font-size:.78rem;color:var(--ink-4);flex-shrink:0}
+  .fact-value{font-size:.82rem;color:var(--ink-2);text-align:right}
+  .similar-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:2px;overflow:hidden}
+  .similar-item{background:var(--surface);padding:.85rem 1rem;text-decoration:none;display:flex;align-items:center;justify-content:space-between;transition:background .15s}
+  .similar-item:hover{background:var(--bg)}
+  .similar-left{display:flex;align-items:center;gap:.6rem}
+  .similar-pip{width:7px;height:7px;border-radius:50%}
+  .similar-name{font-family:var(--serif);font-size:.95rem;color:var(--ink)}
+  .similar-arrow{font-size:.75rem;color:var(--ink-4)}
+  .page-footnote{max-width:1100px;margin:0 auto;padding:1.5rem 2.5rem 2rem;font-size:.78rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border)}
+  footer{background:var(--ink);color:rgba(255,255,255,.45);padding:3.5rem 2.5rem}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,.85);margin-bottom:.6rem}
+  .footer-note{font-size:.78rem;line-height:1.75;max-width:300px}
+  .footer-col h4{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+  .footer-col a{font-size:.82rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s}
+  .footer-col a:hover{color:rgba(255,255,255,.75)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;gap:2.5rem}.sidebar{position:static}.nav-links{display:none}}
+
+
+
+/* overall verdict strip */
+.overall-verdict-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: .85rem 1.1rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--ink-4);
+  background: var(--bg2);
+  margin-bottom: 1.5rem;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+.verdict-dot-lg {
+  display: none;
+}
+.verdict-text-wrap strong {
+  font-weight: 500;
+  display: block;
+  margin-bottom: .15rem;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.verdict-text-wrap {
+  color: var(--ink-2);
+}
+
+
+
+
+
+/* Glossary tooltips */
+.gloss-link {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--amber);
+  color: inherit;
+  cursor: help;
+}
+.gloss-link .gloss-tip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: rgba(255,255,255,0.9);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 300;
+  line-height: 1.55;
+  padding: 0.6rem 0.85rem;
+  border-radius: 4px;
+  width: 240px;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 9999;
+  white-space: normal;
+  text-decoration: none;
+}
+.gloss-link .gloss-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+.gloss-link:hover .gloss-tip,
+.gloss-link:focus .gloss-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Glossary term underlines + tooltips */
+.gloss-term{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#b8611a;cursor:help;position:relative;}
+.gloss-term .gloss-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1916;color:rgba(255,255,255,0.9);font-family:'Inter',system-ui,sans-serif;font-size:0.78rem;font-weight:300;line-height:1.55;padding:0.6rem 0.85rem;border-radius:4px;width:240px;max-width:min(240px,90vw);box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;z-index:9999;white-space:normal;text-decoration:none;}
+.gloss-term .gloss-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1916;}
+.gloss-term:hover .gloss-tip{display:block;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html" class="active">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><a href="foods.html">Foods</a><span class="breadcrumb-sep">/</span><span>Eggs</span></div>
+
+<div class="page-wrap">
+<mai</span>
+<div class="food-hero">
+  <div class="food-hero-top"><h1>Eggs</h1><div class="evidence-pill pill-limited"><div class="pill-dot"></div>Limited evidence</div></div>
+  <p class="food-summary">Eggs contain choline, a nutrient that gut bacteria can convert to TMAO, a compound some studies link to cardiovascular risk. However, a 2021 clinical trial found that eating four whole eggs per day did not raise TMAO levels in healthy adults. The reason is that choline in egg yolks is bound up in a molecule that is harder for bacteria to access than the free choline in supplements. Beyond this TMAO finding, almost nothing is known about what eggs do to gut microbiome composition in humans. No clinical trial has studied egg consumption with gut microbiome as its primary outcome.</p>
+<div class="food-tags"><span class="tag">phosphatidylcholine</span><span class="tag">TMAO</span><span class="tag">evidence gap</span><span class="tag">choline</span><span class="tag">no community data</span></div>
+</div>
+
+<div class="overall-verdict-strip"><div class="verdict-dot-lg"></div><div class="verdict-text-wrap"><strong>No clear effect established</strong>Largely neutral based on current evidence, with no consistent microbiome effect in controlled human trials.</div></div></div>
+    <div class="citation-row" id="ref-2"><span class="citation-num">[2]</span><div class="citation-content"><div class="citation-title">DiMarco DM, Missimer A, Murillo AG, et al. Intake of up to 3 eggs/day increases HDL cholesterol and plasma choline while plasma trimethylamine-N-oxide is unchanged. <em>Lipids</em>, 2017; 52(3), 255–263.</div><div class="citation-meta"><span class="study-type-badge">RCT</span><a href="https://doi.org/10.1007/s11745-017-4230-9" class="citation-link" target="_blank</div></div></div>
+    <div class="citation-row" id="ref-3"><span class="citation-num">[3]</span><div class="citation-content"><div class="citation-title">Lemos BS, Medina-Vera I, Blesso CN, Fernandez ML. Intake of 3 eggs per day when compared to a choline bitartrate supplement, downregulates cholesterol synthesis without changing the LDL/HDL ratio. <em>Nutrients</em>, 2018; 10(2), 258.</div><div class="citation-meta"><span class="study-type-badge">RCT</span><a href="https://doi.org/10.3390/nu10020258" class="citation-link" target="_blank</div></div></div>
+    <div class="citation-row" id="ref-4"><span class="citation-num">[4]</span><div class="citation-content"><div class="citation-title">Tsui V, et al. Trimethylamine-N-oxide (TMAO) as a rising-star metabolite: Implications for human health. <em>Nutrients</em>, 2025; 17(9), 1486.</div><div class="citation-meta"><span class="study-type-badge">Review</span><a href="https://doi.org/10.3390/nu17091486" class="citation-link" target="_blank</div></div></div>
+  </div>
+</div>
+
+<div class="section-heading"><span class="section-num">01</span><h2>Key effects on the microbiome</h2></div>
+  <div class="callout callout-red" style="margin-bottom:1rem;">
+    <div class="callout-label">Honest disclaimer</div>
+    <p>No published human RCT has characterized changes to microbiomeeggs affect the gut microbiome in X way" beyond this would fabricate evidence that does not exist.</p>
+  </div>
+  <div class="effects-list">
+    <div class="effect-row"><div class="effect-icon ei-green">!</div><div class="effect-content"><h3>Whole eggs do NOT substantially raise TMAO despite high choline content, the phosphatidylcholine difference</h3><p>Wilcox et al. (2021) conducted an RCT (n = 72) comparing hardboiled eggs, choline bitartrate supplements, eggs + supplements, and egg whites + supplements for 4 weeks. Key result: consumption of 4 hardboiled eggs/day (~500 mg choline as phosphatidylcholine) did <em>not</em> significantly raise fasting plasma TMAO. In contrast, equivalent choline delivered as supplements substantially raised TMAO and increased platelet aggregation.<a href="#ref-1" class="cite">[1]</a> Multiple other RCTs confirmed: 2–3 eggs/day for 4 weeks did not raise TMAO in healthy young adults. This is an important science communication finding, it corrects the common misconception that "eggs = high choline = high TMAO = high cardiovascular risk."</p></div></div>
+    <div class="effect-row"><div class="effect-icon ei-neutral">?</div><div class="effect-content"><h3>taxa>Taxon</a>-level microbiome changes, unknown</h3><p>No published human RCT has specifically characterized changes to microbiomeeffect-row"><div class="effect-icon ei-neutral">~</div><div class="effect-content"><h3>Eggs contribute to animal protein fermentation, to a modest and unstudied degree</h3><p>Eggs are a high-quality complete protein (~6 g per egg) with essentially no fibercontent-section">
+  <div class="section-heading"><span class="section-num">02</span><h2>Why eggs don't raise TMAO much, the mechanism</h2></div>
+  <p class="body-text">The dominant choline form in egg yolk is phosphatidylcholine (PC), approximately 75–80% of total choline. This structural difference explains the paradox:</p>
+  <div class="mechanism-steps">
+    <div class="mechanism-step"><div class="step-left"><div class="step-num-circle">01</div><div class="step-line"></div></div><div class="step-content"><h3>Phosphatidylcholine requires multi-step digestion before bacteria can access it</h3><p>PC must be digested to glycerophosphocholine (GPC) and then to free choline before gut bacteria can use it for TMA production. Small intestinal phospholipase A2 incompletely cleaves PC, meaning less free choline reaches the colon than expected from the total choline content. In contrast, free choline (as in choline bitartrate supplements) is immediately bioavailable for microbial TMA lyases, explaining why supplements raise TMAO but eggs don't.</p></div></div>
+    <div class="mechanism-step"><div class="step-left"><div class="step-num-circle">02</div><div class="step-line"></div></div><div class="step-content"><h3>Individual microbiome composition still creates some variability in egg TMAO response</h3><p>The reduced phosphatidylcholine bioavailability lowers but does not eliminate TMA production from eggs. The Wilcox et al. (2021) trial found inter-individual variation in TMAO response even in the egg group, reflecting differences in the abundance of TMA lyase–expressing bacteria across individuals. People with particularly high densities of these bacteria may still produce meaningful TMAO from egg consumption, paralleling the urolithin metabotype story in polyphenol research.<a href="#ref-1" class="cite">[1]</a></p></div></div>
+</mai</span>
+<aside class="sidebar">
+  <div class="sidebar-card"><div class="sidebar-card-header">Evidence quality</div><div class="sidebar-card-body"><div class="score-rows">
+    <div><div class="score-row-top"><span class="score-row-label">Study quality</span><span class="score-row-val">Low (20)</span></div><div class="score-bar"><div class="score-fill sf-low" style="width:20%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Consistency</span><span class="score-row-val">Low–Moderate (32)</span></div><div class="score-bar"><div class="score-fill sf-low" style="width:32%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Human evidence</span><span class="score-row-val">Low (20)</span></div><div class="score-bar"><div class="score-fill sf-low" style="width:20%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Effect size</span><span class="score-row-val">Low (20)</span></div><div class="score-bar"><div class="score-fill sf-low" style="width:20%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Mechanistic support</span><span class="score-row-val">Moderate (45)</span></div><div class="score-bar"><div class="score-fill sf-low" style="width:45%"></div></div></div>
+  </div><div class="overall-verdict"><span class="verdict-label">Overall verdict</span><span class="evidence-pill pill-limited" style="font-size:.65rem;padding:4px 10px;margin-top:0;">Limited</span></div></div></div>
+  <div class="sidebar-card"><div class="sidebar-card-header">Quick facts</div><div class="sidebar-card-body"><div class="quick-facts">
+    <div class="fact-row"><span class="fact-label">Key compound</span><span class="fact-value">Phosphatidylcholine (~75–80% of choline)</span></div>
+    <div class="fact-row"><span class="fact-label">TMAO effect</span><span class="fact-value">Null in healthy adults (whole eggs)</span></div>
+    <div class="fact-row"><span class="fact-label">Taxon-level data</span><span class="fact-value">None, unstudied</span></div>
+    <div class="fact-row"><span class="fact-label">Dietary fiber content</span><span class="fact-value">None</span></div>
+    <div class="fact-row"><span class="fact-label">Best TMAO RCT</span><span class="fact-value">Wilcox et al. 2021 (n = 72)</span></div>
+  </div></div></div>
+  <div class="sidebar-card"><div class="sidebar-card-header">Compare with</div><div class="sidebar-card-body" style="padding:0;"><div class="similar-list">
+    <a href="food-red-meat.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:#c9a020"></div><span class="similar-name">Red Meat</span></div><div style="display:flex;align-items:center;gap:.5rem;"><span style="font-family:var(--mono);font-size:.58rem;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);padding:2px 6px;border-radius:2px;">Emerging</span><span class="similar-arrow">→</span></div></a>
+    <a href="food-poultry.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:var(--red)"></div><span class="similar-name">Poultry</span></div><div style="display:flex;align-items:center;gap:.5rem;"><span style="font-family:var(--mono);font-size:.58rem;background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);padding:2px 6px;border-radius:2px;">Limited</span><span class="similar-arrow">→</span></div></a>
+  </div></div></div>
+</aside>
+</div>
+
+
+
+<div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+  <div class="section-heading"><span class="section-num">03</span><h2>Limitations & caveats</h2></div>
+  <div class="caveat-list">
+    <div class="caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">There is essentially no dedicated egg-microbiome style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;cursor:pointer;"caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">TMAO findings are limited to healthy adults with normal renal function.</strong> The Wilcox et al. (2021) finding that eggs don't raise TMAO was in healthy adults with eGFR &gt; 60. Individuals with chronic kidney disease have impaired TMAO clearance and may accumulate more TMAO even from moderate choline intake. The same "egg safety" finding may not apply in renally compromised populations.<a href="#ref-1" class="cite">[1]</a></p></div>
+    <div class="caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">Eggs have no fibercontent-section">
+  <div class="section-heading"><span class="section-num">04</span><h2>Sources</h2></div>
+  <div class="citations-list">
+    <div class="citation-row" id="ref-1"><span class="citation-num">[1]</span><div class="citation-content"><div class="citation-title">Wilcox J, Skye SM, Graham B, et al. Dietary choline supplements, but not eggs, raise fasting TMAO levels in participants with normal renal function: A randomized clinical trial. <em>The American Journal of Medicine</em>, 2021; 134(9), 1160–1169.</div><div class="citation-meta"><span class="study-type-badge">RCT</span><span>n = 72</span><a href="https://doi.org/10.1016/j.amjmed.2021.03.016" class="citation-link" target="_blank</div></div>
+</div>
+<div class="page-footnote">This page is for educational and science literacy purposes only. It does not constitute medical or dietary advice. Consult a qualified clinician before making dietary changes based on microbiome research.</div>
+<footer><div class="footer-inner"><div><div class="footer-logo">You are what <em>they</em> eat</div><p class="footer-note">An independent science communication project based on peer-reviewed literature.</p></div><div class="footer-col">      <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></div></div></footer>
+<script>
+(function(){
+var TERMS=[
+    ["alpha-diversity", "term-alpha-diversity", "A measure of how many different types of bacteria live in one person's gut."],
+    ["anthocyanins", "term-anthocyanin", "The blue/purple/red pigments in berries. Most reach the colon where gut bacteria transform them."],
+    ["anthocyanin", "term-anthocyanin", "A blue/purple/red pigment in berries that reaches the colon where gut bacteria transform it."],
+    ["beta-diversity", "term-beta-diversity", "A measure of how similar or different the gut bacterial communities of two or more people are."],
+    ["beta-glucan", "term-beta-glucan", "A soluble fiber in oats and barley that gut bacteria ferment, selectively feeding Bifidobacterium."],
+    ["bifidogenic", "term-bifidogenic", "Promotes the growth of Bifidobacterium \u2014 bacteria that produce beneficial short-chain fatty acids."],
+    ["butyrate", "term-butyrate", "A short-chain fatty acid produced when gut bacteria ferment fiber. The main fuel for colon cells and a key anti-inflammatory signal."],
+    ["clinical trials", "term-clinical-trial", "Research studies in human participants. The gold standard for human evidence."],
+    ["clinical trial", "term-clinical-trial", "A research study in human participants. The gold standard for human evidence."],
+    ["crossover trial", "term-crossover-trial", "A trial where each participant receives both the test intervention and the control at different times."],
+    ["dysbiosis", "term-dysbiosis", "An imbalance in gut bacteria where harmful species increase and beneficial ones decrease."],
+    ["ellagitannins", "term-ellagitannin", "Polyphenols in pomegranates and walnuts converted by gut bacteria to urolithins \u2014 only in people who carry the right bacteria."],
+    ["ellagitannin", "term-ellagitannin", "A polyphenol in pomegranates and walnuts that gut bacteria convert to urolithins."],
+    ["enterotypes", "term-enterotype", "Broad categories of gut bacterial community type \u2014 Bacteroides-dominant and Prevotella-dominant are the two most studied."],
+    ["enterotype", "term-enterotype", "A broad category describing the general type of gut bacterial community a person carries."],
+    ["ex vivo", "term-ex-vivo", "Studies using bacteria from living organisms tested in a lab setting. More relevant than animal studies but not the same as a human trial."],
+    ["fermentation", "term-fermentation", "The process by which gut bacteria break down fiber, producing short-chain fatty acids and other compounds."],
+    ["glucosinolates", "term-glucosinolate", "Compounds in cruciferous vegetables converted by enzymes and gut bacteria into sulforaphane."],
+    ["glucosinolate", "term-glucosinolate", "A compound in cruciferous vegetables converted into sulforaphane by plant enzymes and gut bacteria."],
+    ["gut barrier", "term-gut-barrier", "The single-cell lining of the intestine that lets nutrients through while keeping bacteria and toxins out."],
+    ["gut microbiome", "term-gut-microbiome", "The community of trillions of bacteria and other microorganisms living in the human gut."],
+    ["inflammatory bowel disease", "term-ibd-inflammatory-bowel-disease", "Crohn's disease and ulcerative colitis \u2014 conditions where the immune system attacks the gut lining."],
+    ["in vitro", "term-in-vitro", "Studies in lab dishes or test tubes. Results often do not transfer directly to humans."],
+    ["in vivo", "term-in-vivo", "Studies in living organisms. Human in vivo studies are clinical trials."],
+    ["keystone species", "term-keystone-species", "A species with disproportionately large effects on its ecosystem. In the gut, Ruminococcus bromii is a keystone for resistant starch breakdown."],
+    ["lactic acid bacteria", "term-lactic-acid-bacteria", "Bacteria that produce lactic acid during fermentation. Found in yogurt, kimchi, and kefir."],
+    ["lachnospiraceae", "term-lachnospiraceae", "A family of gut bacteria that are major butyrate producers. Reduced in IBD; enriched by high-fiber diets."],
+    ["meta-analyses", "term-meta-analysis", "Statistical methods combining results of multiple studies \u2014 considered the highest level of research evidence."],
+    ["meta-analysis", "term-meta-analysis", "A statistical method combining results of multiple studies into one overall estimate."],
+    ["metabolites", "term-metabolite", "Small molecules produced by bacteria or human cells during digestion. SCFAs and urolithins are examples."],
+    ["metabolite", "term-metabolite", "A small molecule produced during metabolism by human cells or gut bacteria."],
+    ["metabotypes", "term-metabotype", "Categories describing what metabolites a person's gut bacteria produce from a given food."],
+    ["metabotype", "term-metabotype", "A category describing what metabolites a person's gut bacteria produce from a given food."],
+    ["microbiome", "term-microbiome", "The community of microorganisms in a given environment. The gut microbiome refers to those in the digestive tract."],
+    ["microbiota", "term-microbiota", "The living microorganisms \u2014 mainly bacteria \u2014 in the gut. Often used interchangeably with microbiome."],
+    ["mucus layer", "term-mucus-layer", "The protective coating on the intestinal wall forming a barrier between gut contents and intestinal cells."],
+    ["pathobionts", "term-pathobiont", "Microorganisms normally harmless in small amounts that become problematic when gut balance shifts."],
+    ["pathobiont", "term-pathobiont", "A microorganism normally harmless in small amounts that becomes problematic when gut balance shifts."],
+    ["pectin", "term-pectin", "A soluble fiber in fruit cell walls that gut bacteria ferment, specifically feeding Lachnospira and Faecalibacterium."],
+    ["prebiotic fiber", "term-prebiotic", "Fiber that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotics", "term-prebiotic", "Compounds that selectively feed beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotic", "term-prebiotic", "A compound that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["polyphenols", "term-polyphenol", "Plant compounds in berries, tea, and chocolate. Most reach the colon where gut bacteria transform them into anti-inflammatory molecules."],
+    ["polyphenol", "term-polyphenol", "A plant compound found in berries, tea, and chocolate. Most reaches the colon where gut bacteria transform it."],
+    ["probiotics", "term-probiotic", "Live bacteria that may benefit gut health. Found in fermented foods and supplements."],
+    ["probiotic", "term-probiotic", "Live bacteria that may benefit gut health when consumed in sufficient amounts."],
+    ["propionate", "term-propionate", "A short-chain fatty acid produced by gut bacteria from fiber. Travels to the liver to help regulate blood sugar."],
+    ["randomized controlled trial", "term-randomized-controlled-trial", "The gold-standard study design where participants are randomly assigned to intervention or control groups."],
+    ["resistant starch", "term-resistant-starch", "Starch that human enzymes cannot digest, reaching the colon where bacteria ferment it to produce butyrate."],
+    ["ruminococcus bromii", "term-ruminococcus-bromii", "A keystone gut bacterium that initiates resistant starch breakdown, making it accessible to other bacteria."],
+    ["saccharolytic fermentation", "term-saccharolytic-fermentation", "Bacterial fermentation of carbohydrates (fiber), producing beneficial short-chain fatty acids."],
+    ["short-chain fatty acids", "term-scfa-short-chain-fatty-acid", "Small molecules \u2014 butyrate, propionate, acetate \u2014 produced when gut bacteria ferment fiber."],
+    ["short-chain fatty acid", "term-scfa-short-chain-fatty-acid", "A small molecule produced when gut bacteria ferment fiber. Butyrate, propionate, and acetate are the main ones."],
+    ["sulforaphane", "term-sulforaphane", "An anti-inflammatory compound produced from cruciferous vegetables by plant enzymes and gut bacteria."],
+    ["synbiotics", "term-synbiotic", "Combinations of probiotics and prebiotics in one food or supplement."],
+    ["synbiotic", "term-synbiotic", "A combination of a probiotic and a prebiotic in one food or supplement."],
+    ["systematic reviews", "term-systematic-review", "Comprehensive, reproducible reviews of all existing research on a specific question."],
+    ["systematic review", "term-systematic-review", "A comprehensive, reproducible review of all existing research on a specific question."],
+    ["tight junctions", "term-tight-junctions", "Protein structures holding intestinal cells together, forming the gut barrier."],
+    ["tmao", "term-tmao", "A compound produced when gut bacteria process L-carnitine (red meat) and choline. Linked to cardiovascular risk in some studies."],
+    ["urolithins", "term-urolithin", "Compounds produced by gut bacteria from pomegranate and walnut ellagitannins. Only about 60-70% of people can produce them."],
+    ["urolithin", "term-urolithin", "A compound produced by gut bacteria from ellagitannins in pomegranates and walnuts."],
+    ["proteolytic fermentation", "term-proteolytic-fermentation", "Bacterial breakdown of proteins rather than fiber, producing compounds that can damage the gut lining at high levels."],
+    ["dietary fiber", "term-fiber", "Parts of plant foods that human enzymes cannot digest. Travels to the colon where gut bacteria ferment it."],
+    ["faecalibacterium prausnitzii", "term-faecalibacterium-prausnitzii", "One of the most beneficial gut bacteria. A major butyrate producer; depleted in IBD and metabolic disease."]
+];
+TERMS.sort(function(a,b){return b[0].length-a[0].length;});
+var linked={};
+var SEL=['.body-text','.effect-content p','.effect-content h3','.step-content p','.step-content h3','.caveat-item p','.callout p'];
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function makeLink(term,anchor,tip,text){
+  var a=document.createElement('a');
+  a.href='glossary.html#'+anchor;
+  a.className='gloss-term';
+  a.setAttribute('title',tip);
+  a.textContent=text;
+  var sp=document.createElement('span');
+  sp.className='gloss-tip';
+  sp.textContent=tip;
+  a.appendChild(sp);
+  return a;
+}
+function walkNode(node){
+  if(!node||node.nodeType!==1)return;
+  var tag=node.tagName?node.tagName.toLowerCase():'';
+  if(tag==='a'||tag==='script'||tag==='style'||tag==='code')return;
+  if(node.className&&node.className.indexOf&&node.className.indexOf('gloss-term')>=0)return;
+  Array.prototype.slice.call(node.childNodes).forEach(function(child){
+    if(child.nodeType===3){processText(child);}
+    else if(child.nodeType===1){walkNode(child);}
+  });
+}
+function processText(tn){
+  var txt=tn.nodeValue;
+  for(var i=0;i<TERMS.length;i++){
+    var t=TERMS[i][0],a=TERMS[i][1],d=TERMS[i][2];
+    if(linked[t])continue;
+    var re=new RegExp('\\b('+esc(t)+')\\b','i');
+    var m=re.exec(txt);
+    if(!m)continue;
+    linked[t]=true;
+    var before=txt.slice(0,m.index);
+    var after=txt.slice(m.index+m[0].length);
+    var parent=tn.parentNode;
+    var frag=document.createDocumentFragment();
+    if(before)frag.appendChild(document.createTextNode(before));
+    frag.appendChild(makeLink(t,a,d,m[0]));
+    if(after)frag.appendChild(document.createTextNode(after));
+    parent.replaceChild(frag,tn);
+    // Continue processing the 'after' text node
+    if(after){
+      var newTn=parent.lastChild;
+      if(newTn&&newTn.nodeType===3)processText(newTn);
+    }
+    return;
+  }
+}
+function init(){
+  SEL.forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(el){walkNode(el);});
+  });
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+})();
+</script>
+</body>
+</html>

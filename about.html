@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About &mdash; You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#faf9f6;--bg2:#f3f1ec;--surface:#ffffff;--border:#e2dfd7;--ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;--amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;--serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.75}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{font-size:.82rem;font-weight:400;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color .15s}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+  .breadcrumb{max-width:820px;margin:0 auto;padding:1.25rem 2.5rem 0;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-4)}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none}
+  .breadcrumb-sep{margin:0 .4rem}
+  .page-hero{max-width:820px;margin:0 auto;padding:3rem 2.5rem 2rem}
+  .page-hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.2rem);font-weight:400;line-height:1.1;color:var(--ink);margin-bottom:1rem}
+  .page-hero .sub{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:1.5rem}
+  .page-hero .lead{font-size:1.05rem;color:var(--ink-2);line-height:1.85;max-width:660px}
+  .page-body{max-width:820px;margin:0 auto;padding:1rem 2.5rem 6rem}
+  .prose-section{margin-bottom:3rem;padding-bottom:3rem;border-bottom:1px solid var(--border)}
+  .prose-section:last-of-type{border-bottom:none}
+  .prose-section h2{font-family:var(--serif);font-size:1.45rem;font-weight:400;color:var(--ink);margin-bottom:1.1rem}
+  .prose-section p{font-size:.95rem;color:var(--ink-2);line-height:1.9;margin-bottom:1rem}
+  .prose-section p:last-child{margin-bottom:0}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.75rem 0}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1.25rem 1rem}
+  .stat-num{font-family:var(--serif);font-size:2rem;font-weight:400;color:var(--amber);line-height:1;margin-bottom:.35rem}
+  .stat-label{font-size:.8rem;color:var(--ink-3);line-height:1.5}
+  .principle-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin:1.5rem 0}
+  .principle-row{background:var(--surface);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start}
+  .principle-num{font-family:var(--mono);font-size:.65rem;color:var(--amber);flex-shrink:0;margin-top:3px}
+  .principle-row p{font-size:.87rem;color:var(--ink-2);line-height:1.7;margin:0}
+  .principle-row strong{font-weight:500;color:var(--ink)}
+  .milstein-badge{display:inline-flex;align-items:center;gap:.6rem;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:3px;padding:.5rem 1rem;margin-bottom:1.25rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+  .ack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-top:1.25rem}
+  .ack-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.85rem 1rem}
+  .ack-name{font-family:var(--serif);font-size:.95rem;color:var(--ink);margin-bottom:.15rem}
+  .ack-role{font-size:.76rem;color:var(--ink-4)}
+  .page-footnote{max-width:820px;margin:0 auto;padding:1.5rem 2.5rem 2rem;font-size:.76rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border)}
+  footer{background:var(--ink);color:rgba(255,255,255,.45);padding:3.5rem 2.5rem}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,.85);margin-bottom:.6rem}
+  .footer-note{font-size:.78rem;line-height:1.75;max-width:300px}
+  .footer-col h4{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+  .footer-col a{font-size:.82rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s}
+  .footer-col a:hover{color:rgba(255,255,255,.75)}
+  @media(max-width:700px){.stat-row{grid-template-columns:1fr}.ack-grid{grid-template-columns:1fr}.nav-links{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>About</span></div>
+
+<div class="page-hero">
+  <div class="sub">About this project</div>
+  <h1>You are what <em>they</em> eat</h1>
+  <p class="lead">A science communication project translating peer-reviewed gut microbiome research into honest, accessible information for everyday people.</p>
+</div>
+
+<div class="page-body">
+
+  <div style="padding:1rem 1.25rem;background:var(--amber-bg);border:1px solid var(--amber-border);border-left:3px solid var(--amber);border-radius:0 3px 3px 0;margin-bottom:2rem">
+    <p style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.35rem">Prototype</p>
+    <p style="font-size:.88rem;color:var(--ink-2);line-height:1.7;margin:0">This site is a work in progress. New food pages are being added, existing pages are updated as new research is published, and the design continues to evolve. Any and all feedback is welcome &mdash; on content, clarity, design, or anything else. A feedback form will be linked here shortly.</p>
+  </div>
+
+  <div style="padding:.9rem 1.1rem;background:var(--bg2);border:1px solid var(--border);border-radius:3px;margin-bottom:2rem">
+    <p style="font-size:.9rem;color:var(--ink-2);line-height:1.75">New to the scientific terms used on this site? The <a href="glossary.html" style="color:var(--amber);text-decoration:none;border-bottom:1px solid var(--amber-border)">Glossary</a> explains every term in plain language. The <a href="how-to-read.html" style="color:var(--amber);text-decoration:none;border-bottom:1px solid var(--amber-border)">Guide</a> walks through how to read a food page and what each section means.</p>
+  </div>
+
+  <div class="prose-section">
+    <h2>Why this site exists</h2>
+    <p>Interest in gut health has grown faster than most people's ability to evaluate the science behind it. Walk into any supermarket and probiotic claims appear on everything from yogurt to granola bars to sparkling water. Search for gut health online and the results range from peer-reviewed research to supplement advertising dressed up as nutrition advice. Telling them apart is not easy, even for people with a science background.</p>
+    <p>At the same time, the microbiome research field is generating genuinely important findings. Diet is now understood to be one of the most powerful drivers of gut microbiome composition, and the gut microbiome is linked to outcomes ranging from inflammatory bowel disease to colorectal cancer to metabolic health. The gap between what researchers know and what the public hears is large and consequential.</p>
+    <p>This project was built to sit in that gap: more honest than popular nutrition content, more accessible than academic papers. The goal is not to tell anyone what to eat. It is to give a clearer picture of what the research actually shows, and where it falls short.</p>
+  </div>
+
+  <div class="prose-section">
+    <h2>Why the microbiome matters</h2>
+    <p>The human gut contains an estimated 38 trillion bacteria, roughly equal to the number of human cells in the body. Together these microorganisms form what is called the gut microbiome. They are not passive passengers: they digest fiber, produce vitamins, train the immune system, regulate inflammation, and communicate with the brain. What they eat shapes what they do for us.</p>
+    <p>A diet rich in diverse plant fiber produces a different microbial community than a diet dominated by ultra-processed foods, and these communities have measurably different effects on health. When gut bacteria ferment fiber, they produce a compound called butyrate that feeds the cells lining the colon and has protective effects against colorectal cancer. Certain bacterial species are consistently depleted in people with Crohn's disease, ulcerative colitis, and type 2 diabetes.</p>
+    <p>Colorectal cancer is now the second leading cause of cancer death in the United States, and rates are increasing among people under 50. Diet and the gut microbiome are among the most modifiable risk factors. This site covers 52 foods and dietary patterns, each reviewed against the peer-reviewed evidence, to give a clearer picture of what specific foods actually do to the gut community and why it matters.</p>
+  </div>
+
+  <div class="prose-section">
+    <h2>How this site works</h2>
+    <p>Every food page is built from peer-reviewed research, prioritizing systematic reviews, meta-analyses, and randomized controlled trials in humans. Each food is assigned an evidence tier reflecting the quality and consistency of the human data. A food rated Limited is not necessarily unhealthy. It simply means that controlled human research on that specific food and the gut microbiome is thin or absent.</p>
+    <div class="principle-list">
+      <div class="principle-row">
+        <span class="principle-num">[1]</span>
+        <p><strong>Human evidence comes first.</strong> Animal model findings are described where relevant but are clearly labelled, and are never used to make direct human health claims.</p>
+      </div>
+      <div class="principle-row">
+        <span class="principle-num">[2]</span>
+        <p><strong>Null results are included.</strong> When a well-designed trial finds no significant effect, that finding appears on the page. Negative results are part of the scientific record.</p>
+      </div>
+      <div class="principle-row">
+        <span class="principle-num">[3]</span>
+        <p><strong>Individual variation is real.</strong> The gut microbiome differs significantly between people. Findings that apply to one population group may not apply to another, and this is noted when relevant.</p>
+      </div>
+      <div class="principle-row">
+        <span class="principle-num">[4]</span>
+        <p><strong>Industry funding is disclosed.</strong> When primary research on a food is substantially funded by industry groups, this is flagged in the caveats section of that page.</p>
+      </div>
+      <div class="principle-row">
+        <span class="principle-num">[5]</span>
+        <p><strong>Uncertainty is stated, not resolved.</strong> Where the science is genuinely contested or incomplete, this is said directly rather than papered over with the more optimistic interpretation.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prose-section">
+    <h2>About this project</h2>
+    <div class="milstein-badge">Cornell University &mdash; Milstein Program in Technology &amp; Humanity</div>
+    <p>This site was developed by Sofia, a junior studying biology at Cornell University, as part of the Milstein Program in Technology and Humanity. The Milstein Program supports student projects at the intersection of emerging technology and society.</p>
+    <p>The site is intended for educational purposes only and does not constitute medical or dietary advice. Microbiome science is a rapidly evolving field with significant remaining uncertainty, and individual responses to diet vary. Readers should consult a qualified clinician before making changes to their diet based on anything read here.</p>
+  </div>
+
+  <div class="prose-section">
+    <h2>Acknowledgments</h2>
+    <p>This project would not have been possible without the guidance and support of Professor Moseley, Professor Stucker, Promise, Todd, and Kina.</p>
+  </div>
+
+</div>
+
+<div class="page-footnote">This site is for educational purposes only and does not constitute medical or dietary advice. All content is based on peer-reviewed literature. Consult a qualified clinician before making dietary changes based on microbiome research.</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">You are what <em>they</em> eat</div>
+      <p class="footer-note">An independent science communication project. Cornell University, Milstein Program in Technology &amp; Humanity.</p>
+    </div>
+    <div class="footer-col">
+            <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

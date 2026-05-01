@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garlic, You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#faf9f6;--bg2:#f3f1ec;--bg3:#eceae3;--surface:#ffffff;
+    --border:#e2dfd7;--border-strong:#c8c4ba;
+    --ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;
+    --amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;
+    --green:#1e6b3e;--green-bg:#eef7f2;--green-border:#a8d4bc;--green-text:#1a5c35;
+    --yellow:#7a6010;--yellow-bg:#fdf8eb;--yellow-border:#e0cc88;--yellow-text:#6b5210;
+    --red:#8b2e2e;--red-bg:#fdf0f0;--red-border:#daa8a8;--red-text:#7a2828;
+    --serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+  }
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px;}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:0.6rem;}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color 0.15s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink);}
+  .breadcrumb{max-width:1100px;margin:0 auto;padding:1.25rem 2.5rem 0;display:flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.06em;color:var(--ink-4);}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none;} .breadcrumb a:hover{color:var(--ink-3);}
+  .breadcrumb-sep{color:var(--border-strong);}
+  .page-wrap{max-width:1100px;margin:0 auto;padding:2rem 2.5rem 6rem;display:grid;grid-template-columns:1fr 300px;gap:4rem;align-items:start;}
+  .food-hero{margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border);animation:fadeUp 0.4s ease both;}
+  .food-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap;}
+  h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.1;color:var(--ink);}
+  .evidence-pill{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;border-radius:2px;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;margin-top:0.4rem;}
+  .pill-emerging{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);}
+  .pill-dot{width:7px;height:7px;border-radius:50%;background:#c9a020;}
+  .food-summary{font-size:1.05rem;font-weight:300;color:var(--ink-2);line-height:1.85;margin-bottom:1.25rem;}
+  .food-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+  .tag{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.05em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:2px;}
+  .content-section{margin-bottom:2.75rem;padding-bottom:2.75rem;border-bottom:1px solid var(--border);}
+  .content-section:last-of-type{border-bottom:none;margin-bottom:0;}
+  .section-heading{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;}
+  .section-heading h2{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink);}
+  .section-num{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 7px;border-radius:2px;}
+  .body-text{font-size:0.95rem;color:var(--ink-2);line-height:1.9;margin-bottom:1rem;}
+  .cite{font-family:var(--mono);font-size:0.62rem;color:var(--amber);text-decoration:none;vertical-align:super;line-height:0;margin-left:1px;}
+
+  /* DUAL PATHWAY VISUAL */
+  .dual-pathway{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.5rem;}
+  .pathway-col{padding:1.25rem 1.5rem;}
+  .pathway-col.prebiotic{background:var(--green-bg);}
+  .pathway-col.antimicrobial{background:var(--red-bg);}
+  .pathway-label{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem;}
+  .pathway-col.prebiotic .pathway-label{color:var(--green);}
+  .pathway-col.antimicrobial .pathway-label{color:var(--red);}
+  .pathway-col h3{font-family:var(--serif);font-size:1rem;font-weight:400;margin-bottom:0.4rem;}
+  .pathway-col.prebiotic h3{color:var(--green-text);}
+  .pathway-col.antimicrobial h3{color:var(--red-text);}
+  .pathway-col p{font-size:0.82rem;line-height:1.65;}
+  .pathway-col.prebiotic p{color:var(--green-text);}
+  .pathway-col.antimicrobial p{color:var(--red-text);}
+
+  .effects-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+  .effect-row{background:var(--surface);padding:1.1rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;}
+  .effect-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;}
+  .ei-green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
+  .ei-yellow{background:var(--yellow-bg);border:1px solid var(--yellow-border);color:var(--yellow);}
+  .ei-red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);}
+  .effect-content h3{font-family:var(--serif);font-size:0.98rem;font-weight:400;color:var(--ink);margin-bottom:0.25rem;}
+  .effect-content p{font-size:0.84rem;color:var(--ink-3);line-height:1.65;}
+
+  .mechanism-steps{display:flex;flex-direction:column;}
+  .mechanism-step{display:flex;gap:1.25rem;padding:0 0 1.75rem 0;}
+  .mechanism-step:last-child{padding-bottom:0;}
+  .step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+  .step-num-circle{width:30px;height:30px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.65rem;color:var(--ink-3);}
+  .step-line{width:1px;background:var(--border);flex:1;margin-top:4px;}
+  .mechanism-step:last-child .step-line{display:none;}
+  .step-content{padding-top:4px;}
+  .step-content h3{font-family:var(--serif);font-size:0.98rem;font-weight:400;color:var(--ink);margin-bottom:0.3rem;}
+  .step-content p{font-size:0.84rem;color:var(--ink-3);line-height:1.65;}
+
+  /* PREP TABLE */
+  .prep-table{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1.25rem;}
+  .prep-row{background:var(--surface);padding:0.85rem 1.25rem;display:grid;grid-template-columns:140px 1fr 1fr;gap:1rem;align-items:center;}
+  .prep-row.header{background:var(--bg2);font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);}
+  .prep-form{font-size:0.85rem;color:var(--ink);font-weight:400;}
+  .prep-allicin{font-size:0.82rem;}
+  .prep-fos{font-size:0.82rem;}
+  .badge-high{font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:2px;background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);}
+  .badge-none{font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:2px;background:var(--bg2);color:var(--ink-4);border:1px solid var(--border);}
+  .badge-partial{font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:2px;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);}
+  .badge-full{font-family:var(--mono);font-size:0.6rem;padding:2px 7px;border-radius:2px;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);}
+
+  .caveat-list{display:flex;flex-direction:column;gap:0.75rem;}
+  .caveat-item{display:flex;align-items:flex-start;gap:0.85rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem;}
+  .caveat-marker{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px;}
+  .caveat-item p{font-size:0.85rem;color:var(--ink-3);line-height:1.65;}
+
+  .callout-finding{margin:1.25rem 0;border:1px solid var(--yellow-border);border-left:3px solid #c9a020;background:var(--yellow-bg);padding:1rem 1.25rem;border-radius:0 3px 3px 0;}
+  .callout-finding-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:0.4rem;}
+  .callout-finding p{font-size:0.85rem;color:var(--ink-2);line-height:1.65;margin:0;}
+
+  .citations-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+  .citation-row{background:var(--surface);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start;}
+  .citation-num{font-family:var(--mono);font-size:0.7rem;color:var(--amber);flex-shrink:0;min-width:20px;margin-top:2px;}
+  .citation-content{flex:1;}
+  .citation-title{font-size:0.85rem;color:var(--ink-2);line-height:1.6;margin-bottom:0.25rem;}
+  .citation-meta{font-family:var(--mono);font-size:0.68rem;color:var(--ink-4);display:flex;gap:1rem;flex-wrap:wrap;}
+  .citation-link{color:var(--amber);text-decoration:none;font-family:var(--mono);font-size:0.68rem;}
+  .citation-link:hover{text-decoration:underline;}
+  .study-type-badge{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.07em;text-transform:uppercase;padding:1px 6px;border-radius:2px;background:var(--bg2);color:var(--ink-4);border:1px solid var(--border);}
+
+  .sidebar{position:sticky;top:80px;}
+  .sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.25rem;}
+  .sidebar-card-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+  .sidebar-card-body{padding:1.25rem;}
+  .score-rows{display:flex;flex-direction:column;gap:0.85rem;}
+  .score-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;}
+  .score-row-label{font-size:0.8rem;color:var(--ink-3);}
+  .score-row-val{font-family:var(--mono);font-size:0.75rem;color:var(--ink-2);}
+  .score-bar{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;}
+  .score-fill{height:100%;border-radius:2px;}
+  .score-fill.high{background:var(--green);}
+  .score-fill.mid{background:#c9a020;}
+  .score-fill.low{background:var(--red);}
+  .overall-verdict{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .verdict-label{font-size:0.8rem;color:var(--ink-3);}
+  .quick-facts{display:flex;flex-direction:column;}
+  .fact-row{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 0;border-bottom:1px solid var(--border);gap:0.75rem;}
+  .fact-row:last-child{border-bottom:none;padding-bottom:0;} .fact-row:first-child{padding-top:0;}
+  .fact-label{font-size:0.78rem;color:var(--ink-4);flex-shrink:0;}
+  .fact-value{font-size:0.82rem;color:var(--ink-2);text-align:right;}
+  .similar-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:2px;overflow:hidden;}
+  .similar-item{background:var(--surface);padding:0.85rem 1rem;text-decoration:none;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s;}
+  .similar-item:hover{background:var(--bg);}
+  .similar-left{display:flex;align-items:center;gap:0.6rem;}
+  .similar-pip{width:7px;height:7px;border-radius:50%;}
+  .similar-name{font-family:var(--serif);font-size:0.95rem;color:var(--ink);}
+  .similar-arrow{font-size:0.75rem;color:var(--ink-4);}
+  .page-footnote{max-width:1100px;margin:0 auto;padding:1.5rem 2.5rem 2rem;font-size:0.78rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border);}
+  footer{background:var(--ink);color:rgba(255,255,255,0.45);padding:3.5rem 2.5rem;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap;}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,0.85);margin-bottom:0.6rem;}
+  .footer-note{font-size:0.78rem;line-height:1.75;max-width:300px;}
+  .footer-col h4{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.75rem;}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+  .footer-col a{font-size:0.82rem;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.15s;}
+  .footer-col a:hover{color:rgba(255,255,255,0.75);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;gap:2.5rem;}.sidebar{position:static;}.nav-links{display:none;}.dual-pathway{grid-template-columns:1fr;}.prep-row{grid-template-columns:1fr 1fr;}}
+
+
+
+/* overall verdict strip */
+.overall-verdict-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: .85rem 1.1rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--ink-4);
+  background: var(--bg2);
+  margin-bottom: 1.5rem;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+.verdict-dot-lg {
+  display: none;
+}
+.verdict-text-wrap strong {
+  font-weight: 500;
+  display: block;
+  margin-bottom: .15rem;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.verdict-text-wrap {
+  color: var(--ink-2);
+}
+
+
+
+
+
+/* Glossary tooltips */
+.gloss-link {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--amber);
+  color: inherit;
+  cursor: help;
+}
+.gloss-link .gloss-tip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: rgba(255,255,255,0.9);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 300;
+  line-height: 1.55;
+  padding: 0.6rem 0.85rem;
+  border-radius: 4px;
+  width: 240px;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 9999;
+  white-space: normal;
+  text-decoration: none;
+}
+.gloss-link .gloss-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+.gloss-link:hover .gloss-tip,
+.gloss-link:focus .gloss-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Glossary term underlines + tooltips */
+.gloss-term{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#b8611a;cursor:help;position:relative;}
+.gloss-term .gloss-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1916;color:rgba(255,255,255,0.9);font-family:'Inter',system-ui,sans-serif;font-size:0.78rem;font-weight:300;line-height:1.55;padding:0.6rem 0.85rem;border-radius:4px;width:240px;max-width:min(240px,90vw);box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;z-index:9999;white-space:normal;text-decoration:none;}
+.gloss-term .gloss-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1916;}
+.gloss-term:hover .gloss-tip{display:block;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html" class="active">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><a href="foods.html">Foods</a><span class="breadcrumb-sep">/</span><span>Garlic</span></div>
+<div class="page-wrap">
+<mai</span>
+
+  <div class="food-hero">
+    <div class="food-hero-top">
+      <h1>Garlic</h1>
+      <div class="evidence-pill pill-emerging"><div class="pill-dot"></div>Emerging evidence</div>
+    </div>
+    <p class="food-summary">Garlic contains two very different things that affect gut bacteria in opposite ways. About 65 percent of its dry weight is a type of fiber called fructans that gut bacteria use as fuel, selectively increasing beneficial Bifidobacterium. But garlic also contains allicin, a compound released when garlic is crushed raw that kills bacteria broadly, including some beneficial ones. Cooking destroys allicin but preserves most of the prebiotic fiber. Whether garlic helps or challenges the microbiome depends almost entirely on how it is prepared.</p>
+<div class="food-tags">
+      <span class="tag">FOS / inulin</span><span class="tag">allicin</span><span class="tag">bifidogenic</span>
+      <span class="tag">organosulfur</span><span class="tag">Bifidobacterium</span><span class="tag">dual pathway</span>
+    </div>
+  </div>
+
+  <!-- THE DUAL PATHWAY FRAMING -->
+      </div>
+      <div class="citation-row" id="ref-2"><span class="citation-num">[2]</span>
+        <div class="citation-content">
+          <div class="citation-title">Dahl WJ, Auger J, Alyousif Z, Miller JL, Davies M. The prebiotic potential of fos--inulincitation-meta"><span class="study-type-badge">Systematic review</span><a href="https://doi.org/10.1093/advances/nmac018" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-3"><span class="citation-num">[3]</span>
+        <div class="citation-content">
+          <div class="citation-title">Bindels LB, Delannoy J, Segura Damiens E, Neyrinck AM, Delzenne NM. Prebiotic fos--inulincitation-meta"><span class="study-type-badge + shotgun metagenomics</span><a href="https://doi.org/10.1136/gutjnl-2016-312809" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-4"><span class="citation-num">[4]</span>
+        <div class="citation-content">
+          <div class="citation-title">Li J, Liu F, Luo Y, et al. Differential effects of fos--inulincitation-meta"><span class="study-type-badge">Parallel-design RCT</span><span>n = 131</span><a href="https://doi.org/10.1186/s12916-025-04189-6" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-5"><span class="citation-num">[5]</span>
+        <div class="citation-content">
+          <div class="citation-title">Ried K, Travica N, Sali A. The effect of Kyolic aged garlic extract on gut microbiota, inflammation, and cardiovascular markers in hypertensives: The GarGIC trial. <em>Frontiers in Nutrition</em>, 2018; 5, 122.</div>
+          <div class="citation-meta"><span class="study-type-badge">Double-blind RCT</span><span>n = 49, 12 weeks</span><a href="https://doi.org/10.3389/fnut.2018.00122" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-6"><span class="citation-num">[6]</span>
+        <div class="citation-content">
+          <div class="citation-title">Kim H, Kim SY, Lee H, et al. Garlic-induced enhancement of Bifidobacterium: Enterotype-specific modulation of gut microbiota. <em>Microorganisms</em>, 2024; 12(10), 2098.</div>
+          <div class="citation-meta"><span class="study-type-badge">In vitro human fecal incubation</span><span>n = 48</span><a href="https://doi.org/10.3390/microorganisms12102098" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-7"><span class="citation-num">[7]</span>
+        <div class="citation-content">
+          <div class="citation-title">Ettehad-Marvasti F, Ejtahed H-S, Siadat S-D, et al. Effect of garlic extract on weight loss and gut microbiota composition in obese women: A double-blind randomized controlled trial. <em>Frontiers in Nutrition</em>, 2022; 9, 1007506.</div>
+          <div class="citation-meta"><span class="study-type-badge">Double-blind RCT</span><a href="https://doi.org/10.3389/fnut.2022.1007506" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-8"><span class="citation-num">[8]</span>
+        <div class="citation-content">
+          <div class="citation-title">Pandey P, Harboul GS, Srivastava N, Singh A. Antibacterial properties of organosulfur compounds of garlic (Allium sativum). <em>Frontiers in Microbiology</em>, 2021; 12, 613077.</div>
+          <div class="citation-meta"><span class="study-type-badge">Review</span><a href="https://doi.org/10.3389/fmicb.2021.613077" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+      <div class="citation-row" id="ref-9"><span class="citation-num">[9]</span>
+        <div class="citation-content">
+          <div class="citation-title">Zhang C, Li L, Jin B, et al. Allicin-induced host-gut microbe interactions improves energy homeostasis. <em>FASEB Journal</em>, 2020; 34(8), 10682–10698.</div>
+          <div class="citation-meta"><span class="study-type-badge">Animal study + microbiota transplant</span><a href="https://doi.org/10.1096/fj.202001007R" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class="section-heading"><span class="section-num">00</span><h2>The dual pathway problem</h2></div>
+    <p class="body-text">Garlic is unusual among prebiotic foods in that it contains two active components that work in opposite directions. Understanding garlic's microbiome effects requires holding both pathways in mind simultaneously.</p>
+    <div class="dual-pathway">
+      <div class="pathway-col prebiotic">
+        <div class="pathway-label">Pathway 1, Prebiotic</div>
+        <h3>FOS feeds Bifidobacterium</h3>
+        <p>Garlic is ~65% fructan by dry weight. FOS passes undigested to the colon, selectively enriching Bifidobacterium, one of the most consistent effects in prebiotic science. Heat-stable: cooking partially preserves FOS content.</p>
+      </div>
+      <div class="pathway-col antimicrobial">
+        <div class="pathway-label">Pathway 2, Antimicrobial</div>
+        <h3>Allicin kills bacteria broadly</h3>
+        <p>Allicin is released when garlic is crushed raw. It is bactericidal against Bifidobacterium, Lactobacillus, pathogens, and commensals alike. Heat-labile: destroyed by cooking. Absent in aged garlic extract.</p>
+      </div>
+    </div>
+    <p class="body-text" style="font-size:0.88rem;color:var(--ink-3);">How these two forces balance in the human gut, at realistic dietary doses, with real cooking practices, is not yet resolved in human trials. Preparation method is the single most important variable for garlic's net microbiome effect.</p>
+  </div>
+
+  <!-- EFFECTS -->
+  <div class="overall-verdict-strip"><div class="verdict-dot-lg"></div><div class="verdict-text-wrap"><strong>Mixed or context-dependent effects</strong>Mixed, prebiotic fiber strongly supports beneficial bacteria, but allicin in raw garlic has antimicrobial effects on the same bacteria.</div></div>
+<div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">01</span><h2>Key effects on the microbiome</h2></div>
+    <div class="effects-list">
+
+      <div class="effect-row">
+        <div class="effect-icon ei-green">↑</div>
+        <div class="effect-content">
+          <h3>Strongly bifidogenic via FOS, one of the most consistent effects in prebiotic science</h3>
+          <p>A meta-analysis of 8 human RCTs found a highly significant increase in <em>Bifidobacterium</em> from FOS supplementation (WMD: +0.579 log₁₀ CFU/g; 95% CI: 0.444–0.714; p &lt; 0.001; I² = 39.1%).<a href="#ref-1" class="cite">[1]</a> A parallel-design RCT (n = 131) confirmed significant <em>Bifidobacterium</em> increases from fos--inulin#ref-4" class="cite">[4]</a> This is the most robustly replicated prebiotic effect in the human nutrition literature, and garlic's FOS concentration means it is among the most potent food sources for this effect.</p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon ei-green">↓</div>
+        <div class="effect-content">
+          <h3>Decreases Bilophila wadsworthia, a pathobiont linked to IBD and colorectal cancer</h3>
+          <p>A RCT with shotgun metagenomics found a highly significant decrease in <em>Bilophila wadsworthia</em> with fos--inulin#ref-3" class="cite">[3]</a> The mechanism is indirect: FOS-driven <em>Bifidobacterium</em> expansion lowers colonic pH through acetate and lactate production, creating an environment that inhibits this hydrogen sulfide-producing pathobiont. This is one of the clearest documented examples of a prebiotic selectively suppressing a specific pathobiont in humans.</p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon ei-yellow">↑</div>
+        <div class="effect-content">
+          <h3>Aged garlic extract increases microbial richness, diversity, and Lactobacillus</h3>
+          <p>The GarGIC trial, a double-blind, placebo-controlled RCT (n = 49, 12 weeks), found aged garlic extract significantly increased gut microbial richness and Shannon diversity, with a marked increase in <em>Lactobacillus</em> and <em>Clostridia</em> species.<a href="#ref-5" class="cite">[5]</a> Aged garlic extract is allicin-free, isolating the prebiotic FOS effect. This is the only human RCT specifically measuring garlic's microbiome effects, and it used a processed extract, not whole food garlic.</p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon ei-yellow">~</div>
+        <div class="effect-content">
+          <h3>Enterotype-dependent response, Bacteroides-dominant individuals respond; Prevotella-dominant may not</h3>
+          <p>An in vitro fecal incubation study using human fecal cultures from 48 healthy individuals found garlic extract significantly altered microbial diversity in Bacteroides-dominant enterotype individuals, while producing no significant effect in Prevotella-dominant individuals.<a href="#ref-6" class="cite">[6]</a> Within the Bacteroides-dominant group, garlic enriched specific <em>Bifidobacterium</em> species. This enterotype dependency is consistent with the pattern observed for oats and polyphenol style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"effect-row">
+        <div class="effect-icon ei-red">⚠</div>
+        <div class="effect-content">
+          <h3>Allicin is bactericidal against Bifidobacterium and Lactobacillus at higher doses</h3>
+          <p>Raw crushed garlic releases allicin, a reactive organosulfur compound with broad-spectrum bactericidal activity against <em>Lactobacillus</em>, <em>Bifidobacterium</em>, <em>E. coli</em>, <em>Salmonella</em>, <em>C. difficile</em>, and <em>Staphylococcus</em>.<a href="#ref-8" class="cite">[8]</a> Among <em>Bifidobacterium</em>, <em>B. longum</em> is most susceptible and <em>B. lactis</em> most resistant. At high doses, allicin may transiently suppress the same bacteria that FOS is trying to grow, creating a competing dynamic that has not been fully resolved in human trials.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout-finding" style="margin-top:1.25rem;">
+      <div class="callout-finding-label">Preparation guide, what changes with cooking</div>
+      <p>The balance between allicin and FOS effects depends almost entirely on how garlic is prepared. This table summarizes the key differences.</p>
+    </div>
+    <div class="prep-table">
+      <div class="prep-row header">
+        <span>Preparation</span>
+        <span>Allicin content</span>
+        <span>FOS content</span>
+      </div>
+      <div class="prep-row">
+        <span class="prep-form">Raw, crushed</span>
+        <span class="badge-high">High, bactericidal</span>
+        <span class="badge-full">Full</span>
+      </div>
+      <div class="prep-row">
+        <span class="prep-form">Lightly cooked</span>
+        <span class="badge-partial">Reduced</span>
+        <span class="badge-partial">Mostly preserved</span>
+      </div>
+      <div class="prep-row">
+        <span class="prep-form">Well cooked / roasted</span>
+        <span class="badge-none">Minimal</span>
+        <span class="badge-partial">Partially reduced</span>
+      </div>
+      <div class="prep-row">
+        <span class="prep-form">Aged garlic extract</span>
+        <span class="badge-none">None</span>
+        <span class="badge-full">Preserved as S-allylcysteine</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MECHANISMS -->
+  <div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">02</span><h2>Mechanisms</h2></div>
+    <div class="mechanism-steps">
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">01</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>FOS reaches the colon as selective prebiotic substrate</h3>
+          <p>Garlic is ~65% fructan by dry weight, among the richest food sources. Humans lack β-fructosidase (inulinase) in the small intestine, so FOS passes intact to the colon, where only bacteria with intracellular β-fructosidases and fructan transport systems can efficiently use them, giving <em>Bifidobacterium</em> a significant competitive advantage over most other taxa.</p>
+        </div>
+      </div>
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">02</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Bifidobacterium internalises FOS before hydrolysis, a decisive competitive strategy</h3>
+          <p><em>Bifidobacterium</em> (<em>B. longum</em>, <em>B. adolescentis</em>, <em>B. breve</em>) use ATP-binding cassette (ABC) transporters to import FOS whole before degrading them intracellularly. This "import first" strategy prevents cross-feeding competitors from accessing released sugars, the molecular basis of the highly selective bifidogenic effect of inulin and FOS.</p>
+        </div>
+      </div>
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">03</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Bifidobacterium acetate and lactate drive cross-feeding and pH suppression of pathobiont style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;cursor:pointer;"#ref-3" class="cite">[3]</a></p>
+        </div>
+      </div>
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">04</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Allicin, parallel antimicrobial pathway (raw garlic only)</h3>
+          <p>When garlic cloves are crushed, alliinase enzyme converts alliin to allicin within seconds. Allicin forms disulfide bonds with free sulfhydryl (–SH) groups in bacterial enzymes and disrupts cell membranes through lipid oxidation, broad-spectrum activity affecting both Gram-positive and Gram-negative bacteria.<a href="#ref-8" class="cite">[8]</a> Allicin is heat-labile and degrades rapidly to diallyl disulfide (DADS) and other organosulfur metabolite style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;" class="urolithin. Only ~60-70% of people can produce them.</span></a> are examples.</span></a> with weaker but more persistent antimicrobial properties. Cooking destroys allicin; aged garlic extract replaces it with stable S-allylcysteine.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIMITATIONS -->
+  <div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">03</span><h2>Limitations & caveats</h2></div>
+    <div class="caveat-list">
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">No human RCTs testing whole food garlic with microbiome as primary endpoint.</strong> The prebiotic evidence comes from purified fos--inulin#ref-5" class="cite">[5]</a> The allicin literature is primarily in vitro and animal. No trial has fed participants dietary whole garlic and measured microbiome style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">The allicin vs. FOS balance is genuinely unresolved in humans.</strong> At what dietary doses allicin's bactericidal activity outweighs FOS prebiotic feeding, and for which preparation methods, is not established in human trials. This is an honest gap in the literature, not a minor caveat. The dose-dependent relationship between luminal allicin concentration and beneficial bacterial killing has not been characterized in vivo in humans.</p>
+      </div>
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">FOS effects are specifically bifidogenic, not broadly diversifying.</strong> The FOS meta-analysis confirmed that FOS specifically increases <em>Bifidobacterium</em> but does not significantly change <em>Lactobacillus</em>, <em>Bacteroides</em>, or total anaerobe counts.<a href="#ref-1" class="cite">[1]</a> The effect is real and potent but narrow. Claims of broad diversity increases from garlic in popular health media are not well-supported by the controlled human evidence.</p>
+      </div>
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">Enterotype dependency limits generalizability.</strong> The in vitro fecal incubation study found significant microbiome modulation only in Bacteroides-dominant individuals, no significant effect in Prevotella-dominant individuals.<a href="#ref-6" class="cite">[6]</a> Since enterotype distribution varies across populations and dietary patterns, population-level recommendations for garlic intake cannot assume universal benefit.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CITATIONS -->
+  <div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">04</span><h2>Sources</h2></div>
+    <div class="citations-list">
+      <div class="citation-row" id="ref-1"><span class="citation-num">[1]</span>
+        <div class="citation-content">
+          <div class="citation-title">Chen W, Chen H, Dong W, et al. Effect of fructooligosaccharides supplementation on the gut microbiota in human: A systematic review and meta-analysis. <em>Nutrients</em>, 2022; 14(16), 3298.</div>
+          <div class="citation-meta"><span class="study-type-badge">Systematic review + meta-analysis</span><span>8 RCTs</span><a href="https://doi.org/10.3390/nu14163298" class="citation-link" target="_blank</div>
+</mai</span>
+<aside class="sidebar">
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">Evidence quality</div>
+    <div class="sidebar-card-body">
+      <div class="score-rows">
+        <div><div class="score-row-top"><span class="score-row-label">Study quality</span><span class="score-row-val">Moderate (52)</span></div><div class="score-bar"><div class="score-fill mid" style="width:52%"></div></div></div>
+        <div><div class="score-row-top"><span class="score-row-label">Consistency</span><span class="score-row-val">Moderate–High (62)</span></div><div class="score-bar"><div class="score-fill mid" style="width:62%"></div></div></div>
+        <div><div class="score-row-top"><span class="score-row-label">Human evidence</span><span class="score-row-val">Moderate (50)</span></div><div class="score-bar"><div class="score-fill mid" style="width:50%"></div></div></div>
+        <div><div class="score-row-top"><span class="score-row-label">Effect size</span><span class="score-row-val">Moderate (55)</span></div><div class="score-bar"><div class="score-fill mid" style="width:55%"></div></div></div>
+        <div><div class="score-row-top"><span class="score-row-label">Mechanistic support</span><span class="score-row-val">High (72)</span></div><div class="score-bar"><div class="score-fill high" style="width:72%"></div></div></div>
+      </div>
+      <div class="overall-verdict">
+        <span class="verdict-label">Overall verdict</span>
+        <span class="evidence-pill pill-emerging" style="font-size:0.65rem;padding:4px 10px;margin-top:0;">Emerging</span>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">Quick facts</div>
+    <div class="sidebar-card-body">
+      <div class="quick-facts">
+        <div class="fact-row"><span class="fact-label">FOS content</span><span class="fact-value">~65% fructan by dry weight</span></div>
+        <div class="fact-row"><span class="fact-label">Key prebiotic pathway</span><span class="fact-value">Bifidobacterium via FOS</span></div>
+        <div class="fact-row"><span class="fact-label">Antimicrobial compound</span><span class="fact-value">Allicin (heat-labile)</span></div>
+        <div class="fact-row"><span class="fact-label">Key taxa enriched</span><span class="fact-value">Bifidobacterium, Lactobacillus</span></div>
+        <div class="fact-row"><span class="fact-label">Key taxa suppressed</span><span class="fact-value">Bilophila wadsworthia</span></div>
+        <div class="fact-row"><span class="fact-label">Best human RCT</span><span class="fact-value">GarGIC (n = 49, aged extract)</span></div>
+        <div class="fact-row"><span class="fact-label">Responds best in</span><span class="fact-value">Bacteroides-dominant enterotype</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">Related foods</div>
+    <div class="sidebar-card-body" style="padding:0;">
+      <div class="similar-list">
+        <a href="food-onions.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:#c9a020"></div><span class="similar-name">Onions</span></div><div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-family:var(--mono);font-size:0.58rem;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);padding:2px 6px;border-radius:2px;">Emerging</span><span class="similar-arrow">→</span></div></a>
+        <a href="food-leeks.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Leeks</span></div><div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-family:var(--mono);font-size:0.58rem;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);padding:2px 6px;border-radius:2px;">Strong</span><span class="similar-arrow">→</span></div></a>
+        <a href="food-asparagus.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Asparagus</span></div><div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-family:var(--mono);font-size:0.58rem;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);padding:2px 6px;border-radius:2px;">Strong</span><span class="similar-arrow">→</span></div></a>
+        <a href="food-jerusalem-artichoke.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Jerusalem Artichoke</span></div><div style="display:flex;align-items:center;gap:0.5rem;"><span style="font-family:var(--mono);font-size:0.58rem;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);padding:2px 6px;border-radius:2px;">Strong</span><span class="similar-arrow">→</span></div></a>
+      </div>
+    </div>
+  </div>
+</aside>
+</div>
+
+<div class="page-footnote">This page is for educational and science literacy purposes only. It does not constitute medical or dietary advice. Consult a qualified clinician before making dietary changes based on microbiome research.</div>
+<footer><div class="footer-inner"><div><div class="footer-logo">You are what <em>they</em> eat</div><p class="footer-note">An independent science communication project based on peer-reviewed literature.</p></div><div class="footer-col">      <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></div></div></footer>
+<script>
+(function(){
+var TERMS=[
+    ["alpha-diversity", "term-alpha-diversity", "A measure of how many different types of bacteria live in one person's gut."],
+    ["anthocyanins", "term-anthocyanin", "The blue/purple/red pigments in berries. Most reach the colon where gut bacteria transform them."],
+    ["anthocyanin", "term-anthocyanin", "A blue/purple/red pigment in berries that reaches the colon where gut bacteria transform it."],
+    ["beta-diversity", "term-beta-diversity", "A measure of how similar or different the gut bacterial communities of two or more people are."],
+    ["beta-glucan", "term-beta-glucan", "A soluble fiber in oats and barley that gut bacteria ferment, selectively feeding Bifidobacterium."],
+    ["bifidogenic", "term-bifidogenic", "Promotes the growth of Bifidobacterium \u2014 bacteria that produce beneficial short-chain fatty acids."],
+    ["butyrate", "term-butyrate", "A short-chain fatty acid produced when gut bacteria ferment fiber. The main fuel for colon cells and a key anti-inflammatory signal."],
+    ["clinical trials", "term-clinical-trial", "Research studies in human participants. The gold standard for human evidence."],
+    ["clinical trial", "term-clinical-trial", "A research study in human participants. The gold standard for human evidence."],
+    ["crossover trial", "term-crossover-trial", "A trial where each participant receives both the test intervention and the control at different times."],
+    ["dysbiosis", "term-dysbiosis", "An imbalance in gut bacteria where harmful species increase and beneficial ones decrease."],
+    ["ellagitannins", "term-ellagitannin", "Polyphenols in pomegranates and walnuts converted by gut bacteria to urolithins \u2014 only in people who carry the right bacteria."],
+    ["ellagitannin", "term-ellagitannin", "A polyphenol in pomegranates and walnuts that gut bacteria convert to urolithins."],
+    ["enterotypes", "term-enterotype", "Broad categories of gut bacterial community type \u2014 Bacteroides-dominant and Prevotella-dominant are the two most studied."],
+    ["enterotype", "term-enterotype", "A broad category describing the general type of gut bacterial community a person carries."],
+    ["ex vivo", "term-ex-vivo", "Studies using bacteria from living organisms tested in a lab setting. More relevant than animal studies but not the same as a human trial."],
+    ["fermentation", "term-fermentation", "The process by which gut bacteria break down fiber, producing short-chain fatty acids and other compounds."],
+    ["glucosinolates", "term-glucosinolate", "Compounds in cruciferous vegetables converted by enzymes and gut bacteria into sulforaphane."],
+    ["glucosinolate", "term-glucosinolate", "A compound in cruciferous vegetables converted into sulforaphane by plant enzymes and gut bacteria."],
+    ["gut barrier", "term-gut-barrier", "The single-cell lining of the intestine that lets nutrients through while keeping bacteria and toxins out."],
+    ["gut microbiome", "term-gut-microbiome", "The community of trillions of bacteria and other microorganisms living in the human gut."],
+    ["inflammatory bowel disease", "term-ibd-inflammatory-bowel-disease", "Crohn's disease and ulcerative colitis \u2014 conditions where the immune system attacks the gut lining."],
+    ["in vitro", "term-in-vitro", "Studies in lab dishes or test tubes. Results often do not transfer directly to humans."],
+    ["in vivo", "term-in-vivo", "Studies in living organisms. Human in vivo studies are clinical trials."],
+    ["keystone species", "term-keystone-species", "A species with disproportionately large effects on its ecosystem. In the gut, Ruminococcus bromii is a keystone for resistant starch breakdown."],
+    ["lactic acid bacteria", "term-lactic-acid-bacteria", "Bacteria that produce lactic acid during fermentation. Found in yogurt, kimchi, and kefir."],
+    ["lachnospiraceae", "term-lachnospiraceae", "A family of gut bacteria that are major butyrate producers. Reduced in IBD; enriched by high-fiber diets."],
+    ["meta-analyses", "term-meta-analysis", "Statistical methods combining results of multiple studies \u2014 considered the highest level of research evidence."],
+    ["meta-analysis", "term-meta-analysis", "A statistical method combining results of multiple studies into one overall estimate."],
+    ["metabolites", "term-metabolite", "Small molecules produced by bacteria or human cells during digestion. SCFAs and urolithins are examples."],
+    ["metabolite", "term-metabolite", "A small molecule produced during metabolism by human cells or gut bacteria."],
+    ["metabotypes", "term-metabotype", "Categories describing what metabolites a person's gut bacteria produce from a given food."],
+    ["metabotype", "term-metabotype", "A category describing what metabolites a person's gut bacteria produce from a given food."],
+    ["microbiome", "term-microbiome", "The community of microorganisms in a given environment. The gut microbiome refers to those in the digestive tract."],
+    ["microbiota", "term-microbiota", "The living microorganisms \u2014 mainly bacteria \u2014 in the gut. Often used interchangeably with microbiome."],
+    ["mucus layer", "term-mucus-layer", "The protective coating on the intestinal wall forming a barrier between gut contents and intestinal cells."],
+    ["pathobionts", "term-pathobiont", "Microorganisms normally harmless in small amounts that become problematic when gut balance shifts."],
+    ["pathobiont", "term-pathobiont", "A microorganism normally harmless in small amounts that becomes problematic when gut balance shifts."],
+    ["pectin", "term-pectin", "A soluble fiber in fruit cell walls that gut bacteria ferment, specifically feeding Lachnospira and Faecalibacterium."],
+    ["prebiotic fiber", "term-prebiotic", "Fiber that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotics", "term-prebiotic", "Compounds that selectively feed beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotic", "term-prebiotic", "A compound that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["polyphenols", "term-polyphenol", "Plant compounds in berries, tea, and chocolate. Most reach the colon where gut bacteria transform them into anti-inflammatory molecules."],
+    ["polyphenol", "term-polyphenol", "A plant compound found in berries, tea, and chocolate. Most reaches the colon where gut bacteria transform it."],
+    ["probiotics", "term-probiotic", "Live bacteria that may benefit gut health. Found in fermented foods and supplements."],
+    ["probiotic", "term-probiotic", "Live bacteria that may benefit gut health when consumed in sufficient amounts."],
+    ["propionate", "term-propionate", "A short-chain fatty acid produced by gut bacteria from fiber. Travels to the liver to help regulate blood sugar."],
+    ["randomized controlled trial", "term-randomized-controlled-trial", "The gold-standard study design where participants are randomly assigned to intervention or control groups."],
+    ["resistant starch", "term-resistant-starch", "Starch that human enzymes cannot digest, reaching the colon where bacteria ferment it to produce butyrate."],
+    ["ruminococcus bromii", "term-ruminococcus-bromii", "A keystone gut bacterium that initiates resistant starch breakdown, making it accessible to other bacteria."],
+    ["saccharolytic fermentation", "term-saccharolytic-fermentation", "Bacterial fermentation of carbohydrates (fiber), producing beneficial short-chain fatty acids."],
+    ["short-chain fatty acids", "term-scfa-short-chain-fatty-acid", "Small molecules \u2014 butyrate, propionate, acetate \u2014 produced when gut bacteria ferment fiber."],
+    ["short-chain fatty acid", "term-scfa-short-chain-fatty-acid", "A small molecule produced when gut bacteria ferment fiber. Butyrate, propionate, and acetate are the main ones."],
+    ["sulforaphane", "term-sulforaphane", "An anti-inflammatory compound produced from cruciferous vegetables by plant enzymes and gut bacteria."],
+    ["synbiotics", "term-synbiotic", "Combinations of probiotics and prebiotics in one food or supplement."],
+    ["synbiotic", "term-synbiotic", "A combination of a probiotic and a prebiotic in one food or supplement."],
+    ["systematic reviews", "term-systematic-review", "Comprehensive, reproducible reviews of all existing research on a specific question."],
+    ["systematic review", "term-systematic-review", "A comprehensive, reproducible review of all existing research on a specific question."],
+    ["tight junctions", "term-tight-junctions", "Protein structures holding intestinal cells together, forming the gut barrier."],
+    ["tmao", "term-tmao", "A compound produced when gut bacteria process L-carnitine (red meat) and choline. Linked to cardiovascular risk in some studies."],
+    ["urolithins", "term-urolithin", "Compounds produced by gut bacteria from pomegranate and walnut ellagitannins. Only about 60-70% of people can produce them."],
+    ["urolithin", "term-urolithin", "A compound produced by gut bacteria from ellagitannins in pomegranates and walnuts."],
+    ["proteolytic fermentation", "term-proteolytic-fermentation", "Bacterial breakdown of proteins rather than fiber, producing compounds that can damage the gut lining at high levels."],
+    ["dietary fiber", "term-fiber", "Parts of plant foods that human enzymes cannot digest. Travels to the colon where gut bacteria ferment it."],
+    ["faecalibacterium prausnitzii", "term-faecalibacterium-prausnitzii", "One of the most beneficial gut bacteria. A major butyrate producer; depleted in IBD and metabolic disease."]
+];
+TERMS.sort(function(a,b){return b[0].length-a[0].length;});
+var linked={};
+var SEL=['.body-text','.effect-content p','.effect-content h3','.step-content p','.step-content h3','.caveat-item p','.callout p'];
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function makeLink(term,anchor,tip,text){
+  var a=document.createElement('a');
+  a.href='glossary.html#'+anchor;
+  a.className='gloss-term';
+  a.setAttribute('title',tip);
+  a.textContent=text;
+  var sp=document.createElement('span');
+  sp.className='gloss-tip';
+  sp.textContent=tip;
+  a.appendChild(sp);
+  return a;
+}
+function walkNode(node){
+  if(!node||node.nodeType!==1)return;
+  var tag=node.tagName?node.tagName.toLowerCase():'';
+  if(tag==='a'||tag==='script'||tag==='style'||tag==='code')return;
+  if(node.className&&node.className.indexOf&&node.className.indexOf('gloss-term')>=0)return;
+  Array.prototype.slice.call(node.childNodes).forEach(function(child){
+    if(child.nodeType===3){processText(child);}
+    else if(child.nodeType===1){walkNode(child);}
+  });
+}
+function processText(tn){
+  var txt=tn.nodeValue;
+  for(var i=0;i<TERMS.length;i++){
+    var t=TERMS[i][0],a=TERMS[i][1],d=TERMS[i][2];
+    if(linked[t])continue;
+    var re=new RegExp('\\b('+esc(t)+')\\b','i');
+    var m=re.exec(txt);
+    if(!m)continue;
+    linked[t]=true;
+    var before=txt.slice(0,m.index);
+    var after=txt.slice(m.index+m[0].length);
+    var parent=tn.parentNode;
+    var frag=document.createDocumentFragment();
+    if(before)frag.appendChild(document.createTextNode(before));
+    frag.appendChild(makeLink(t,a,d,m[0]));
+    if(after)frag.appendChild(document.createTextNode(after));
+    parent.replaceChild(frag,tn);
+    // Continue processing the 'after' text node
+    if(after){
+      var newTn=parent.lastChild;
+      if(newTn&&newTn.nodeType===3)processText(newTn);
+    }
+    return;
+  }
+}
+function init(){
+  SEL.forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(el){walkNode(el);});
+  });
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+})();
+</script>
+</body>
+</html>

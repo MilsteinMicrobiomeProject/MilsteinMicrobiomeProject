@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Read a Food Page &mdash; You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#faf9f6;--bg2:#f3f1ec;--surface:#ffffff;--border:#e2dfd7;--ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;--amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;--green:#1e6b3e;--green-bg:#eef7f2;--green-border:#a8d4bc;--green-text:#1a5c35;--yellow:#7a6010;--yellow-bg:#fdf8eb;--yellow-border:#e0cc88;--yellow-text:#6b5210;--red:#8b2e2e;--red-bg:#fdf0f0;--red-border:#daa8a8;--red-text:#7a2828;--serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.75}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{font-size:.82rem;font-weight:400;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color .15s}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+  .breadcrumb{max-width:1000px;margin:0 auto;padding:1.25rem 2.5rem 0;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-4)}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none}
+  .breadcrumb-sep{margin:0 .4rem}
+
+  .page-hero{max-width:1000px;margin:0 auto;padding:2.5rem 2.5rem 1.5rem}
+  .page-hero h1{font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:400;color:var(--ink);margin-bottom:.6rem}
+  .page-hero p{font-size:.95rem;color:var(--ink-3);max-width:620px;line-height:1.75}
+
+  /* FOOD SEARCH */
+  .search-section{max-width:1000px;margin:0 auto;padding:0 2.5rem 2rem}
+  .search-bar-wrap{position:relative;margin-bottom:1.25rem}
+  .search-bar{width:100%;padding:.85rem 1rem .85rem 3rem;font-family:var(--sans);font-size:1rem;font-weight:300;border:1.5px solid var(--border);border-radius:3px;background:var(--surface);color:var(--ink);outline:none;transition:border-color .15s}
+  .search-bar:focus{border-color:var(--amber)}
+  .search-bar::placeholder{color:var(--ink-4)}
+  .search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--ink-4);font-size:.9rem;pointer-events:none}
+  .filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem}
+  .filter-btn{font-family:var(--mono);font-size:.62rem;letter-spacing:.07em;text-transform:uppercase;padding:5px 12px;border-radius:2px;border:1px solid var(--border);background:var(--surface);color:var(--ink-3);cursor:pointer;transition:all .15s}
+  .filter-btn:hover,.filter-btn.active{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+  .food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .food-card{background:var(--surface);padding:.85rem 1rem;text-decoration:none;display:flex;align-items:center;justify-content:space-between;gap:.75rem;transition:background .15s}
+  .food-card:hover{background:var(--bg2)}
+  .food-card-left{display:flex;align-items:center;gap:.65rem}
+  .food-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .fp-strong{background:var(--green)}
+  .fp-emerging{background:#c9a020}
+  .fp-limited{background:var(--red)}
+  .food-name{font-family:var(--serif);font-size:.92rem;color:var(--ink)}
+  .food-tier-badge{font-family:var(--mono);font-size:.55rem;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:2px;flex-shrink:0}
+  .ftb-strong{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border)}
+  .ftb-emerging{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border)}
+  .ftb-limited{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border)}
+  .no-food-results{padding:2rem;text-align:center;font-size:.9rem;color:var(--ink-4);grid-column:1/-1;display:none}
+
+  /* GUIDE SECTIONS */
+  .guide-wrap{max-width:1000px;margin:0 auto;padding:0 2.5rem 6rem}
+  .guide-divider{border:none;border-top:2px solid var(--border);margin:2.5rem 0}
+  .guide-section{margin-bottom:2.5rem}
+  .guide-section-title{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink);margin-bottom:.5rem}
+  .guide-section-sub{font-size:.88rem;color:var(--ink-3);margin-bottom:1.25rem;line-height:1.7}
+
+  /* Annotated example blocks */
+  .annotated{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1rem}
+  .annotated-label{background:var(--bg2);border-bottom:1px solid var(--border);padding:.5rem 1rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4)}
+  .annotated-body{padding:1.1rem 1.25rem}
+  .annotation{margin-top:.85rem;padding:.75rem 1rem;background:var(--amber-bg);border:1px solid var(--amber-border);border-left:3px solid var(--amber);border-radius:0 3px 3px 0;font-size:.82rem;color:var(--ink-2);line-height:1.65}
+  .annotation strong{font-weight:500;color:var(--amber)}
+
+  /* Tier cards */
+  .tier-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+  .tc{border-radius:3px;padding:1rem;border:1.5px solid}
+  .tc-strong{background:var(--green-bg);border-color:var(--green-border)}
+  .tc-emerging{background:var(--yellow-bg);border-color:var(--yellow-border)}
+  .tc-limited{background:var(--red-bg);border-color:var(--red-border)}
+  .tc-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+  .tc-strong .tc-pill{color:var(--green-text)}
+  .tc-emerging .tc-pill{color:var(--yellow-text)}
+  .tc-limited .tc-pill{color:var(--red-text)}
+  .tc-dot{width:7px;height:7px;border-radius:50%}
+  .tc-strong .tc-dot{background:var(--green)}
+  .tc-emerging .tc-dot{background:#c9a020}
+  .tc-limited .tc-dot{background:var(--red)}
+  .tc h3{font-family:var(--serif);font-size:.92rem;font-weight:400;margin-bottom:.3rem}
+  .tc-strong h3{color:var(--green-text)}
+  .tc-emerging h3{color:var(--yellow-text)}
+  .tc-limited h3{color:var(--red-text)}
+  .tc p{font-size:.8rem;line-height:1.55}
+  .tc-strong p{color:var(--green-text)}
+  .tc-emerging p{color:var(--yellow-text)}
+  .tc-limited p{color:var(--red-text)}
+
+  /* Icon legend */
+  .icon-legend{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .icon-row{background:var(--surface);padding:.85rem 1.1rem;display:flex;align-items:center;gap:1rem}
+  .icon-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+  .ic-green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+  .ic-yellow{background:var(--yellow-bg);border:1px solid var(--yellow-border);color:var(--yellow)}
+  .ic-red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+  .ic-gray{background:var(--bg2);border:1px solid var(--border);color:var(--ink-4)}
+  .icon-row-text h4{font-size:.85rem;font-weight:400;font-family:var(--serif);color:var(--ink);margin-bottom:.15rem}
+  .icon-row-text p{font-size:.8rem;color:var(--ink-3);line-height:1.5}
+
+  /* Score bars */
+  .score-example{display:flex;flex-direction:column;gap:.75rem;padding:1rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;margin-bottom:.5rem}
+  .score-row-top{display:flex;justify-content:space-between;margin-bottom:.25rem}
+  .score-row-label{font-size:.8rem;color:var(--ink-3)}
+  .score-row-val{font-family:var(--mono);font-size:.72rem;color:var(--ink-2)}
+  .score-bar{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden}
+  .score-fill{height:100%;border-radius:2px}
+  .sf-high{background:var(--green)} .sf-mid{background:#c9a020} .sf-low{background:var(--red)}
+
+  .page-footnote{max-width:1000px;margin:0 auto;padding:1.5rem 2.5rem 2rem;font-size:.76rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border)}
+  footer{background:var(--ink);color:rgba(255,255,255,.45);padding:3.5rem 2.5rem}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,.85);margin-bottom:.6rem}
+  .footer-note{font-size:.78rem;line-height:1.75;max-width:300px}
+  .footer-col h4{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+  .footer-col a{font-size:.82rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s}
+  .footer-col a:hover{color:rgba(255,255,255,.75)}
+  @media(max-width:700px){.tier-cards{grid-template-columns:1fr}.food-grid{grid-template-columns:1fr}.nav-links{display:none}}
+
+/* evidence breakdown widget */
+.ev-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:2rem 0;}
+.ev-breakdown-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);}
+.ev-breakdown-body{padding:1.5rem 1.25rem;}
+.ev-bar-wrap{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:1.5rem;gap:3px;}
+.ev-bar-seg{height:100%;border-radius:3px;transition:opacity .2s;}
+.ev-bar-seg:hover{opacity:.75;}
+.ev-tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.ev-tier-panel{border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.ev-tier-head{padding:.65rem 1rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;}
+.ev-tier-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ev-tier-count{font-size:.72rem;opacity:.7;}
+.ev-tier-body{padding:.75rem 1rem;background:var(--surface);}
+.ev-food-links{display:flex;flex-direction:column;gap:4px;max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.ev-food-links.open{max-height:600px;}
+.ev-food-link{font-size:.82rem;color:var(--ink-2);text-decoration:none;display:flex;align-items:center;gap:.5rem;padding:2px 0;transition:color .15s;}
+.ev-food-link:hover{color:var(--amber);}
+.ev-food-pip{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ev-toggle{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;background:none;border:none;color:var(--amber);cursor:pointer;padding:0;margin-top:.5rem;display:block;}
+.ev-toggle:hover{text-decoration:underline;}
+.ev-strong-head{background:var(--green-bg);border-bottom:1px solid var(--green-border);color:var(--green-text);}
+.ev-emerging-head{background:var(--yellow-bg);border-bottom:1px solid var(--yellow-border);color:var(--yellow-text);}
+.ev-limited-head{background:var(--red-bg);border-bottom:1px solid var(--red-border);color:var(--red-text);}
+@media(max-width:700px){.ev-tier-grid{grid-template-columns:1fr;}}
+
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html">Foods</a></li>
+    <li><a href="how-to-read.html" class="active">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Guide</span></div>
+
+<div class="page-hero">
+  <h1>How to read a food page</h1>
+  <p>Search for any food below, then scroll down to see what each section of a food page means and how to interpret it.</p>
+</div>
+
+<!-- FOOD SEARCH -->
+<div class="search-section">
+  <div class="search-bar-wrap">
+    <span class="search-icon">&#9906;</span>
+    <input class="search-bar" type="text" id="foodSearch" placeholder="Search foods &mdash; e.g. garlic, yogurt, oats..." autocomplete="off">
+  </div>
+  <div class="ev-breakdown">
+  <div class="ev-breakdown-header">Evidence breakdown &mdash; 49 foods reviewed</div>
+  <div class="ev-breakdown-body">
+    <div class="ev-bar-wrap" title="Strong: 5 &bull; Emerging: 36 &bull; Limited: 8">
+      <div class="ev-bar-seg" style="width:10%;background:var(--green);" title="Strong: 5 foods"></div>
+      <div class="ev-bar-seg" style="width:73%;background:#c9a020;" title="Emerging: 36 foods"></div>
+      <div class="ev-bar-seg" style="width:16%;background:var(--red);" title="Limited: 8 foods"></div>
+    </div>
+    <div class="ev-tier-grid">
+
+      <div class="ev-tier-panel">
+        <div class="ev-tier-head ev-strong-head">
+          <span style="display:flex;align-items:center;gap:6px;"><span class="ev-tier-pip" style="background:var(--green)"></span>Strong</span>
+          <span class="ev-tier-count">5 foods &middot; 10%</span>
+        </div>
+        <div class="ev-tier-body">
+          <div class="ev-food-links open"><a href="food-oats.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Oats</a><a href="food-resistant-starch.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Resistant Starch</a><a href="food-jerusalem-artichoke.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Jerusalem Artichoke</a><a href="food-barley.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Barley</a><a href="food-alcohol.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Alcohol</a></div>
+        </div>
+      </div>
+
+      <div class="ev-tier-panel">
+        <div class="ev-tier-head ev-emerging-head">
+          <span style="display:flex;align-items:center;gap:6px;"><span class="ev-tier-pip" style="background:#c9a020"></span>Emerging</span>
+          <span class="ev-tier-count">36 foods &middot; 73%</span>
+        </div>
+        <div class="ev-tier-body">
+          <div class="ev-food-links"><a href="food-almonds.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Almonds</a><a href="food-apples.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Apples</a><a href="food-artificial-sweeteners.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Artificial Sweeteners</a><a href="food-asparagus.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Asparagus</a><a href="food-bananas.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Bananas</a><a href="food-blueberries.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Blueberries</a><a href="food-broccoli.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Broccoli</a><a href="food-brown-rice.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Brown Rice</a><a href="food-carrots.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Carrots</a><a href="food-coffee.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Coffee</a><a href="food-cruciferous.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Cruciferous Vegetables</a><a href="food-dairy.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Dairy</a><a href="food-dark-chocolate.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Dark Chocolate</a><a href="food-fatty-fish.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Fatty Fish</a><a href="food-flaxseed.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Flaxseed</a><a href="food-garlic.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Garlic</a><a href="food-green-tea.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Green Tea</a><a href="food-kefir.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Kefir</a><a href="food-kimchi.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Kimchi</a><a href="food-leeks.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Leeks</a><a href="food-legumes.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Legumes</a><a href="food-nuts-general.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Nuts</a><a href="food-olive-oil.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Olive Oil</a><a href="food-onions.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Onions</a><a href="food-polyphenols.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Polyphenol-Rich Foods</a><a href="food-pomegranate.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Pomegranate</a><a href="food-probiotic-supplements.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Probiotic Supplements</a><a href="food-quinoa.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Quinoa</a><a href="food-red-meat.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Red Meat</a><a href="food-refined-sugar.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Refined Sugar</a><a href="food-rye-bread.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Rye Bread</a><a href="food-sweet-potato.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Sweet Potato</a><a href="food-ultra-processed-foods.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Ultra-Processed Foods</a><a href="food-walnuts.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Walnuts</a><a href="food-whole-grains.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Whole Grains</a><a href="food-yogurt.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Yogurt</a></div>
+          <button class="ev-toggle">Show all &darr;</butto</span>
+        </div>
+      </div>
+
+      <div class="ev-tier-panel">
+        <div class="ev-tier-head ev-limited-head">
+          <span style="display:flex;align-items:center;gap:6px;"><span class="ev-tier-pip" style="background:var(--red)"></span>Limited</span>
+          <span class="ev-tier-count">8 foods &middot; 16%</span>
+        </div>
+        <div class="ev-tier-body">
+          <div class="ev-food-links open"><a href="food-chia-seeds.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Chia Seeds</a><a href="food-eggs.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Eggs</a><a href="food-kombucha.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Kombucha</a><a href="food-miso.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Miso</a><a href="food-poultry.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Poultry</a><a href="food-sauerkraut.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Sauerkraut</a><a href="food-spinach.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Spinach</a><a href="food-tempeh.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Tempeh</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="filter-row" id="filterRow">
+    <button class="filter-btn active" data-cat="all">All</butto</span>
+    <button class="filter-btn" data-cat="grains">Grains &amp; fiber</butto</span>
+    <button class="filter-btn" data-cat="vegetables">Vegetables</butto</span>
+    <button class="filter-btn" data-cat="fruits">Fruits</butto</span>
+    <button class="filter-btn" data-cat="fermented">Fermented</butto</span>
+    <button class="filter-btn" data-cat="protein">Protein foods</butto</span>
+    <button class="filter-btn" data-cat="other">Other</butto</span>
+  </div>
+  <div class="food-grid" id="foodGrid">
+    <!-- populated by JS -->
+    <div class="no-food-results" id="noFoodResults">No foods match your search.</div>
+  </div>
+</div>
+
+<hr class="guide-divider">
+
+<!-- GUIDE CONTENT -->
+<div class="guide-wrap">
+
+  <div class="guide-section">
+    <div class="guide-section-title">1. The evidence tier</div>
+    <div class="guide-section-sub">The colored badge at the top of every food page is the most important thing on it. It tells you how much high-quality human evidence exists for that food's effects on the gut microbiome.</div>
+    <div class="tier-cards">
+      <div class="tc tc-strong">
+        <div class="tc-pill"><span class="tc-dot"></span>Strong</div>
+        <h3>Multiple human trials with consistent results</h3>
+        <p>The effect has been confirmed in well-designed clinical trials in people, more than once, with consistent findings.</p>
+      </div>
+      <div class="tc tc-emerging">
+        <div class="tc-pill"><span class="tc-dot"></span>Emerging</div>
+        <h3>Promising signals, but incomplete evidence</h3>
+        <p>Human studies suggest real effects, but the trials are small, short, or inconsistent enough that confidence is not yet warranted.</p>
+      </div>
+      <div class="tc tc-limited">
+        <div class="tc-pill"><span class="tc-dot"></span>Limited</div>
+        <h3>Little or no direct human evidence</h3>
+        <p>The biology may be plausible, but controlled human trials are largely absent. The page describes what is known, honestly.</p>
+      </div>
+    </div>
+    <div class="annotation"><strong>Important:</strong> Limited does not mean unhealthy. It means the food has not been rigorously studied in humans with gut microbiome as the primary outcome. Many nutritious foods have a Limited tier simply because researchers have not focused on them yet.</div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title">2. Key effects &mdash; what the icons mean</div>
+    <div class="guide-section-sub">Each row in the effects section describes one documented effect on the gut microbiome. The colored circle on the left tells you the direction and confidence of that effect at a glance.</div>
+    <div class="icon-legend">
+      <div class="icon-row">
+        <div class="icon-circle ic-green">&#8593;</div>
+        <div class="icon-row-text"><h4>Green arrow up</h4><p>This food increases something beneficial: a helpful bacterial species, microbial diversity, or a protective compound like butyrate. Backed by human evidence.</p></div>
+      </div>
+      <div class="icon-row">
+        <div class="icon-circle ic-green">&#8595;</div>
+        <div class="icon-row-text"><h4>Green arrow down</h4><p>This food decreases something harmful: a bacteria linked to inflammation or disease. A decrease in something harmful is a good thing, hence green.</p></div>
+      </div>
+      <div class="icon-row">
+        <div class="icon-circle ic-green">!</div>
+        <div class="icon-row-text"><h4>Green exclamation</h4><p>A notable positive finding that does not fit neatly as a simple increase or decrease. Often used for findings that correct a common misconception.</p></div>
+      </div>
+      <div class="icon-row">
+        <div class="icon-circle ic-yellow">!</div>
+        <div class="icon-row-text"><h4>Yellow exclamation</h4><p>A real finding that comes with an important condition or nuance. For example, an effect that only occurs in certain people, or a result that contradicts a simpler story.</p></div>
+      </div>
+      <div class="icon-row">
+        <div class="icon-circle ic-yellow">&#8593;</div>
+        <div class="icon-row-text"><h4>Yellow arrow</h4><p>A preliminary or inconsistent finding. The direction is plausible but the evidence is not strong enough for high confidence. Often based on a single small trial or animal studies.</p></div>
+      </div>
+      <div class="icon-row">
+        <div class="icon-circle ic-red">&#8593;</div>
+        <div class="icon-row-text"><h4>Red arrow</h4><p>This food increases something potentially harmful: a pro-inflammatory bacteria, a compound associated with disease risk, or a reduction in protective species.</p></div>
+      </div>
+      <div class="icon-row">
+        <div class="icon-circle ic-gray">~</div>
+        <div class="icon-row-text"><h4>Grey tilde</h4><p>The evidence is mixed, null, or the effect simply has not been studied in humans yet. This is an honest acknowledgment of uncertainty, not a finding of "no effect."</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title">3. Mechanisms &mdash; the how</div>
+    <div class="guide-section-sub">The mechanisms section explains the step-by-step biological process: how a food survives digestion, which bacteria respond to it, and what those bacteria produce. It is written to be understandable without a science background. When a mechanism has been confirmed in humans it is stated directly. When it is inferred from animal or lab studies, that is noted. Unfamiliar words? Check the <a href="glossary.html" style="color:var(--amber)">Glossary</a>.</div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title">4. Limitations &amp; caveats</div>
+    <div class="guide-section-sub">This section lists the most significant weaknesses in the evidence for each food. It is one of the most important parts of the page. A food with substantial caveats should be interpreted more cautiously than one with minor ones. Common caveats include:</div>
+    <div class="annotated">
+      <div class="annotated-label">Common types of caveats</div>
+      <div class="annotated-body">
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.8"><strong style="font-weight:500">Supplement vs. whole food:</strong> Many trials use concentrated extracts or purified compounds at doses far higher than you would get from eating the food normally. Results may not translate to dietary portions.</p>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.8;margin-top:.75rem"><strong style="font-weight:500">Animal studies:</strong> Effects seen in mice often do not replicate in people. When animal evidence is the main support for a claim, this is flagged.</p>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.8;margin-top:.75rem"><strong style="font-weight:500">Small sample sizes:</strong> A trial with 15 people is much weaker evidence than one with 500. Small trials are more likely to produce false positives or results that don't hold up when repeated.</p>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.8;margin-top:.75rem"><strong style="font-weight:500">Individual variation:</strong> The gut microbiome differs significantly between people. Some effects only occur in certain population groups, and this limits how broadly any finding can be applied.</p>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.8;margin-top:.75rem"><strong style="font-weight:500">Industry funding:</strong> Research funded by food companies has a higher risk of bias toward positive results. When this applies, it is flagged.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title">5. Evidence quality scores</div>
+    <div class="guide-section-sub">The sidebar of each food page shows five scores that explain why the overall evidence tier is what it is. Each score runs from 0 to 100 and is color-coded green (strong), amber (moderate), or red (low).</div>
+    <div class="score-example">
+      <div>
+        <div class="score-row-top"><span class="score-row-label">Study quality</span><span class="score-row-val">How rigorous were the best available studies?</span></div>
+        <div class="score-bar"><div class="score-fill sf-mid" style="width:55%"></div></div>
+      </div>
+      <div>
+        <div class="score-row-top"><span class="score-row-label">Consistency of findings</span><span class="score-row-val">Do different studies agree with each other?</span></div>
+        <div class="score-bar"><div class="score-fill sf-high" style="width:72%"></div></div>
+      </div>
+      <div>
+        <div class="score-row-top"><span class="score-row-label">Human evidence</span><span class="score-row-val">How much comes from human trials vs. animals or labs?</span></div>
+        <div class="score-bar"><div class="score-fill sf-low" style="width:30%"></div></div>
+      </div>
+      <div>
+        <div class="score-row-top"><span class="score-row-label">Effect size</span><span class="score-row-val">How large were the observed changes?</span></div>
+        <div class="score-bar"><div class="score-fill sf-mid" style="width:48%"></div></div>
+      </div>
+      <div>
+        <div class="score-row-top"><span class="score-row-label">Mechanistic support</span><span class="score-row-val">How well is the underlying mechanism understood?</span></div>
+        <div class="score-bar"><div class="score-fill sf-high" style="width:80%"></div></div>
+      </div>
+    </div>
+    <div class="annotation">A food can score high on <strong>mechanistic support</strong> (the biology is well understood) but low on <strong>human evidence</strong> (it has not been tested in people). That combination is common and is exactly the kind of nuance these scores are meant to show.</div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title">5b. How the scores and tiers are determined</div>
+    <div class="guide-section-sub">The evidence quality scores and overall tier are not produced by an algorithm. They reflect a judgment based on reviewing the available peer-reviewed literature for each food, using a consistent set of criteria across all pages. Here is exactly what goes into each score and how the overall tier is assigned.</div>
+
+    <div class="annotated" style="margin-bottom:1rem">
+      <div class="annotated-label">How each of the five scores is assigned (0&ndash;100)</div>
+      <div class="annotated-body" style="display:flex;flex-direction:column;gap:.85rem">
+
+        <div>
+          <p style="font-size:.87rem;font-weight:500;color:var(--ink);margin-bottom:.3rem">Study quality</p>
+          <p style="font-size:.84rem;color:var(--ink-2);line-height:1.7">Scores higher when: the best available studies are randomized controlled trials (RCTs) rather than observational studies; sample sizes are large (hundreds of participants rather than tens); studies lasted longer (months rather than weeks); interventions used whole foods rather than purified supplements; and trials were pre-registered, reducing the risk that researchers only reported favorable outcomes. Scores lower when the best evidence is animal studies, small pilot trials, or in vitro lab work.</p>
+        </div>
+
+        <div>
+          <p style="font-size:.87rem;font-weight:500;color:var(--ink);margin-bottom:.3rem">Consistency of findings</p>
+          <p style="font-size:.84rem;color:var(--ink-2);line-height:1.7">Scores higher when multiple independent research groups find the same result: the same bacteria change in the same direction across different populations, methods, and study designs. Scores lower when studies point in opposite directions, or when one positive finding has never been replicated. A single impressive result that has never been confirmed by another lab scores low here regardless of how compelling it looks.</p>
+        </div>
+
+        <div>
+          <p style="font-size:.87rem;font-weight:500;color:var(--ink);margin-bottom:.3rem">Human evidence</p>
+          <p style="font-size:.84rem;color:var(--ink-2);line-height:1.7">Scores based specifically on how much of the evidence comes from studies in people. Animal studies and lab studies are informative but do not count toward this score. A food with five well-designed human trials scores much higher than one whose entire evidence base comes from mouse studies, regardless of how convincing the animal findings are. This is the dimension where many foods score low: the human microbiome research base is surprisingly thin for many commonly eaten foods.</p>
+        </div>
+
+        <div>
+          <p style="font-size:.87rem;font-weight:500;color:var(--ink);margin-bottom:.3rem">Effect size</p>
+          <p style="font-size:.84rem;color:var(--ink-2);line-height:1.7">Scores higher when the observed changes in the microbiome are large and meaningful: a substantial shift in the relative abundance of a key bacterial species, a significant change in microbial diversity, or a measurable increase in a beneficial compound like butyrate. Scores lower when changes are statistically significant (unlikely to be due to chance) but numerically tiny, or when results vary so much between individuals that the average effect is hard to interpret.</p>
+        </div>
+
+        <div>
+          <p style="font-size:.87rem;font-weight:500;color:var(--ink);margin-bottom:.3rem">Mechanistic support</p>
+          <p style="font-size:.84rem;color:var(--ink-2);line-height:1.7">Scores higher when the biological explanation for why a food affects the microbiome is well-understood: the specific fiber or compound has been identified, the bacteria that process it have been named, and the downstream compounds they produce are known. Scores lower when an effect has been observed but nobody knows why it happens. High mechanistic support does not substitute for human evidence &mdash; it explains the biology, but a well-understood mechanism in a lab dish is not the same as a confirmed effect in people.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="annotated">
+      <div class="annotated-label">How the overall evidence tier is assigned</div>
+      <div class="annotated-body">
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.7">The overall tier (Strong, Emerging, or Limited) is assigned based on the pattern of the five scores taken together, with human evidence and consistency weighted most heavily. A food scores <strong style="font-weight:500;color:var(--green-text)">Strong</strong> when there are multiple well-designed human RCTs that consistently find the same result, with clear mechanisms. It scores <strong style="font-weight:500;color:var(--yellow-text)">Emerging</strong> when human trials exist and suggest real effects, but the evidence has meaningful gaps: trials are small, durations are short, results are inconsistent across studies, or effects depend heavily on supplement doses that are unrealistic from food alone. It scores <strong style="font-weight:500;color:var(--red-text)">Limited</strong> when human trial data are largely absent and the case for a food's microbiome effects rests mainly on animal studies, lab work, or mechanistic reasoning.</p>
+        <p style="font-size:.87rem;color:var(--ink-2);line-height:1.7;margin-top:.75rem">High mechanistic support alone is not enough for a higher tier. A food can have a beautifully understood biological mechanism and still be rated Limited if that mechanism has never been confirmed in a controlled human trial. This is an intentional choice: the site reflects what has been tested in people, not just what is theoretically plausible.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="guide-section">
+    <div class="guide-section-title">6. Sources</div>
+    <div class="guide-section-sub">Every claim on a food page is cited. The amber numbers in the text link to the source at the bottom of the page. Each citation shows the study type, which tells you how much weight to give it. From strongest to weakest:</div>
+    <div class="annotated">
+      <div class="annotated-label">Study type hierarchy</div>
+      <div class="annotated-body" style="display:flex;flex-direction:column;gap:.5rem">
+        <div style="display:flex;gap:.75rem;align-items:flex-start">
+          <span style="font-family:var(--mono);font-size:.6rem;background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px">Strongest</span>
+          <span style="font-size:.84rem;color:var(--ink-2)">Systematic reviews and meta-analyses of multiple human trials; large pre-registered randomized controlled trials</span>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start">
+          <span style="font-family:var(--mono);font-size:.6rem;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px">Moderate</span>
+          <span style="font-size:.84rem;color:var(--ink-2)">Single well-designed human clinical trials; large observational studies in humans</span>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start">
+          <span style="font-family:var(--mono);font-size:.6rem;background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px">Supporting</span>
+          <span style="font-size:.84rem;color:var(--ink-2)">Small human trials; cross-sectional surveys; lab studies using human fecal bacteria</span>
+        </div>
+        <div style="display:flex;gap:.75rem;align-items:flex-start">
+          <span style="font-family:var(--mono);font-size:.6rem;background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px">Context only</span>
+          <span style="font-size:.84rem;color:var(--ink-2)">Animal studies; standard cell culture; mechanistic biochemistry. These explain the biology but do not support human health claims on their own.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end guide-wrap -->
+
+<div class="page-footnote">This guide is for educational purposes. Unfamiliar terms? Visit the <a href="glossary.html" style="color:var(--amber)">Glossary</a> for plain-language definitions.</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">You are what <em>they</em> eat</div>
+      <p class="footer-note">An independent science communication project based on peer-reviewed literature.</p>
+    </div>
+    <div class="footer-col">
+            <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+const FOODS = [
+  {href:'food-oats.html',name:'Oats',tier:'strong',cat:'grains'},
+  {href:'food-whole-grains.html',name:'Whole Grains',tier:'emerging',cat:'grains'},
+  {href:'food-resistant-starch.html',name:'Resistant Starch',tier:'strong',cat:'grains'},
+  {href:'food-legumes.html',name:'Legumes',tier:'emerging',cat:'grains'},
+  {href:'food-barley.html',name:'Barley',tier:'strong',cat:'grains'},
+  {href:'food-rye-bread.html',name:'Rye Bread',tier:'emerging',cat:'grains'},
+  {href:'food-brown-rice.html',name:'Brown Rice',tier:'emerging',cat:'grains'},
+  {href:'food-quinoa.html',name:'Quinoa',tier:'emerging',cat:'grains'},
+  {href:'food-garlic.html',name:'Garlic',tier:'emerging',cat:'vegetables'},
+  {href:'food-onions.html',name:'Onions',tier:'emerging',cat:'vegetables'},
+  {href:'food-cruciferous.html',name:'Cruciferous Vegetables',tier:'emerging',cat:'vegetables'},
+  {href:'food-broccoli.html',name:'Broccoli',tier:'emerging',cat:'vegetables'},
+  {href:'food-jerusalem-artichoke.html',name:'Jerusalem Artichoke',tier:'strong',cat:'vegetables'},
+  {href:'food-asparagus.html',name:'Asparagus',tier:'emerging',cat:'vegetables'},
+  {href:'food-leeks.html',name:'Leeks',tier:'emerging',cat:'vegetables'},
+  {href:'food-spinach.html',name:'Spinach',tier:'limited',cat:'vegetables'},
+  {href:'food-sweet-potato.html',name:'Sweet Potato',tier:'emerging',cat:'vegetables'},
+  {href:'food-carrots.html',name:'Carrots',tier:'emerging',cat:'vegetables'},
+  {href:'food-blueberries.html',name:'Blueberries',tier:'emerging',cat:'fruits'},
+  {href:'food-apples.html',name:'Apples',tier:'emerging',cat:'fruits'},
+  {href:'food-pomegranate.html',name:'Pomegranate',tier:'emerging',cat:'fruits'},
+  {href:'food-bananas.html',name:'Bananas',tier:'emerging',cat:'fruits'},
+  {href:'food-yogurt.html',name:'Yogurt',tier:'emerging',cat:'fermented'},
+  {href:'food-kimchi.html',name:'Kimchi',tier:'emerging',cat:'fermented'},
+  {href:'food-kefir.html',name:'Kefir',tier:'emerging',cat:'fermented'},
+  {href:'food-sauerkraut.html',name:'Sauerkraut',tier:'limited',cat:'fermented'},
+  {href:'food-miso.html',name:'Miso',tier:'limited',cat:'fermented'},
+  {href:'food-tempeh.html',name:'Tempeh',tier:'limited',cat:'fermented'},
+  {href:'food-kombucha.html',name:'Kombucha',tier:'limited',cat:'fermented'},
+  {href:'food-aged-cheese.html',name:'Aged Cheese',tier:'limited',cat:'fermented'},
+  {href:'food-cottage-cheese.html',name:'Cottage Cheese',tier:'limited',cat:'fermented'},
+  {href:'food-goat-cheese.html',name:'Goat Cheese',tier:'limited',cat:'fermented'},
+  {href:'food-fatty-fish.html',name:'Fatty Fish',tier:'emerging',cat:'protein'},
+  {href:'food-red-meat.html',name:'Red Meat',tier:'emerging',cat:'protein'},
+  {href:'food-poultry.html',name:'Poultry',tier:'limited',cat:'protein'},
+  {href:'food-dairy.html',name:'Dairy',tier:'emerging',cat:'protein'},
+  {href:'food-eggs.html',name:'Eggs',tier:'limited',cat:'protein'},
+  {href:'food-almonds.html',name:'Almonds',tier:'emerging',cat:'nuts'},
+  {href:'food-walnuts.html',name:'Walnuts',tier:'emerging',cat:'nuts'},
+  {href:'food-flaxseed.html',name:'Flaxseed',tier:'emerging',cat:'nuts'},
+  {href:'food-chia-seeds.html',name:'Chia Seeds',tier:'limited',cat:'nuts'},
+  {href:'food-nuts-general.html',name:'Nuts (General)',tier:'emerging',cat:'nuts'},
+  {href:'food-polyphenols.html',name:'Polyphenol-Rich Foods',tier:'emerging',cat:'other'},
+  {href:'food-dark-chocolate.html',name:'Dark Chocolate',tier:'emerging',cat:'other'},
+  {href:'food-olive-oil.html',name:'Olive Oil',tier:'emerging',cat:'other'},
+  {href:'food-green-tea.html',name:'Green Tea',tier:'emerging',cat:'beverages'},
+  {href:'food-coffee.html',name:'Coffee',tier:'emerging',cat:'beverages'},
+  {href:'food-alcohol.html',name:'Alcohol',tier:'strong',cat:'beverages'},
+  {href:'food-probiotic-supplements.html',name:'Probiotic Supplements',tier:'emerging',cat:'other'},
+  {href:'food-artificial-sweeteners.html',name:'Artificial Sweeteners',tier:'emerging',cat:'other'},
+  {href:'food-ultra-processed-foods.html',name:'Ultra-Processed Foods',tier:'emerging',cat:'other'},
+  {href:'food-refined-sugar.html',name:'Refined Sugar',tier:'emerging',cat:'other'}
+];
+
+const grid = document.getElementById('foodGrid');
+const noResults = document.getElementById('noFoodResults');
+const searchInput = document.getElementById('foodSearch');
+const filterBtns = document.querySelectorAll('.filter-btn');
+let activecat = 'all';
+
+function renderFoods() {
+  const q = searchInput.value.toLowerCase().trim();
+  const filtered = FOODS.filter(f => {
+    const catMatch = activecat === 'all' || f.cat === activecat;
+    const nameMatch = !q || f.name.toLowerCase().includes(q);
+    return catMatch && nameMatch;
+  });
+
+  // remove old cards
+  grid.querySelectorAll('.food-card').forEach(el => el.remove());
+
+  if (filtered.length === 0) {
+    noResults.style.display = 'block';
+  } else {
+    noResults.style.display = 'none';
+    filtered.forEach(f => {
+      const a = document.createElement('a');
+      a.className = 'food-card';
+      a.href = f.href;
+      a.innerHTML =
+        '<div class="food-card-left">' +
+        '<div class="food-pip fp-' + f.tier + '"></div>' +
+        '<span class="food-name">' + f.name + '</span>' +
+        '</div>' +
+        '<span class="food-tier-badge ftb-' + f.tier + '">' + f.tier + '</span>';
+      grid.insertBefore(a, noResults);
+    });
+  }
+}
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', function() {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activecat = this.dataset.cat;
+    renderFoods();
+  });
+});
+
+searchInput.addEventListener('input', renderFoods);
+renderFoods();
+</script>
+
+<script>
+document.querySelectorAll('.ev-toggle').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var links = this.previousElementSibling;
+    var open = links.classList.toggle('open');
+    this.textContent = open ? 'Show less ↑' : 'Show all ↓';
+  });
+});
+</script>
+
+</body>
+</html>

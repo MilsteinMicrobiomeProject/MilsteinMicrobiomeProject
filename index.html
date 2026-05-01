@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>You are what they eat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -36,9 +36,9 @@
     --red-bg: #fdf0f0;
     --red-border: #daa8a8;
     --red-text: #7a2828;
-    --serif: 'Lora', Georgia, serif;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --serif: 'Playfair Display', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Inter', system-ui, sans-serif;
   }
 
   body {
@@ -362,17 +362,42 @@
     .food-grid { grid-template-columns: 1fr; }
     .process-grid { grid-template-columns: 1fr; }
   }
+
+/* evidence breakdown widget */
+.ev-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:2rem 0;}
+.ev-breakdown-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);}
+.ev-breakdown-body{padding:1.5rem 1.25rem;}
+.ev-bar-wrap{display:flex;height:10px;border-radius:5px;overflow:hidden;margin-bottom:1.5rem;gap:3px;}
+.ev-bar-seg{height:100%;border-radius:3px;transition:opacity .2s;}
+.ev-bar-seg:hover{opacity:.75;}
+.ev-tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.ev-tier-panel{border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.ev-tier-head{padding:.65rem 1rem;font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;}
+.ev-tier-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ev-tier-count{font-size:.72rem;opacity:.7;}
+.ev-tier-body{padding:.75rem 1rem;background:var(--surface);}
+.ev-food-links{display:flex;flex-direction:column;gap:4px;max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.ev-food-links.open{max-height:600px;}
+.ev-food-link{font-size:.82rem;color:var(--ink-2);text-decoration:none;display:flex;align-items:center;gap:.5rem;padding:2px 0;transition:color .15s;}
+.ev-food-link:hover{color:var(--amber);}
+.ev-food-pip{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ev-toggle{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;background:none;border:none;color:var(--amber);cursor:pointer;padding:0;margin-top:.5rem;display:block;}
+.ev-toggle:hover{text-decoration:underline;}
+.ev-strong-head{background:var(--green-bg);border-bottom:1px solid var(--green-border);color:var(--green-text);}
+.ev-emerging-head{background:var(--yellow-bg);border-bottom:1px solid var(--yellow-border);color:var(--yellow-text);}
+.ev-limited-head{background:var(--red-bg);border-bottom:1px solid var(--red-border);color:var(--red-text);}
+@media(max-width:700px){.ev-tier-grid{grid-template-columns:1fr;}}
+
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">
-    <span class="nav-pip"></span>You are what <em>they</em> eat
-  </a>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
   <ul class="nav-links">
     <li><a href="foods.html">Foods</a></li>
-    <li><a href="methods.html">Methods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
     <li><a href="about.html">About</a></li>
   </ul>
 </nav>
@@ -380,12 +405,11 @@
 <section style="border-bottom:1px solid var(--border);">
   <div class="hero">
     <div>
-      <p class="hero-kicker">Science Communication</p>
       <h1>What does your food do to your <em>microbiome?</em></h1>
-      <p class="hero-sub">Evidence-based information on how diet shapes gut health — translated from peer-reviewed research, with honest ratings of what we know, what's emerging, and what remains uncertain.</p>
+      <p class="hero-sub">Evidence-based information on how diet shapes gut health — translated from peer-reviewed research, with honest ratings of what is known, what is emerging, and what remains uncertain.</p>
       <div class="hero-actions">
         <a href="foods.html" class="btn-primary">Explore foods →</a>
-        <a href="methods.html" class="btn-ghost">How we rate evidence</a>
+        <a href="how-to-read.html" class="btn-ghost">How evidence is rated</a>
       </div>
     </div>
 
@@ -397,23 +421,23 @@
       <div class="panel-rows">
         <div class="panel-row">
           <span class="row-left"><span class="row-pip" style="background:var(--green)"></span>Strong evidence</span>
-          <span class="row-val">3 foods</span>
+          <span class="row-val">5 foods</span>
         </div>
         <div class="panel-row">
           <span class="row-left"><span class="row-pip" style="background:#c9a020"></span>Emerging evidence</span>
-          <span class="row-val">4 foods</span>
+          <span class="row-val">36 foods</span>
         </div>
         <div class="panel-row">
           <span class="row-left"><span class="row-pip" style="background:var(--red)"></span>Limited evidence</span>
-          <span class="row-val">3 foods</span>
+          <span class="row-val">8 foods</span>
         </div>
       </div>
       <div class="panel-bar">
-        <div class="bar-label">Evidence distribution</div>
+        <div class="bar-label">Evidence distribution &mdash; 49 foods</div>
         <div class="bar-track">
-          <div class="bar-seg" style="width:30%;background:var(--green)"></div>
-          <div class="bar-seg" style="width:40%;background:#c9a020"></div>
-          <div class="bar-seg" style="width:30%;background:var(--red)"></div>
+          <div class="bar-seg" style="width:10%;background:var(--green)"></div>
+          <div class="bar-seg" style="width:74%;background:#c9a020"></div>
+          <div class="bar-seg" style="width:16%;background:var(--red)"></div>
         </div>
         <div class="bar-legend">
           <div class="legend-item"><div class="legend-pip" style="background:var(--green)"></div>Strong</div>
@@ -423,7 +447,7 @@
       </div>
     </div>
   </div>
-</section>
+</sectio</span>
 
 <div class="trust-row">
   <div class="trust-inner">
@@ -431,6 +455,51 @@
     <div class="trust-item"><div class="trust-check">✓</div>Uncertainty always disclosed</div>
     <div class="trust-item"><div class="trust-check">✓</div>No personalized advice</div>
     <div class="trust-item"><div class="trust-check">✓</div>Full citations for every claim</div>
+  </div>
+</div>
+
+<div class="ev-breakdown">
+  <div class="ev-breakdown-header">Evidence breakdown &mdash; 49 foods reviewed</div>
+  <div class="ev-breakdown-body">
+    <div class="ev-bar-wrap" title="Strong: 5 &bull; Emerging: 36 &bull; Limited: 8">
+      <div class="ev-bar-seg" style="width:10%;background:var(--green);" title="Strong: 5 foods"></div>
+      <div class="ev-bar-seg" style="width:73%;background:#c9a020;" title="Emerging: 36 foods"></div>
+      <div class="ev-bar-seg" style="width:16%;background:var(--red);" title="Limited: 8 foods"></div>
+    </div>
+    <div class="ev-tier-grid">
+
+      <div class="ev-tier-panel">
+        <div class="ev-tier-head ev-strong-head">
+          <span style="display:flex;align-items:center;gap:6px;"><span class="ev-tier-pip" style="background:var(--green)"></span>Strong</span>
+          <span class="ev-tier-count">5 foods &middot; 10%</span>
+        </div>
+        <div class="ev-tier-body">
+          <div class="ev-food-links open"><a href="food-oats.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Oats</a><a href="food-resistant-starch.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Resistant Starch</a><a href="food-jerusalem-artichoke.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Jerusalem Artichoke</a><a href="food-barley.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Barley</a><a href="food-alcohol.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--green)"></span>Alcohol</a></div>
+        </div>
+      </div>
+
+      <div class="ev-tier-panel">
+        <div class="ev-tier-head ev-emerging-head">
+          <span style="display:flex;align-items:center;gap:6px;"><span class="ev-tier-pip" style="background:#c9a020"></span>Emerging</span>
+          <span class="ev-tier-count">36 foods &middot; 73%</span>
+        </div>
+        <div class="ev-tier-body">
+          <div class="ev-food-links"><a href="food-almonds.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Almonds</a><a href="food-apples.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Apples</a><a href="food-artificial-sweeteners.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Artificial Sweeteners</a><a href="food-asparagus.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Asparagus</a><a href="food-bananas.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Bananas</a><a href="food-blueberries.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Blueberries</a><a href="food-broccoli.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Broccoli</a><a href="food-brown-rice.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Brown Rice</a><a href="food-carrots.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Carrots</a><a href="food-coffee.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Coffee</a><a href="food-cruciferous.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Cruciferous Vegetables</a><a href="food-dairy.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Dairy</a><a href="food-dark-chocolate.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Dark Chocolate</a><a href="food-fatty-fish.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Fatty Fish</a><a href="food-flaxseed.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Flaxseed</a><a href="food-garlic.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Garlic</a><a href="food-green-tea.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Green Tea</a><a href="food-kefir.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Kefir</a><a href="food-kimchi.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Kimchi</a><a href="food-leeks.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Leeks</a><a href="food-legumes.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Legumes</a><a href="food-nuts-general.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Nuts</a><a href="food-olive-oil.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Olive Oil</a><a href="food-onions.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Onions</a><a href="food-polyphenols.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Polyphenol-Rich Foods</a><a href="food-pomegranate.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Pomegranate</a><a href="food-probiotic-supplements.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Probiotic Supplements</a><a href="food-quinoa.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Quinoa</a><a href="food-red-meat.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Red Meat</a><a href="food-refined-sugar.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Refined Sugar</a><a href="food-rye-bread.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Rye Bread</a><a href="food-sweet-potato.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Sweet Potato</a><a href="food-ultra-processed-foods.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Ultra-Processed Foods</a><a href="food-walnuts.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Walnuts</a><a href="food-whole-grains.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Whole Grains</a><a href="food-yogurt.html" class="ev-food-link"><span class="ev-food-pip" style="background:#c9a020"></span>Yogurt</a></div>
+          <button class="ev-toggle">Show all &darr;</butto</span>
+        </div>
+      </div>
+
+      <div class="ev-tier-panel">
+        <div class="ev-tier-head ev-limited-head">
+          <span style="display:flex;align-items:center;gap:6px;"><span class="ev-tier-pip" style="background:var(--red)"></span>Limited</span>
+          <span class="ev-tier-count">8 foods &middot; 16%</span>
+        </div>
+        <div class="ev-tier-body">
+          <div class="ev-food-links open"><a href="food-chia-seeds.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Chia Seeds</a><a href="food-eggs.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Eggs</a><a href="food-kombucha.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Kombucha</a><a href="food-miso.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Miso</a><a href="food-poultry.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Poultry</a><a href="food-sauerkraut.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Sauerkraut</a><a href="food-spinach.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Spinach</a><a href="food-tempeh.html" class="ev-food-link"><span class="ev-food-pip" style="background:var(--red)"></span>Tempeh</a></div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -458,7 +527,7 @@
       <div class="food-tags"><span class="tag">prebiotic</span><span class="tag">butyrate</span><span class="tag">colon</span></div>
       <div class="card-rule r-strong"></div>
     </a>
-    <a href="food-fermented.html" class="food-card">
+    <a href="foods.html" class="food-card">
       <div class="card-top"><span class="food-name">Fermented Foods</span><span class="badge b-emerging">Emerging</span></div>
       <p class="food-desc">Promising signals for microbiome diversity, but effects vary significantly by food type and individual microbiome baseline.</p>
       <div class="food-tags"><span class="tag">diversity</span><span class="tag">live cultures</span><span class="tag">variable</span></div>
@@ -470,25 +539,25 @@
       <div class="food-tags"><span class="tag">Lactobacillus</span><span class="tag">transient</span><span class="tag">live cultures</span></div>
       <div class="card-rule r-emerging"></div>
     </a>
-    <a href="food-nuts.html" class="food-card">
+    <a href="food-nuts-general.html" class="food-card">
       <div class="card-top"><span class="food-name">Nuts</span><span class="badge b-emerging">Emerging</span></div>
       <p class="food-desc">Observational and some interventional data suggest modest increases in beneficial taxa, but trial sizes remain limited.</p>
       <div class="food-tags"><span class="tag">polyphenols</span><span class="tag">fiber</span><span class="tag">observational</span></div>
       <div class="card-rule r-emerging"></div>
     </a>
-    <a href="food-sweeteners.html" class="food-card">
+    <a href="food-artificial-sweeteners.html" class="food-card">
       <div class="card-top"><span class="food-name">Artificial Sweeteners</span><span class="badge b-limited">Limited</span></div>
       <p class="food-desc">Mixed findings from animal and human studies. Some suggest microbiome disruption; others show no significant effect.</p>
       <div class="food-tags"><span class="tag">controversial</span><span class="tag">conflicting data</span><span class="tag">animal models</span></div>
       <div class="card-rule r-limited"></div>
     </a>
-    <a href="food-processed.html" class="food-card">
+    <a href="food-ultra-processed-foods.html" class="food-card">
       <div class="card-top"><span class="food-name">Ultra-Processed Foods</span><span class="badge b-limited">Limited</span></div>
       <p class="food-desc">Observational evidence links high intake to reduced diversity, but causality is difficult to establish given confounding patterns.</p>
       <div class="food-tags"><span class="tag">diversity</span><span class="tag">observational</span><span class="tag">confounding</span></div>
       <div class="card-rule r-limited"></div>
     </a>
-    <a href="food-probiotics.html" class="food-card">
+    <a href="food-probiotic-supplements.html" class="food-card">
       <div class="card-top"><span class="food-name">Probiotic Supplements</span><span class="badge b-limited">Limited</span></div>
       <p class="food-desc">Highly variable evidence depending on strain, dose, and host microbiome. Most effects are transient and strain-specific.</p>
       <div class="food-tags"><span class="tag">strain-specific</span><span class="tag">transient</span><span class="tag">supplement</span></div>
@@ -503,8 +572,8 @@
   <div class="ev-grid">
     <div>
       <p class="kicker">Our approach</p>
-      <h2>How we rate evidence</h2>
-      <p style="font-size:0.92rem;color:var(--ink-3);line-height:1.85;max-width:480px;">Not all research is equal. We evaluate each study on methodology, sample size, replication, and effect size — and show our reasoning on every food page.</p>
+      <h2>How evidence is rated</h2>
+      <p style="font-size:0.92rem;color:var(--ink-3);line-height:1.85;max-width:480px;">Not all research is equal. Each study is evaluated on methodology, sample size, replication, and effect size — with the reasoning shown on every food page.</p>
       <div class="tier-list">
         <div class="tier-row">
           <div class="tier-pip" style="background:var(--green)"></div>
@@ -556,7 +625,7 @@
     <div class="process-step">
       <div class="process-num">04</div>
       <div class="process-title">Citation transparency</div>
-      <p class="process-desc">Every claim links to its source. Readers can follow the chain of evidence rather than taking our word for it.</p>
+      <p class="process-desc">Every claim links to its source. Readers can follow the chain of evidence rather than taking it on faith.</p>
     </div>
   </div>
 </div>
@@ -568,10 +637,11 @@
       <p class="footer-note">An independent science communication project. All information is based on peer-reviewed literature and is intended for educational purposes only.</p>
     </div>
     <div class="footer-col">
-      <h4>Pages</h4>
+            <h4>Pages</h4>
       <ul>
         <li><a href="foods.html">Foods</a></li>
-        <li><a href="methods.html">Methods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
         <li><a href="about.html">About</a></li>
       </ul>
     </div>
@@ -584,6 +654,17 @@
     </div>
   </div>
 </footer>
+
+
+<script>
+document.querySelectorAll('.ev-toggle').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var links = this.previousElementSibling;
+    var open = links.classList.toggle('open');
+    this.textContent = open ? 'Show less ↑' : 'Show all ↓';
+  });
+});
+</script>
 
 </body>
 </html>

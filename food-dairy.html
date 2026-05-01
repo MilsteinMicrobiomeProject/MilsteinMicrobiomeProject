@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dairy, You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#faf9f6;--bg2:#f3f1ec;--surface:#ffffff;--border:#e2dfd7;--border-strong:#c8c4ba;--ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;--amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;--green:#1e6b3e;--green-bg:#eef7f2;--green-border:#a8d4bc;--green-text:#1a5c35;--yellow:#7a6010;--yellow-bg:#fdf8eb;--yellow-border:#e0cc88;--yellow-text:#6b5210;--red:#8b2e2e;--red-bg:#fdf0f0;--red-border:#daa8a8;--red-text:#7a2828;--serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{font-size:.82rem;font-weight:400;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color .15s}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+  .breadcrumb{max-width:1100px;margin:0 auto;padding:1.25rem 2.5rem 0;display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-4)}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none} .breadcrumb a:hover{color:var(--ink-3)} .breadcrumb-sep{color:var(--border-strong)}
+  .page-wrap{max-width:1100px;margin:0 auto;padding:2rem 2.5rem 6rem;display:grid;grid-template-columns:1fr 300px;gap:4rem;align-items:start}
+  .food-hero{margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border);animation:fadeUp .4s ease both}
+  .food-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap}
+  h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.1;color:var(--ink)}
+  .evidence-pill{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:2px;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;margin-top:.4rem}
+  .pill-emerging{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border)}
+  .pill-limited{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border)}
+  .pill-dot{width:7px;height:7px;border-radius:50%}
+  .pill-emerging .pill-dot{background:#c9a020} .pill-limited .pill-dot{background:var(--red)}
+  .food-summary{font-size:1.05rem;font-weight:300;color:var(--ink-2);line-height:1.85;margin-bottom:1.25rem}
+  .food-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+  .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.05em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:2px}
+  .content-section{margin-bottom:2.75rem;padding-bottom:2.75rem;border-bottom:1px solid var(--border)}
+  .content-section:last-of-type{border-bottom:none;margin-bottom:0}
+  .section-heading{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+  .section-heading h2{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink)}
+  .section-num{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 7px;border-radius:2px}
+  .body-text{font-size:.95rem;color:var(--ink-2);line-height:1.9;margin-bottom:1rem}
+  .cite{font-family:var(--mono);font-size:.62rem;color:var(--amber);text-decoration:none;vertical-align:super;line-height:0;margin-left:1px}
+  .effects-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .effect-row{background:var(--surface);padding:1.1rem 1.5rem;display:flex;align-items:flex-start;gap:1rem}
+  .effect-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px}
+  .ei-green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+  .ei-yellow{background:var(--yellow-bg);border:1px solid var(--yellow-border);color:var(--yellow)}
+  .ei-red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+  .ei-neutral{background:var(--bg2);border:1px solid var(--border);color:var(--ink-4)}
+  .effect-content h3{font-family:var(--serif);font-size:.98rem;font-weight:400;color:var(--ink);margin-bottom:.25rem}
+  .effect-content p{font-size:.84rem;color:var(--ink-3);line-height:1.65}
+  .mechanism-steps{display:flex;flex-direction:column}
+  .mechanism-step{display:flex;gap:1.25rem;padding:0 0 1.75rem}
+  .mechanism-step:last-child{padding-bottom:0}
+  .step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+  .step-num-circle{width:30px;height:30px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.65rem;color:var(--ink-3)}
+  .step-line{width:1px;background:var(--border);flex:1;margin-top:4px}
+  .mechanism-step:last-child .step-line{display:none}
+  .step-content{padding-top:4px}
+  .step-content h3{font-family:var(--serif);font-size:.98rem;font-weight:400;color:var(--ink);margin-bottom:.3rem}
+  .step-content p{font-size:.84rem;color:var(--ink-3);line-height:1.65}
+  .caveat-list{display:flex;flex-direction:column;gap:.75rem}
+  .caveat-item{display:flex;align-items:flex-start;gap:.85rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem}
+  .caveat-marker{font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px}
+  .caveat-item p{font-size:.85rem;color:var(--ink-3);line-height:1.65}
+  .callout{margin:1.25rem 0;border:1px solid var(--yellow-border);border-left:3px solid #c9a020;background:var(--yellow-bg);padding:1rem 1.25rem;border-radius:0 3px 3px 0}
+  .callout-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:.4rem}
+  .callout p{font-size:.85rem;color:var(--ink-2);line-height:1.65;margin:0}
+  .callout-red{border-color:var(--red-border);border-left-color:var(--red);background:var(--red-bg)}
+  .callout-red .callout-label{color:var(--red-text)}
+  .callout-red p{color:var(--red-text)}
+  .callout-green{border-color:var(--green-border);border-left-color:var(--green);background:var(--green-bg)}
+  .callout-green .callout-label{color:var(--green-text)}
+  .callout-green p{color:var(--green-text)}
+  .citations-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .citation-row{background:var(--surface);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start}
+  .citation-num{font-family:var(--mono);font-size:.7rem;color:var(--amber);flex-shrink:0;min-width:20px;margin-top:2px}
+  .citation-content{flex:1}
+  .citation-title{font-size:.85rem;color:var(--ink-2);line-height:1.6;margin-bottom:.25rem}
+  .citation-meta{font-family:var(--mono);font-size:.68rem;color:var(--ink-4);display:flex;gap:1rem;flex-wrap:wrap}
+  .citation-link{color:var(--amber);text-decoration:none;font-family:var(--mono);font-size:.68rem}
+  .citation-link:hover{text-decoration:underline}
+  .study-type-badge{font-family:var(--mono);font-size:.6rem;letter-spacing:.07em;text-transform:uppercase;padding:1px 6px;border-radius:2px;background:var(--bg2);color:var(--ink-4);border:1px solid var(--border)}
+  .sidebar{position:sticky;top:80px}
+  .sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+  .sidebar-card-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 1.25rem;font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4)}
+  .sidebar-card-body{padding:1.25rem}
+  .score-rows{display:flex;flex-direction:column;gap:.85rem}
+  .score-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
+  .score-row-label{font-size:.8rem;color:var(--ink-3)}
+  .score-row-val{font-family:var(--mono);font-size:.75rem;color:var(--ink-2)}
+  .score-bar{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden}
+  .score-fill{height:100%;border-radius:2px}
+  .sf-high{background:var(--green)} .sf-mid{background:#c9a020} .sf-low{background:var(--red)}
+  .overall-verdict{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .verdict-label{font-size:.8rem;color:var(--ink-3)}
+  .quick-facts{display:flex;flex-direction:column}
+  .fact-row{display:flex;justify-content:space-between;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--border);gap:.75rem}
+  .fact-row:last-child{border-bottom:none;padding-bottom:0} .fact-row:first-child{padding-top:0}
+  .fact-label{font-size:.78rem;color:var(--ink-4);flex-shrink:0}
+  .fact-value{font-size:.82rem;color:var(--ink-2);text-align:right}
+  .similar-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:2px;overflow:hidden}
+  .similar-item{background:var(--surface);padding:.85rem 1rem;text-decoration:none;display:flex;align-items:center;justify-content:space-between;transition:background .15s}
+  .similar-item:hover{background:var(--bg)}
+  .similar-left{display:flex;align-items:center;gap:.6rem}
+  .similar-pip{width:7px;height:7px;border-radius:50%}
+  .similar-name{font-family:var(--serif);font-size:.95rem;color:var(--ink)}
+  .similar-arrow{font-size:.75rem;color:var(--ink-4)}
+  .page-footnote{max-width:1100px;margin:0 auto;padding:1.5rem 2.5rem 2rem;font-size:.78rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border)}
+  footer{background:var(--ink);color:rgba(255,255,255,.45);padding:3.5rem 2.5rem}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,.85);margin-bottom:.6rem}
+  .footer-note{font-size:.78rem;line-height:1.75;max-width:300px}
+  .footer-col h4{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+  .footer-col a{font-size:.82rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s}
+  .footer-col a:hover{color:rgba(255,255,255,.75)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;gap:2.5rem}.sidebar{position:static}.nav-links{display:none}}
+
+
+
+/* overall verdict strip */
+.overall-verdict-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: .85rem 1.1rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--ink-4);
+  background: var(--bg2);
+  margin-bottom: 1.5rem;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+.verdict-dot-lg {
+  display: none;
+}
+.verdict-text-wrap strong {
+  font-weight: 500;
+  display: block;
+  margin-bottom: .15rem;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.verdict-text-wrap {
+  color: var(--ink-2);
+}
+
+
+
+
+
+/* Glossary tooltips */
+.gloss-link {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--amber);
+  color: inherit;
+  cursor: help;
+}
+.gloss-link .gloss-tip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: rgba(255,255,255,0.9);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 300;
+  line-height: 1.55;
+  padding: 0.6rem 0.85rem;
+  border-radius: 4px;
+  width: 240px;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 9999;
+  white-space: normal;
+  text-decoration: none;
+}
+.gloss-link .gloss-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+.gloss-link:hover .gloss-tip,
+.gloss-link:focus .gloss-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Glossary term underlines + tooltips */
+.gloss-term{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#b8611a;cursor:help;position:relative;}
+.gloss-term .gloss-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1916;color:rgba(255,255,255,0.9);font-family:'Inter',system-ui,sans-serif;font-size:0.78rem;font-weight:300;line-height:1.55;padding:0.6rem 0.85rem;border-radius:4px;width:240px;max-width:min(240px,90vw);box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;z-index:9999;white-space:normal;text-decoration:none;}
+.gloss-term .gloss-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1916;}
+.gloss-term:hover .gloss-tip{display:block;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html" class="active">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><a href="foods.html">Foods</a><span class="breadcrumb-sep">/</span><span>Dairy</span></div>
+
+<div class="page-wrap">
+<mai</span>
+<div class="food-hero">
+  <div class="food-hero-top"><h1>Dairy</h1><div class="evidence-pill pill-emerging"><div class="pill-dot"></div>Emerging evidence</div></div>
+  <p class="food-summary">The effect of dairy on the gut microbiome depends almost entirely on whether it has been fermented. Yogurt and kefir contain live bacteria that can be detected in the gut after consumption, while pasteurized milk, cream, and butter do not. The strongest evidence comes from a 2021 clinical trial in which a diet rich in fermented foods including yogurt increased gut microbiome diversity and reduced 19 markers of inflammation. Unfermented dairy shows weaker and less consistent effects. A large study of 21,561 people found that a yogurt bacterium was the clearest dietary fingerprint distinguishing dairy consumers from non-consumers in fecal samples.</p>
+<div class="food-tags"><span class="tag">fermented vs. unfermented</span><span class="tag">S. thermophilus</span><span class="tag">Bifidobacterium</span><span class="tag">live cultures</span><span class="tag">diversity</span><span class="tag">strain-specific</span></div>
+</div>
+
+<div class="overall-verdict-strip"><div class="verdict-dot-lg"></div><div class="verdict-text-wrap"><strong>Mixed or context-dependent effects</strong>Mixed, fermented dairy (yogurt, kefir) shows beneficial effects; unfermented dairy shows weaker, less consistent evidence.</div></div></div>
+    <div class="citation-row" id="ref-2"><span class="citation-num">[2]</span><div class="citation-content"><div class="citation-title">Cait A, Hughes MR, Antignano F, et al. The effects of dairy and dairy derivatives on the gut microbiota: A systematic literature review. <em>Beneficial Microbes</em>, 2020.</div><div class="citation-meta"><span class="study-type-badge">Systematic review</span><span>8 RCTs, n = 468</span><a href="https://doi.org/10.1080/19490976.2020.1799533" class="citation-link" target="_blank</div></div></div>
+    <div class="citation-row" id="ref-3"><span class="citation-num">[3]</span><div class="citation-content"><div class="citation-title">Veiga P, Pons N, Agrawal A, et al. Changes of the human microbiomecitation-meta"><span class="study-type-badge">Observational association</span><span>n = 730</span><a href="https://doi.org/10.1038/srep06328" class="citation-link" target="_blank</div></div></div>
+    <div class="citation-row" id="ref-4"><span class="citation-num">[4]</span><div class="citation-content"><div class="citation-title">Fackelmann G, Manghi P, Carlino N, et al. microbiome>Gut microbiome</a> signatures of vegan, vegetarian and omnivore diets across 21,561 individuals. <em>Nature Microbiology</em>, 2025; 10, 41–52.</div><div class="citation-meta"><span class="study-type-badge">Cross-sectional</span><span>n = 21,561</span><a href="https://doi.org/10.1038/s41564-024-01870-z" class="citation-link" target="_blank</div></div></div>
+    <div class="citation-row" id="ref-5"><span class="citation-num">[5]</span><div class="citation-content"><div class="citation-title">Natividad JM, Lamas B, Pham HP, et al. Bilophila wadsworthia aggravates high fat diet induced metabolic dysfunctions in mice. <em>Nature Communications</em>, 2018; 9, 2802.</div><div class="citation-meta"><span class="study-type-badge">Animal study</span><a href="https://doi.org/10.1038/s41467-018-05249-7" class="citation-link" target="_blank</div></div></div>
+  </div>
+</div>
+
+<div class="section-heading"><span class="section-num">01</span><h2>Key effects on the microbiome</h2></div>
+  <div class="callout" style="margin-bottom:1rem;">
+    <div class="callout-label">Critical distinction</div>
+    <p>Fermented dairy (yogurt, kefir) and unfermented dairy (milk, cream) behave very differently in the gut. The strongest evidence is specifically for fermented dairy. Grouping all dairy together produces inconsistent and misleading conclusions.</p>
+  </div>
+  <div class="effects-list">
+    <div class="effect-row"><div class="effect-icon ei-green">↑</div><div class="effect-content"><h3>Fermented dairy increases microbiome diversity, the highest-quality direct evidence for any single food</h3><p>The Wastyk/Sonnenburg et al. (2021, Cell) 17-week parallel RCT (n = 36) found the high-fermented food arm significantly increased microbiota diversity, while the high-fiber arm did not, a counterintuitive landmark result. The fermented food group also showed decreased levels of 19 inflammatory proteins including IL-6 and IL-12p70. Diversity remained elevated throughout the 10-week post-intervention follow-up.<a href="#ref-1" class="cite">[1]</a> This is the highest-quality direct evidence that any specific dietary change increases microbiomeeffect-row"><div class="effect-icon ei-yellow">↑</div><div class="effect-content"><h3>Yogurt and fermented milk increase Bifidobacterium and Lactobacillus, transiently</h3><p>Three of the 8 RCTs in the Cait et al. (2020) systematic review found yogurt or kefir increased <em>Bifidobacterium</em> and <em>Lactobacillus</em>.<a href="#ref-2" class="cite">[2]</a> However, these changes are strain-dependent, dose-dependent, and typically transient, most studies show microbiome changes reverse when yogurt consumption stops, indicating bacteria transit through rather than permanently colonizing the gut. "Contains live and active cultures" is a prerequisite for any microbiome benefit claim.</p></div></div>
+    <div class="effect-row"><div class="effect-icon ei-green">!</div><div class="effect-content"><h3>S. thermophilus is the most consistently detectable dairy-derived bacterial signature in the human gut</h3><p>Veiga et al. (2014) used shotgun metagenomics in 730 individuals and found yogurt consumption was significantly associated with <em>S. thermophilus</em> in fecal samples, the first large-scale confirmation of a food's bacterial "fingerprint" in the gut.<a href="#ref-3" class="cite">[3]</a> The 2025 Fackelmann et al. Nature Microbiology study confirmed <em>S. thermophilus</em> had the highest effect size among all species distinguishing vegetarian from vegan microbiomes (SMD = −0.67), making it a reliable biomarker of fermented dairy consumption.<a href="#ref-4" class="cite">[4]</a></p></div></div>
+    <div class="effect-row"><div class="effect-icon ei-yellow">~</div><div class="effect-content"><h3>Unfermented milk modestly increases Lactobacillus but may reduce alpha-diversity</h3><p>The Cait et al. (2020) systematic review found bovine milk significantly increased <em>Lactobacillus</em> copy numbers in the one eligible RCT comparing milk types. However, bacterial diversity (ACE and Chao1 indices) declined in all milk groups, independent of type, suggesting milk consumption may enrich certain taxa while reducing overall species richness. Fermented dairy did not show this diversity reduction in parallel studies.<a href="#ref-2" class="cite">[2]</a> Casein and whey protein supplements showed no significant effects on gut microbiota composition in three eligible RCTs.</p></div></div>
+</mai</span>
+<aside class="sidebar">
+  <div class="sidebar-card"><div class="sidebar-card-header">Evidence quality</div><div class="sidebar-card-body"><div class="score-rows">
+    <div><div class="score-row-top"><span class="score-row-label">Study quality</span><span class="score-row-val">Low–Moderate (45)</span></div><div class="score-bar"><div class="score-fill sf-low" style="width:45%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Consistency</span><span class="score-row-val">Moderate (52)</span></div><div class="score-bar"><div class="score-fill sf-mid" style="width:52%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Human evidence</span><span class="score-row-val">Moderate (55)</span></div><div class="score-bar"><div class="score-fill sf-mid" style="width:55%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Effect size</span><span class="score-row-val">Moderate (52)</span></div><div class="score-bar"><div class="score-fill sf-mid" style="width:52%"></div></div></div>
+    <div><div class="score-row-top"><span class="score-row-label">Mechanistic support</span><span class="score-row-val">Moderate–High (65)</span></div><div class="score-bar"><div class="score-fill sf-mid" style="width:65%"></div></div></div>
+  </div><div class="overall-verdict"><span class="verdict-label">Overall verdict</span><span class="evidence-pill pill-emerging" style="font-size:.65rem;padding:4px 10px;margin-top:0;">Emerging</span></div></div></div>
+  <div class="sidebar-card"><div class="sidebar-card-header">Quick facts</div><div class="sidebar-card-body"><div class="quick-facts">
+    <div class="fact-row"><span class="fact-label">Best-evidenced forms</span><span class="fact-value">Yogurt, kefir (live cultures)</span></div>
+    <div class="fact-row"><span class="fact-label">Landmark RCT</span><span class="fact-value">Sonnenburg et al. 2021, Cell</span></div>
+    <div class="fact-row"><span class="fact-label">S. thermophilus signature</span><span class="fact-value">Strongest dairy biomarker in feces</span></div>
+    <div class="fact-row"><span class="fact-label">Key taxa enriched</span><span class="fact-value">Bifidobacterium, Lactobacillus (transient)</span></div>
+    <div class="fact-row"><span class="fact-label">Duration of effect</span><span class="fact-value">Transient, reverses on cessation</span></div>
+    <div class="fact-row"><span class="fact-label">Industry funding concern</span><span class="fact-value">Yes, significant in this literature</span></div>
+  </div></div></div>
+  <div class="sidebar-card"><div class="sidebar-card-header">Related foods</div><div class="sidebar-card-body" style="padding:0;"><div class="similar-list">
+    <a href="food-yogurt.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:#c9a020"></div><span class="similar-name">Yogurt</span></div><div style="display:flex;align-items:center;gap:.5rem;"><span style="font-family:var(--mono);font-size:.58rem;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);padding:2px 6px;border-radius:2px;">Emerging</span><span class="similar-arrow">→</span></div></a>
+    <a href="food-kefir.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:#c9a020"></div><span class="similar-name">Kefir</span></div><div style="display:flex;align-items:center;gap:.5rem;"><span style="font-family:var(--mono);font-size:.58rem;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);padding:2px 6px;border-radius:2px;">Emerging</span><span class="similar-arrow">→</span></div></a>
+    <a href="foods.html" class="similar-item"><div class="similar-left"><div class="similar-pip" style="background:#c9a020"></div><span class="similar-name">Fermented Foods</span></div><div style="display:flex;align-items:center;gap:.5rem;"><span style="font-family:var(--mono);font-size:.58rem;background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);padding:2px 6px;border-radius:2px;">Emerging</span><span class="similar-arrow">→</span></div></a>
+  </div></div></div>
+</aside>
+</div>
+
+
+
+<div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+  <div class="section-heading"><span class="section-num">02</span><h2>Mechanisms</h2></div>
+  <div class="mechanism-steps">
+    <div class="mechanism-step"><div class="step-left"><div class="step-num-circle">01</div><div class="step-line"></div></div><div class="step-content"><h3>Live bacteria transit the gut and interact with the resident microbiome</h3><p>Yogurt contains approximately 10⁸ CFU/g of <em>S. thermophilus</em> and <em>L. bulgaricus</em>. Kefir contains a more complex consortium including <em>Lactobacillus kefiranofaciens</em>, <em>Lentilactobacillus kefiri</em>, and yeasts. Bacteria that cannot permanently colonize can still produce metabolite style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;" class="urolithin" class="ellagitannins. Only ~60-70% of people can produce them.</span></a> are examples.</span></a> (lactic acid, bacteriocins, SCFA precursors, bioactive peptides) during transit, competing with pathogens and providing substrate for resident beneficial taxa.</p></div></div>
+    <div class="mechanism-step"><div class="step-left"><div class="step-num-circle">02</div><div class="step-line"></div></div><div class="step-content"><h3>Lactic acid and SCFA production lower luminal pH and support beneficial microbiome ecology</h3><p>bacteria>Lactic acid bacteria. Found in yogurt, kimchi, and kefir.</span></a></a> in fermented dairy produce lactic acid, acetate, and (in some strains) propionate and butyrate. These lower luminal pH in the proximal colon, selectively favoring acid-tolerant beneficial bacteria (<em>Bifidobacterium</em>, <em>Lactobacillus</em>) over acid-sensitive pathobiont style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"#ref-1" class="cite">[1]</a></p></div></div>
+    <div class="mechanism-step"><div class="step-left"><div class="step-num-circle">03</div><div class="step-line"></div></div><div class="step-content"><h3>Exopolysaccharides from yogurt bacteria act as prebiotic style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"><div class="step-left"><div class="step-num-circle">04</div><div class="step-line"></div></div><div class="step-content"><h3>Saturated fat in high-fat dairy may partially counteract beneficial fermentation effects</h3><p>High-fat dairy products (whole milk, cream, high-fat cheeses) contribute dietary saturated fat, which can increase bile acid secretion and enrich <em>Bilophila</em> and secondary bile acid producers. The beneficial microbiome effects of fermented dairy are most clearly demonstrated for low-fat or standard yogurt; high-fat fermented dairy products have not been separately characterized for microbiome effects. The "dairy is beneficial" narrative should not be applied to all dairy products without specifying fat content and fermentation status.</p></div></div>
+  </div>
+</div>
+
+<div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+  <div class="section-heading"><span class="section-num">03</span><h2>Limitations & caveats</h2></div>
+  <div class="caveat-list">
+    <div class="caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">The fermented vs. unfermented distinction is critical and often collapsed.</strong> "Dairy" conflates fermented yogurt (with live bacteria) vs. UHT pasteurized milk (no live bacteria) vs. aged cheese vs. processed cheese. Reviews pooling all dairy types produce inconsistent conclusions. The strongest microbiome evidence is specifically for yogurt, kefir, and other fermented dairy.<a href="#ref-2" class="cite">[2]</a></p></div>
+    <div class="caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">Strain specificity limits generalization.</strong> Most beneficial effects are demonstrated for specific bacterial strains (B. lactis DN-173 010, B. longum BB536) rather than "yogurt" generally. Products with different strains, insufficient live bacteria, or that have been heat-treated post-fermentation ("yogurt flavored" products without live cultures) may show no microbiome effect at all.</p></div>
+    <div class="caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">The systematic review evidence base is thin, only 8 eligible RCTs identified from 6,592 studies.</strong> Total participants across all 8 RCTs in the Cait et al. (2020) review: 468. None was powered for microbiome as a primary endpoint.<a href="#ref-2" class="cite">[2]</a> The most impactful recent evidence (Sonnenburg 2021) included fermented foods broadly, not dairy specifically.</p></div>
+    <div class="caveat-item"><span class="caveat-marker">Note</span><p><strong style="font-weight:500;">Industry funding is widespread in this literature.</strong> A significant proportion of dairy-microbiome research is funded by dairy industry bodies (National Dairy Council, Danone, Yakult). Branded strain-specific yogurt research is particularly vulnerable to publication bias and selective outcome reporting. Mechanistic evidence for specific commercial strains requires careful critical appraisal.</p></div>
+  </div>
+</div>
+
+<div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+  <div class="section-heading"><span class="section-num">04</span><h2>Sources</h2></div>
+  <div class="citations-list">
+    <div class="citation-row" id="ref-1"><span class="citation-num">[1]</span><div class="citation-content"><div class="citation-title">Wastyk HC, Fragiadakis GK, Perelman D, et al. Gut-microbiota-targeted diets modulate human immune status. <em>Cell</em>, 2021; 184(16), 4137–4153.</div><div class="citation-meta"><span class="study-type-badge">17-week parallel RCT</span><span>n = 36</span><a href="https://doi.org/10.1016/j.cell.2021.06.019" class="citation-link" target="_blank</div></div>
+</div>
+<div class="page-footnote">This page is for educational and science literacy purposes only. It does not constitute medical or dietary advice. Consult a qualified clinician before making dietary changes based on microbiome research.</div>
+<footer><div class="footer-inner"><div><div class="footer-logo">You are what <em>they</em> eat</div><p class="footer-note">An independent science communication project based on peer-reviewed literature.</p></div><div class="footer-col">      <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></div></div></footer>
+<script>
+(function(){
+var TERMS=[
+    ["alpha-diversity", "term-alpha-diversity", "A measure of how many different types of bacteria live in one person's gut."],
+    ["anthocyanins", "term-anthocyanin", "The blue/purple/red pigments in berries. Most reach the colon where gut bacteria transform them."],
+    ["anthocyanin", "term-anthocyanin", "A blue/purple/red pigment in berries that reaches the colon where gut bacteria transform it."],
+    ["beta-diversity", "term-beta-diversity", "A measure of how similar or different the gut bacterial communities of two or more people are."],
+    ["beta-glucan", "term-beta-glucan", "A soluble fiber in oats and barley that gut bacteria ferment, selectively feeding Bifidobacterium."],
+    ["bifidogenic", "term-bifidogenic", "Promotes the growth of Bifidobacterium \u2014 bacteria that produce beneficial short-chain fatty acids."],
+    ["butyrate", "term-butyrate", "A short-chain fatty acid produced when gut bacteria ferment fiber. The main fuel for colon cells and a key anti-inflammatory signal."],
+    ["clinical trials", "term-clinical-trial", "Research studies in human participants. The gold standard for human evidence."],
+    ["clinical trial", "term-clinical-trial", "A research study in human participants. The gold standard for human evidence."],
+    ["crossover trial", "term-crossover-trial", "A trial where each participant receives both the test intervention and the control at different times."],
+    ["dysbiosis", "term-dysbiosis", "An imbalance in gut bacteria where harmful species increase and beneficial ones decrease."],
+    ["ellagitannins", "term-ellagitannin", "Polyphenols in pomegranates and walnuts converted by gut bacteria to urolithins \u2014 only in people who carry the right bacteria."],
+    ["ellagitannin", "term-ellagitannin", "A polyphenol in pomegranates and walnuts that gut bacteria convert to urolithins."],
+    ["enterotypes", "term-enterotype", "Broad categories of gut bacterial community type \u2014 Bacteroides-dominant and Prevotella-dominant are the two most studied."],
+    ["enterotype", "term-enterotype", "A broad category describing the general type of gut bacterial community a person carries."],
+    ["ex vivo", "term-ex-vivo", "Studies using bacteria from living organisms tested in a lab setting. More relevant than animal studies but not the same as a human trial."],
+    ["fermentation", "term-fermentation", "The process by which gut bacteria break down fiber, producing short-chain fatty acids and other compounds."],
+    ["glucosinolates", "term-glucosinolate", "Compounds in cruciferous vegetables converted by enzymes and gut bacteria into sulforaphane."],
+    ["glucosinolate", "term-glucosinolate", "A compound in cruciferous vegetables converted into sulforaphane by plant enzymes and gut bacteria."],
+    ["gut barrier", "term-gut-barrier", "The single-cell lining of the intestine that lets nutrients through while keeping bacteria and toxins out."],
+    ["gut microbiome", "term-gut-microbiome", "The community of trillions of bacteria and other microorganisms living in the human gut."],
+    ["inflammatory bowel disease", "term-ibd-inflammatory-bowel-disease", "Crohn's disease and ulcerative colitis \u2014 conditions where the immune system attacks the gut lining."],
+    ["in vitro", "term-in-vitro", "Studies in lab dishes or test tubes. Results often do not transfer directly to humans."],
+    ["in vivo", "term-in-vivo", "Studies in living organisms. Human in vivo studies are clinical trials."],
+    ["keystone species", "term-keystone-species", "A species with disproportionately large effects on its ecosystem. In the gut, Ruminococcus bromii is a keystone for resistant starch breakdown."],
+    ["lactic acid bacteria", "term-lactic-acid-bacteria", "Bacteria that produce lactic acid during fermentation. Found in yogurt, kimchi, and kefir."],
+    ["lachnospiraceae", "term-lachnospiraceae", "A family of gut bacteria that are major butyrate producers. Reduced in IBD; enriched by high-fiber diets."],
+    ["meta-analyses", "term-meta-analysis", "Statistical methods combining results of multiple studies \u2014 considered the highest level of research evidence."],
+    ["meta-analysis", "term-meta-analysis", "A statistical method combining results of multiple studies into one overall estimate."],
+    ["metabolites", "term-metabolite", "Small molecules produced by bacteria or human cells during digestion. SCFAs and urolithins are examples."],
+    ["metabolite", "term-metabolite", "A small molecule produced during metabolism by human cells or gut bacteria."],
+    ["metabotypes", "term-metabotype", "Categories describing what metabolites a person's gut bacteria produce from a given food."],
+    ["metabotype", "term-metabotype", "A category describing what metabolites a person's gut bacteria produce from a given food."],
+    ["microbiome", "term-microbiome", "The community of microorganisms in a given environment. The gut microbiome refers to those in the digestive tract."],
+    ["microbiota", "term-microbiota", "The living microorganisms \u2014 mainly bacteria \u2014 in the gut. Often used interchangeably with microbiome."],
+    ["mucus layer", "term-mucus-layer", "The protective coating on the intestinal wall forming a barrier between gut contents and intestinal cells."],
+    ["pathobionts", "term-pathobiont", "Microorganisms normally harmless in small amounts that become problematic when gut balance shifts."],
+    ["pathobiont", "term-pathobiont", "A microorganism normally harmless in small amounts that becomes problematic when gut balance shifts."],
+    ["pectin", "term-pectin", "A soluble fiber in fruit cell walls that gut bacteria ferment, specifically feeding Lachnospira and Faecalibacterium."],
+    ["prebiotic fiber", "term-prebiotic", "Fiber that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotics", "term-prebiotic", "Compounds that selectively feed beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotic", "term-prebiotic", "A compound that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["polyphenols", "term-polyphenol", "Plant compounds in berries, tea, and chocolate. Most reach the colon where gut bacteria transform them into anti-inflammatory molecules."],
+    ["polyphenol", "term-polyphenol", "A plant compound found in berries, tea, and chocolate. Most reaches the colon where gut bacteria transform it."],
+    ["probiotics", "term-probiotic", "Live bacteria that may benefit gut health. Found in fermented foods and supplements."],
+    ["probiotic", "term-probiotic", "Live bacteria that may benefit gut health when consumed in sufficient amounts."],
+    ["propionate", "term-propionate", "A short-chain fatty acid produced by gut bacteria from fiber. Travels to the liver to help regulate blood sugar."],
+    ["randomized controlled trial", "term-randomized-controlled-trial", "The gold-standard study design where participants are randomly assigned to intervention or control groups."],
+    ["resistant starch", "term-resistant-starch", "Starch that human enzymes cannot digest, reaching the colon where bacteria ferment it to produce butyrate."],
+    ["ruminococcus bromii", "term-ruminococcus-bromii", "A keystone gut bacterium that initiates resistant starch breakdown, making it accessible to other bacteria."],
+    ["saccharolytic fermentation", "term-saccharolytic-fermentation", "Bacterial fermentation of carbohydrates (fiber), producing beneficial short-chain fatty acids."],
+    ["short-chain fatty acids", "term-scfa-short-chain-fatty-acid", "Small molecules \u2014 butyrate, propionate, acetate \u2014 produced when gut bacteria ferment fiber."],
+    ["short-chain fatty acid", "term-scfa-short-chain-fatty-acid", "A small molecule produced when gut bacteria ferment fiber. Butyrate, propionate, and acetate are the main ones."],
+    ["sulforaphane", "term-sulforaphane", "An anti-inflammatory compound produced from cruciferous vegetables by plant enzymes and gut bacteria."],
+    ["synbiotics", "term-synbiotic", "Combinations of probiotics and prebiotics in one food or supplement."],
+    ["synbiotic", "term-synbiotic", "A combination of a probiotic and a prebiotic in one food or supplement."],
+    ["systematic reviews", "term-systematic-review", "Comprehensive, reproducible reviews of all existing research on a specific question."],
+    ["systematic review", "term-systematic-review", "A comprehensive, reproducible review of all existing research on a specific question."],
+    ["tight junctions", "term-tight-junctions", "Protein structures holding intestinal cells together, forming the gut barrier."],
+    ["tmao", "term-tmao", "A compound produced when gut bacteria process L-carnitine (red meat) and choline. Linked to cardiovascular risk in some studies."],
+    ["urolithins", "term-urolithin", "Compounds produced by gut bacteria from pomegranate and walnut ellagitannins. Only about 60-70% of people can produce them."],
+    ["urolithin", "term-urolithin", "A compound produced by gut bacteria from ellagitannins in pomegranates and walnuts."],
+    ["proteolytic fermentation", "term-proteolytic-fermentation", "Bacterial breakdown of proteins rather than fiber, producing compounds that can damage the gut lining at high levels."],
+    ["dietary fiber", "term-fiber", "Parts of plant foods that human enzymes cannot digest. Travels to the colon where gut bacteria ferment it."],
+    ["faecalibacterium prausnitzii", "term-faecalibacterium-prausnitzii", "One of the most beneficial gut bacteria. A major butyrate producer; depleted in IBD and metabolic disease."]
+];
+TERMS.sort(function(a,b){return b[0].length-a[0].length;});
+var linked={};
+var SEL=['.body-text','.effect-content p','.effect-content h3','.step-content p','.step-content h3','.caveat-item p','.callout p'];
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function makeLink(term,anchor,tip,text){
+  var a=document.createElement('a');
+  a.href='glossary.html#'+anchor;
+  a.className='gloss-term';
+  a.setAttribute('title',tip);
+  a.textContent=text;
+  var sp=document.createElement('span');
+  sp.className='gloss-tip';
+  sp.textContent=tip;
+  a.appendChild(sp);
+  return a;
+}
+function walkNode(node){
+  if(!node||node.nodeType!==1)return;
+  var tag=node.tagName?node.tagName.toLowerCase():'';
+  if(tag==='a'||tag==='script'||tag==='style'||tag==='code')return;
+  if(node.className&&node.className.indexOf&&node.className.indexOf('gloss-term')>=0)return;
+  Array.prototype.slice.call(node.childNodes).forEach(function(child){
+    if(child.nodeType===3){processText(child);}
+    else if(child.nodeType===1){walkNode(child);}
+  });
+}
+function processText(tn){
+  var txt=tn.nodeValue;
+  for(var i=0;i<TERMS.length;i++){
+    var t=TERMS[i][0],a=TERMS[i][1],d=TERMS[i][2];
+    if(linked[t])continue;
+    var re=new RegExp('\\b('+esc(t)+')\\b','i');
+    var m=re.exec(txt);
+    if(!m)continue;
+    linked[t]=true;
+    var before=txt.slice(0,m.index);
+    var after=txt.slice(m.index+m[0].length);
+    var parent=tn.parentNode;
+    var frag=document.createDocumentFragment();
+    if(before)frag.appendChild(document.createTextNode(before));
+    frag.appendChild(makeLink(t,a,d,m[0]));
+    if(after)frag.appendChild(document.createTextNode(after));
+    parent.replaceChild(frag,tn);
+    // Continue processing the 'after' text node
+    if(after){
+      var newTn=parent.lastChild;
+      if(newTn&&newTn.nodeType===3)processText(newTn);
+    }
+    return;
+  }
+}
+function init(){
+  SEL.forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(el){walkNode(el);});
+  });
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+})();
+</script>
+</body>
+</html>

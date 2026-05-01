@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foods — You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#faf9f6;--bg2:#f3f1ec;--bg3:#eceae3;--surface:#ffffff;
+    --border:#e2dfd7;--border-strong:#c8c4ba;
+    --ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;
+    --amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;
+    --green:#1e6b3e;--green-bg:#eef7f2;--green-border:#a8d4bc;--green-text:#1a5c35;
+    --yellow:#7a6010;--yellow-bg:#fdf8eb;--yellow-border:#e0cc88;--yellow-text:#6b5210;
+    --red:#8b2e2e;--red-bg:#fdf0f0;--red-border:#daa8a8;--red-text:#7a2828;
+    --serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+  }
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px;}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:0.6rem;}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color 0.15s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink);}
+
+  .page-header{background:var(--surface);border-bottom:1px solid var(--border);}
+  .page-header-inner{max-width:1200px;margin:0 auto;padding:3.5rem 2.5rem 2.5rem;display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap;}
+  .page-kicker{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.6rem;}
+  .page-kicker::before{content:'';display:block;width:20px;height:1px;background:var(--amber);}
+  h1{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;line-height:1.15;color:var(--ink);margin-bottom:0.6rem;}
+  .page-sub{font-size:0.92rem;color:var(--ink-3);line-height:1.8;max-width:480px;}
+  .header-stats{display:flex;gap:2rem;flex-shrink:0;}
+  .stat-block{text-align:right;}
+  .stat-num{font-family:var(--serif);font-size:2rem;font-weight:400;color:var(--ink);line-height:1;display:block;}
+  .stat-label{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+
+  .filter-bar{border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:58px;z-index:90;}
+  .filter-inner{max-width:1200px;margin:0 auto;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:52px;flex-wrap:wrap;padding-top:4px;padding-bottom:4px;}
+  .filter-left{display:flex;align-items:center;gap:0;flex-wrap:wrap;}
+  .filter-tab{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-4);background:none;border:none;padding:0 1rem;height:44px;cursor:pointer;border-bottom:2px solid transparent;transition:color 0.15s,border-color 0.15s;display:flex;align-items:center;gap:0.45rem;}
+  .filter-tab:hover{color:var(--ink-2);}
+  .filter-tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+  .filter-tab.active.t-strong{color:var(--green);border-bottom-color:var(--green);}
+  .filter-tab.active.t-emerging{color:var(--yellow);border-bottom-color:#c9a020;}
+  .filter-tab.active.t-limited{color:var(--red);border-bottom-color:var(--red);}
+  .tab-count{font-size:0.58rem;padding:1px 5px;border-radius:10px;background:var(--bg2);color:var(--ink-4);}
+  .filter-tab.active .tab-count{background:var(--bg3);}
+  .divider{width:1px;height:20px;background:var(--border);margin:0 0.5rem;}
+  .filter-right{display:flex;align-items:center;gap:0.75rem;}
+  .category-select{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.05em;color:var(--ink-3);background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:0.4rem 0.75rem;outline:none;cursor:pointer;transition:border-color 0.15s;}
+  .category-select:focus{border-color:var(--border-strong);}
+  .search-wrap{position:relative;}
+  .search-icon{position:absolute;left:0.65rem;top:50%;transform:translateY(-50%);color:var(--ink-4);font-size:12px;pointer-events:none;}
+  .search-input{font-family:var(--sans);font-size:0.82rem;font-weight:300;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:0.42rem 0.85rem 0.42rem 2.1rem;width:200px;outline:none;transition:border-color 0.15s,width 0.2s;}
+  .search-input:focus{border-color:var(--border-strong);width:240px;}
+  .search-input::placeholder{color:var(--ink-4);}
+
+  .results-meta{max-width:1200px;margin:0 auto;padding:1.25rem 2.5rem 0;display:flex;align-items:center;justify-content:space-between;}
+  .results-count{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.08em;color:var(--ink-4);text-transform:uppercase;}
+
+  .foods-wrap{max-width:1200px;margin:0 auto;padding:1.25rem 2.5rem 5rem;}
+  .food-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+
+  .food-card{background:var(--surface);padding:1.5rem;text-decoration:none;display:block;position:relative;transition:background 0.15s;}
+  .food-card:hover{background:var(--bg);}
+  .food-card.hidden{display:none;}
+
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.7rem;}
+  .food-name{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--ink);line-height:1.2;}
+  .badge{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.09em;text-transform:uppercase;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:2px;}
+  .b-strong{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);}
+  .b-emerging{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);}
+  .b-limited{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);}
+
+  .food-desc{font-size:0.79rem;color:var(--ink-3);line-height:1.65;margin-bottom:0.9rem;}
+  .food-meta{display:flex;justify-content:space-between;align-items:flex-end;gap:0.5rem;}
+  .food-tags{display:flex;gap:0.3rem;flex-wrap:wrap;}
+  .tag{font-family:var(--mono);font-size:0.57rem;letter-spacing:0.04em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 6px;border-radius:2px;}
+  .card-arrow{font-size:0.75rem;color:var(--ink-4);flex-shrink:0;transition:transform 0.15s,color 0.15s;}
+  .food-card:hover .card-arrow{transform:translateX(3px);color:var(--ink-2);}
+  .card-rule{position:absolute;bottom:0;left:1.5rem;right:1.5rem;height:2px;border-radius:2px 2px 0 0;}
+  .r-strong{background:var(--green);}
+  .r-emerging{background:#c9a020;}
+  .r-limited{background:var(--red);}
+
+  .empty-state{display:none;text-align:center;padding:5rem 2rem;grid-column:1/-1;}
+  .empty-state.visible{display:block;}
+  .empty-state p{font-size:0.9rem;color:var(--ink-4);}
+
+  footer{background:var(--ink);color:rgba(255,255,255,0.45);padding:3.5rem 2.5rem;}
+  .footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap;}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,0.85);margin-bottom:0.6rem;}
+  .footer-note{font-size:0.78rem;line-height:1.75;max-width:300px;}
+  .footer-col h4{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.75rem;}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+  .footer-col a{font-size:0.82rem;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.15s;}
+  .footer-col a:hover{color:rgba(255,255,255,0.75);}
+
+  @media(max-width:1100px){.food-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:800px){.food-grid{grid-template-columns:repeat(2,1fr);}.header-stats{display:none;}.nav-links{display:none;}}
+  @media(max-width:500px){.food-grid{grid-template-columns:1fr;}.search-input{width:140px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html" class="active">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Foods</span></div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <p class="page-kicker">Database</p>
+      <h1>Foods & the microbiome</h1>
+      <p class="page-sub">Browse all 50 food entries. Each page summarizes current research on how that food affects gut microbiome composition, diversity, and function.</p>
+    </div>
+    <div class="header-stats">
+      <div class="stat-block"><span class="stat-num">50</span><span class="stat-label">Total entries</span></div>
+      <div class="stat-block"><span class="stat-num" style="color:var(--green)">10</span><span class="stat-label">Strong</span></div>
+      <div class="stat-block"><span class="stat-num" style="color:#c9a020">28</span><span class="stat-label">Emerging</span></div>
+      <div class="stat-block"><span class="stat-num" style="color:var(--red)">12</span><span class="stat-label">Limited</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="filter-left">
+      <button class="filter-tab active" data-filter="all">All <span class="tab-count" id="c-all">50</span></butto</span>
+      <button class="filter-tab t-strong" data-filter="strong">Strong <span class="tab-count" id="c-strong">10</span></butto</span>
+      <button class="filter-tab t-emerging" data-filter="emerging">Emerging <span class="tab-count" id="c-emerging">28</span></butto</span>
+      <button class="filter-tab t-limited" data-filter="limited">Limited <span class="tab-count" id="c-limited">12</span></butto</span>
+      <div class="divider"></div>
+      <select class="category-select" id="category-select">
+        <option value="all">All categories</optio</span>
+        <option value="grains">Grains & fiber</optio</span>
+        <option value="vegetables">Vegetables</optio</span>
+        <option value="fruits">Fruits</optio</span>
+        <option value="fermented">Fermented foods</optio</span>
+        <option value="nuts">Nuts & seeds</optio</span>
+        <option value="protein">Protein foods</optio</span>
+        <option value="beverages">Beverages</optio</span>
+        <option value="other">Other / patterns</optio</span>
+      </select>
+    </div>
+    <div class="filter-right">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input type="text" class="search-input" id="search-input" placeholder="Search foods…" autocomplete="off">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="results-meta">
+  <span class="results-count" id="results-label">Showing all 50 entries</span>
+</div>
+
+<div class="foods-wrap"><div class="food-grid" id="food-grid">
+
+<!-- GRAINS & FIBER -->
+<a href="food-oats.html" class="food-card" data-tier="strong" data-cat="grains" data-name="oats beta-glucan fiber bifidobacterium scfa">
+  <div class="card-top"><span class="food-name">Oats</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Beta-glucan fiber fermented into SCFAs, selectively promoting Bifidobacterium and supporting mucosal barrier integrity.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">beta-glucan</span><span class="tag">SCFAs</span><span class="tag">prebiotic</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-legumes.html" class="food-card" data-tier="strong" data-cat="grains" data-name="legumes beans lentils chickpeas fiber prebiotics diversity">
+  <div class="card-top"><span class="food-name">Legumes</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Consistent microbial diversity increases across multiple RCTs. High prebiotic fiber selectively enriches beneficial taxa.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">diversity</span><span class="tag">prebiotics</span><span class="tag">RCT</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-resistant-starch.html" class="food-card" data-tier="strong" data-cat="grains" data-name="resistant starch potatoes bananas rice cooked cooled butyrate">
+  <div class="card-top"><span class="food-name">Resistant Starch</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Reaches the colon undigested, robustly increasing butyrate-producing bacteria across multiple human trials.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">butyrate</span><span class="tag">prebiotic</span><span class="tag">colon</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-whole-grains.html" class="food-card" data-tier="strong" data-cat="grains" data-name="whole grains wheat fiber diversity SCFAs">
+  <div class="card-top"><span class="food-name">Whole Grains</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Broad evidence across multiple grain types for increased microbial diversity and SCFA production vs refined grains.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">diversity</span><span class="tag">fiber</span><span class="tag">SCFAs</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-barley.html" class="food-card" data-tier="strong" data-cat="grains" data-name="barley beta-glucan lactobacillus prebiotic fiber">
+  <div class="card-top"><span class="food-name">Barley</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">High beta-glucan content comparable to oats. Strong evidence for Lactobacillus enrichment and favorable gut pH changes.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">beta-glucan</span><span class="tag">Lactobacillus</span><span class="tag">pH</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-rye-bread.html" class="food-card" data-tier="emerging" data-cat="grains" data-name="rye bread arabinoxylan fiber sourdough fermented grain">
+  <div class="card-top"><span class="food-name">Rye Bread</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Arabinoxylan fiber shows prebiotic activity in human trials. Sourdough fermentation may further enhance microbiome effects.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">arabinoxylan</span><span class="tag">sourdough</span><span class="tag">fiber</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-brown-rice.html" class="food-card" data-tier="emerging" data-cat="grains" data-name="brown rice bran fiber whole grain diversity">
+  <div class="card-top"><span class="food-name">Brown Rice</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Rice bran associated with modest diversity increases in some trials, but effect sizes are smaller than other whole grains.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">bran</span><span class="tag">diversity</span><span class="tag">modest effects</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-quinoa.html" class="food-card" data-tier="emerging" data-cat="grains" data-name="quinoa polyphenols fiber protein pseudocereal">
+  <div class="card-top"><span class="food-name">Quinoa</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Polyphenols and fiber both contribute to microbiome effects, but human trial evidence remains limited to small studies.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">polyphenols</span><span class="tag">fiber</span><span class="tag">limited trials</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<!-- VEGETABLES -->
+<a href="food-garlic.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="garlic onions inulin FOS fructooligosaccharides prebiotic allium">
+  <div class="card-top"><span class="food-name">Garlic & Onions</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Among the richest dietary sources of inulin and FOS. Consistently increase Bifidobacterium and Lactobacillus in human studies.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">inulin</span><span class="tag">FOS</span><span class="tag">Bifidobacterium</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-onions.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="onions FOS inulin quercetin prebiotic allium Bifidobacterium">
+  <div class="card-top"><span class="food-name">Onions</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">FOS and inulin selectively feed Bifidobacterium; quercetin undergoes bacterial transformation to anti-inflammatory metabolites.</p>
+  <div class="card-tags"><span class="tag">FOS</span><span class="tag">inulin</span><span class="tag">quercetin</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-jerusalem-artichoke.html" class="food-card" data-tier="strong" data-cat="vegetables" data-name="jerusalem artichoke inulin prebiotic chicory sunchoke">
+  <div class="card-top"><span class="food-name">Jerusalem Artichoke</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Exceptionally high inulin content makes it one of the most potent prebiotic foods. Strong bifidogenic effects in multiple RCTs.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">inulin</span><span class="tag">bifidogenic</span><span class="tag">RCT</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-asparagus.html" class="food-card" data-tier="strong" data-cat="vegetables" data-name="asparagus inulin prebiotic fructooligosaccharides bifidobacterium">
+  <div class="card-top"><span class="food-name">Asparagus</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Good source of inulin-type fructans. Human trials show reliable increases in Bifidobacterium with regular consumption.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">inulin</span><span class="tag">Bifidobacterium</span><span class="tag">fructans</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-leeks.html" class="food-card" data-tier="strong" data-cat="vegetables" data-name="leeks inulin FOS allium prebiotic onion family">
+  <div class="card-top"><span class="food-name">Leeks</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Allium family member with high inulin and FOS content. Consistent prebiotic effects with strong mechanistic support.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">inulin</span><span class="tag">allium</span><span class="tag">prebiotic</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-cruciferous.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="cruciferous vegetables broccoli cabbage cauliflower kale glucosinolates">
+  <div class="card-top"><span class="food-name">Cruciferous Vegetables</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Glucosinolates are metabolized by gut bacteria into bioactive isothiocyanates. Promising but human trial evidence remains limited.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">glucosinolates</span><span class="tag">isothiocyanates</span><span class="tag">emerging</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-broccoli.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="broccoli sulforaphane glucosinolates fiber cruciferous">
+  <div class="card-top"><span class="food-name">Broccoli</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Sulforaphane shows antimicrobial activity against pathogens while sparing beneficial bacteria in some trials.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">sulforaphane</span><span class="tag">antimicrobial</span><span class="tag">fiber</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-spinach.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="spinach leafy greens thylakoids fiber polyphenols magnesium">
+  <div class="card-top"><span class="food-name">Spinach</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Thylakoid membranes may slow lipid digestion, altering microbial substrate availability. Small human trials show modest diversity gains.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">thylakoids</span><span class="tag">diversity</span><span class="tag">small trials</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-sweet-potato.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="sweet potato fiber resistant starch polyphenols yam">
+  <div class="card-top"><span class="food-name">Sweet Potato</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Combination of fiber, resistant starch, and polyphenols with promising diversity signals in observational data. RCT evidence is thin.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">fiber</span><span class="tag">polyphenols</span><span class="tag">observational</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-carrots.html" class="food-card" data-tier="emerging" data-cat="vegetables" data-name="carrots pectin fiber carotenoids beta-carotene">
+  <div class="card-top"><span class="food-name">Carrots</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Pectin and fiber support microbial fermentation. Carotenoids may have indirect effects via immune modulation of the gut.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">pectin</span><span class="tag">fiber</span><span class="tag">carotenoids</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<!-- FRUITS -->
+<a href="food-blueberries.html" class="food-card" data-tier="emerging" data-cat="fruits" data-name="blueberries polyphenols anthocyanins berries fiber bifidobacterium">
+  <div class="card-top"><span class="food-name">Blueberries</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">High anthocyanin content metabolized by gut bacteria. Several RCTs show increases in Bifidobacterium and Lactobacillus.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">anthocyanins</span><span class="tag">Bifidobacterium</span><span class="tag">RCT</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-bananas.html" class="food-card" data-tier="emerging" data-cat="fruits" data-name="unripe bananas resistant starch green banana prebiotic fiber">
+  <div class="card-top"><span class="food-name">Bananas (unripe)</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">A significant source of resistant starch that decreases as bananas ripen. Prebiotic effects are well-supported mechanistically.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">resistant starch</span><span class="tag">green banana</span><span class="tag">prebiotic</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-apples.html" class="food-card" data-tier="emerging" data-cat="fruits" data-name="apples pectin polyphenols quercetin fiber bifidobacterium">
+  <div class="card-top"><span class="food-name">Apples</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Pectin and polyphenols work synergistically. A notable RCT found whole apples increased Bifidobacterium and reduced Clostridium.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">pectin</span><span class="tag">quercetin</span><span class="tag">Bifidobacterium</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-pomegranate.html" class="food-card" data-tier="emerging" data-cat="fruits" data-name="pomegranate ellagitannins urolithin polyphenols bioactivation">
+  <div class="card-top"><span class="food-name">Pomegranate</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Ellagitannins converted by gut bacteria to urolithins — a compelling microbiome-dependent bioactivation story. Still early-stage.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">ellagitannins</span><span class="tag">urolithins</span><span class="tag">bioactivation</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<!-- FERMENTED FOODS -->
+<a href="foods.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="fermented foods general live cultures diversity inflammation">
+  <div class="card-top"><span class="food-name">Fermented Foods</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Promising signals for diversity and reduced inflammation, but effects vary significantly by food type and individual baseline.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">diversity</span><span class="tag">live cultures</span><span class="tag">variable</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-yogurt.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="yogurt lactobacillus live cultures dairy transient">
+  <div class="card-top"><span class="food-name">Yogurt</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Live cultures transiently modulate microbiome composition. Long-term colonization is inconsistent across individuals.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">Lactobacillus</span><span class="tag">transient</span><span class="tag">dairy</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-kimchi.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="kimchi fermented vegetables lactobacillus Korean diversity">
+  <div class="card-top"><span class="food-name">Kimchi</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Rich in Lactobacillus plantarum. A Stanford RCT found increased microbiome diversity and reduced inflammatory markers.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">L. plantarum</span><span class="tag">diversity</span><span class="tag">RCT</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-kefir.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="kefir fermented milk live cultures lactobacillus yeast diverse">
+  <div class="card-top"><span class="food-name">Kefir</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Contains a more diverse consortium of bacteria and yeasts than yogurt, with some evidence for lasting microbiome modulation.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">yeast</span><span class="tag">diverse cultures</span><span class="tag">lasting effects</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-sauerkraut.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="sauerkraut fermented cabbage lactobacillus lactic acid bacteria">
+  <div class="card-top"><span class="food-name">Sauerkraut</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Naturally fermented cabbage with high lactic acid bacteria counts. Included in Sonnenburg lab fermented food trial showing diversity gains.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">LAB</span><span class="tag">lactic acid</span><span class="tag">diversity</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-miso.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="miso fermented soy Japan Aspergillus prebiotic">
+  <div class="card-top"><span class="food-name">Miso</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Fermented soybean paste with diverse microbial and prebiotic components. Human trial evidence limited but mechanistically plausible.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">fermented soy</span><span class="tag">prebiotic</span><span class="tag">limited trials</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-tempeh.html" class="food-card" data-tier="emerging" data-cat="fermented" data-name="tempeh fermented soy Rhizopus fiber protein Indonesia">
+  <div class="card-top"><span class="food-name">Tempeh</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Whole soybean fermentation retains high fiber alongside live cultures. Limited but promising human data on diversity effects.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">soy</span><span class="tag">fiber</span><span class="tag">live cultures</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-aged-cheese.html" class="food-card" data-tier="limited" data-cat="fermented" data-name="aged cheese cheddar parmesan gruyere Streptococcus thermophilus strain tracking live cultures">
+  <div class="card-top"><span class="food-name">Aged Cheese</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">New strain-tracking data confirms cheese bacteria survive to the colon; whether this produces meaningful changes is unproven.</p>
+  <div class="card-tags"><span class="tag">S. thermophilus</span><span class="tag">strain tracking</span><span class="tag">lactose-free</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-cottage-cheese.html" class="food-card" data-tier="limited" data-cat="fermented" data-name="cottage cheese live cultures Lactobacillus Bifidobacterium acid-set cultured">
+  <div class="card-top"><span class="food-name">Cottage Cheese</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Benefits only if live cultures are present — most commercial products are acid-set and contain none.</p>
+  <div class="card-tags"><span class="tag">live cultures</span><span class="tag">acid-set caveat</span><span class="tag">no dedicated RCTs</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-goat-cheese.html" class="food-card" data-tier="limited" data-cat="fermented" data-name="goat cheese A2 casein beta-casein oligosaccharides Bifidobacterium HMO">
+  <div class="card-top"><span class="food-name">Goat Cheese</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">A2 beta-casein, HMO-like prebiotics, and smaller fat globules make it mechanistically distinct from cow dairy — but untested in human trials.</p>
+  <div class="card-tags"><span class="tag">A2 casein</span><span class="tag">oligosaccharides</span><span class="tag">no human trials</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-kombucha.html" class="food-card" data-tier="limited" data-cat="fermented" data-name="kombucha fermented tea SCOBY acetic acid popular">
+  <div class="card-top"><span class="food-name">Kombucha</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Despite popularity, human evidence for microbiome effects is very limited. Most studies are in vitro or animal models.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">SCOBY</span><span class="tag">limited human data</span><span class="tag">popular</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<!-- NUTS & SEEDS -->
+<a href="food-nuts-general.html" class="food-card" data-tier="emerging" data-cat="nuts" data-name="nuts general polyphenols fiber healthy fats diversity">
+  <div class="card-top"><span class="food-name">Nuts (general)</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Polyphenols and fiber from nut consumption linked to modest diversity increases in observational and limited interventional data.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">polyphenols</span><span class="tag">fiber</span><span class="tag">diversity</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-almonds.html" class="food-card" data-tier="emerging" data-cat="nuts" data-name="almonds prebiotic fiber polyphenols lactobacillus bifidobacterium">
+  <div class="card-top"><span class="food-name">Almonds</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Best-studied individual nut. RCTs show increases in Lactobacillus and Bifidobacterium attributed to unique prebiotic fiber and polyphenol content.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">Lactobacillus</span><span class="tag">Bifidobacterium</span><span class="tag">RCT</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-walnuts.html" class="food-card" data-tier="emerging" data-cat="nuts" data-name="walnuts omega-3 polyphenols ALA ellagitannins fiber">
+  <div class="card-top"><span class="food-name">Walnuts</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">ALA omega-3s and ellagitannins both modulate the microbiome. Trials show reduced Bacteroides and increased Bifidobacterium.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">ALA</span><span class="tag">ellagitannins</span><span class="tag">Bifidobacterium</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-flaxseed.html" class="food-card" data-tier="strong" data-cat="nuts" data-name="flaxseed lignans omega-3 mucilage fiber ALA prebiotic">
+  <div class="card-top"><span class="food-name">Flaxseed</span><span class="badge b-strong">Strong</span></div>
+  <p class="food-desc">Mucilage fiber and lignans both have well-documented prebiotic effects. Among the more thoroughly studied seeds for microbiome outcomes.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">lignans</span><span class="tag">mucilage</span><span class="tag">prebiotic</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-strong"></div>
+</a>
+
+<a href="food-chia-seeds.html" class="food-card" data-tier="emerging" data-cat="nuts" data-name="chia seeds fiber mucilage omega-3 gel forming prebiotics">
+  <div class="card-top"><span class="food-name">Chia Seeds</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Gel-forming fiber has prebiotic potential. Limited but growing human trial evidence for microbial diversity and SCFA production.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">gel fiber</span><span class="tag">omega-3</span><span class="tag">SCFAs</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<!-- PROTEIN FOODS -->
+<a href="food-fatty-fish.html" class="food-card" data-tier="emerging" data-cat="protein" data-name="fatty fish salmon mackerel omega-3 EPA DHA inflammation">
+  <div class="card-top"><span class="food-name">Fatty Fish</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">EPA/DHA omega-3s associated with reduced gut inflammation and increased Bifidobacterium in some trials. Mechanisms under active investigation.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">omega-3</span><span class="tag">EPA/DHA</span><span class="tag">inflammation</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-eggs.html" class="food-card" data-tier="emerging" data-cat="protein" data-name="eggs choline lecithin TMAO protein cardiovascular individual variability">
+  <div class="card-top"><span class="food-name">Eggs</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Choline in eggs can be converted to TMAO by certain gut bacteria — a process linked to cardiovascular risk. Individual microbiome composition determines conversion rate.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">choline</span><span class="tag">TMAO</span><span class="tag">variability</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-red-meat.html" class="food-card" data-tier="emerging" data-cat="protein" data-name="red meat TMAO L-carnitine microbiome cardiovascular risk">
+  <div class="card-top"><span class="food-name">Red Meat</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">L-carnitine converted to TMAO by gut bacteria — a compelling mechanistic link between diet, microbiome, and cardiovascular risk.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">L-carnitine</span><span class="tag">TMAO</span><span class="tag">cardiovascular</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-poultry.html" class="food-card" data-tier="limited" data-cat="protein" data-name="poultry chicken turkey L-carnitine TMAO protein">
+  <div class="card-top"><span class="food-name">Poultry</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Chicken and turkey generate less TMAO than red meat, but direct microbiome evidence is essentially absent.</p>
+  <div class="card-tags"><span class="tag">L-carnitine</span><span class="tag">TMAO</span><span class="tag">limited evidence</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-dairy.html" class="food-card" data-tier="emerging" data-cat="protein" data-name="dairy milk cheese yogurt kefir fermented live cultures">
+  <div class="card-top"><span class="food-name">Dairy (Overview)</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Fermented dairy (yogurt, kefir) consistently benefits the microbiome; unfermented dairy shows weaker effects.</p>
+  <div class="card-tags"><span class="tag">fermented</span><span class="tag">live cultures</span><span class="tag">variable</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="foods.html" class="food-card" data-tier="limited" data-cat="protein" data-name="bone broth collagen gelatin gut lining popular claims">
+  <div class="card-top"><span class="food-name">Bone Broth</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Popular for gut health but direct microbiome evidence is minimal. Collagen and gelatin claims largely unsubstantiated in rigorous human trials.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">collagen</span><span class="tag">anecdotal</span><span class="tag">minimal evidence</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<!-- BEVERAGES -->
+<a href="food-green-tea.html" class="food-card" data-tier="emerging" data-cat="beverages" data-name="green tea EGCG catechins polyphenols bifidobacterium antimicrobial">
+  <div class="card-top"><span class="food-name">Green Tea</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Catechins (especially EGCG) are metabolized by gut bacteria. Multiple studies link green tea to increased Bifidobacterium and reduced pathogens.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">EGCG</span><span class="tag">catechins</span><span class="tag">Bifidobacterium</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-coffee.html" class="food-card" data-tier="emerging" data-cat="beverages" data-name="coffee polyphenols chlorogenic acid diversity caffeine gut health">
+  <div class="card-top"><span class="food-name">Coffee</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">One of the richest polyphenol sources in western diets. Large observational studies link coffee consumption to higher microbial diversity.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">polyphenols</span><span class="tag">chlorogenic acid</span><span class="tag">diversity</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-alcohol.html" class="food-card" data-tier="limited" data-cat="beverages" data-name="alcohol wine beer dysbiosis gut permeability leaky gut">
+  <div class="card-top"><span class="food-name">Alcohol</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Heavy use consistently linked to dysbiosis and gut permeability. Moderate red wine effects are confounded by polyphenols. Highly dose-dependent.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">dysbiosis</span><span class="tag">dose-dependent</span><span class="tag">permeability</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<!-- OTHER / PATTERNS -->
+<a href="food-polyphenols.html" class="food-card" data-tier="emerging" data-cat="other" data-name="polyphenols berries dark chocolate tea coffee flavonoids bioactivation">
+  <div class="card-top"><span class="food-name">Polyphenol-Rich Foods</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Polyphenols reach the colon largely unabsorbed, where bacteria metabolize them into bioactive compounds. A broad and active research area.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">flavonoids</span><span class="tag">bioactivation</span><span class="tag">colon</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-dark-chocolate.html" class="food-card" data-tier="emerging" data-cat="other" data-name="dark chocolate cocoa flavanols polyphenols bifidobacterium">
+  <div class="card-top"><span class="food-name">Dark Chocolate</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Cocoa flavanols are fermented by gut bacteria. Small RCTs show increases in Bifidobacterium and Lactobacillus with high-cocoa chocolate.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">flavanols</span><span class="tag">cocoa</span><span class="tag">Bifidobacterium</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-olive-oil.html" class="food-card" data-tier="emerging" data-cat="other" data-name="olive oil polyphenols EVOO Mediterranean diet oleocanthal">
+  <div class="card-top"><span class="food-name">Olive Oil</span><span class="badge b-emerging">Emerging</span></div>
+  <p class="food-desc">Polyphenols in extra-virgin olive oil show prebiotic-like effects. Much evidence comes from Mediterranean diet trials, making isolation difficult.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">EVOO</span><span class="tag">polyphenols</span><span class="tag">Mediterranean</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-emerging"></div>
+</a>
+
+<a href="food-probiotic-supplements.html" class="food-card" data-tier="limited" data-cat="other" data-name="probiotic supplements capsules lactobacillus bifidobacterium strain specific transient">
+  <div class="card-top"><span class="food-name">Probiotic Supplements</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Highly variable evidence. Most effects are transient and strain-specific. Broad health claims are not well-supported by current evidence.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">strain-specific</span><span class="tag">transient</span><span class="tag">variable</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-artificial-sweeteners.html" class="food-card" data-tier="limited" data-cat="other" data-name="artificial sweeteners aspartame sucralose stevia saccharin sugar substitute">
+  <div class="card-top"><span class="food-name">Artificial Sweeteners</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Mixed findings from animal and human studies. Some suggest microbiome disruption at high doses; others show no effect at typical consumption.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">controversial</span><span class="tag">conflicting data</span><span class="tag">dose-dependent</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-ultra-processed-foods.html" class="food-card" data-tier="limited" data-cat="other" data-name="ultra processed foods UPF junk food additives emulsifiers diversity">
+  <div class="card-top"><span class="food-name">Ultra-Processed Foods</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Observational evidence links high UPF intake to reduced diversity. Emulsifiers and additives may play a distinct mechanistic role.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">emulsifiers</span><span class="tag">diversity</span><span class="tag">observational</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="food-refined-sugar.html" class="food-card" data-tier="limited" data-cat="other" data-name="refined sugar sucrose fructose dysbiosis glucose pathobionts">
+  <div class="card-top"><span class="food-name">Refined Sugar</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">High sugar diets associated with reduced microbial diversity and increased pathobiont abundance in animal models. Human causal evidence limited.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">dysbiosis</span><span class="tag">animal models</span><span class="tag">pathobionts</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="foods.html" class="food-card" data-tier="limited" data-cat="other" data-name="antibiotics food residues livestock farming antimicrobial resistance AMR">
+  <div class="card-top"><span class="food-name">Antibiotic Residues in Food</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Subtherapeutic antibiotic use in livestock leaves residues in some products. Direct microbiome effects from dietary exposure are poorly characterized in humans.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">AMR</span><span class="tag">livestock</span><span class="tag">under-studied</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<a href="foods.html" class="food-card" data-tier="limited" data-cat="other" data-name="intermittent fasting time restricted eating circadian rhythm meal timing TRE">
+  <div class="card-top"><span class="food-name">Intermittent Fasting</span><span class="badge b-limited">Limited</span></div>
+  <p class="food-desc">Emerging evidence that meal timing influences microbial circadian rhythms. Human RCT data limited and results vary by fasting protocol.</p>
+  <div class="food-meta"><div class="food-tags"><span class="tag">circadian</span><span class="tag">meal timing</span><span class="tag">TRE</span></div><span class="card-arrow">→</span></div>
+  <div class="card-rule r-limited"></div>
+</a>
+
+<div class="empty-state" id="empty-state"><p>No foods match your search.</p></div>
+</div></div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">You are what <em>they</em> eat</div>
+      <p class="footer-note">An independent science communication project. All information is based on peer-reviewed literature and is intended for educational purposes only.</p>
+    </div>
+    <div class="footer-col">      <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">Not medical advice</a></li><li><a href="#">Data sources</a></li></ul></div>
+  </div>
+</footer>
+
+<script>
+const cards = Array.from(document.querySelectorAll('.food-card[data-tier]'));
+const tabs = document.querySelectorAll('.filter-tab');
+const catSelect = document.getElementById('category-select');
+const searchInput = document.getElementById('search-input');
+const resultsLabel = document.getElementById('results-label');
+const emptyState = document.getElementById('empty-state');
+
+let activeFilter = 'all', activeCategory = 'all', searchQuery = '';
+
+function updateGrid() {
+  let visible = 0;
+  cards.forEach(card => {
+    const show = (activeFilter === 'all' || card.dataset.tier === activeFilter)
+              && (activeCategory === 'all' || card.dataset.cat === activeCategory)
+              && (searchQuery === '' || card.dataset.name.toLowerCase().includes(searchQuery));
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  emptyState.classList.toggle('visible', visible === 0);
+
+  document.getElementById('c-all').textContent = visible;
+  document.getElementById('c-strong').textContent  = cards.filter(c => !c.classList.contains('hidden') && c.dataset.tier==='strong').length;
+  document.getElementById('c-emerging').textContent = cards.filter(c => !c.classList.contains('hidden') && c.dataset.tier==='emerging').length;
+  document.getElementById('c-limited').textContent  = cards.filter(c => !c.classList.contains('hidden') && c.dataset.tier==='limited').length;
+
+  const catLabel = activeCategory !== 'all' ? ` in ${catSelect.options[catSelect.selectedIndex].text.toLowerCase()}` : '';
+  const searchLabel = searchQuery ? ` matching "${searchQuery}"` : '';
+  resultsLabel.textContent = `Showing ${visible} entr${visible===1?'y':'ies'}${catLabel}${searchLabel}`;
+}
+
+tabs.forEach(tab => tab.addEventListener('click', () => {
+  tabs.forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  activeFilter = tab.dataset.filter;
+  updateGrid();
+}));
+
+catSelect.addEventListener('change', () => { activeCategory = catSelect.value; updateGrid(); });
+searchInput.addEventListener('input', () => { searchQuery = searchInput.value.trim().toLowerCase(); updateGrid(); });
+updateGrid();
+</script>
+</body>
+</html>

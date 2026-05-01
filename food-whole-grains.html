@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whole Grains, You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#faf9f6;--bg2:#f3f1ec;--bg3:#eceae3;--surface:#ffffff;
+    --border:#e2dfd7;--border-strong:#c8c4ba;
+    --ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;
+    --amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;
+    --green:#1e6b3e;--green-bg:#eef7f2;--green-border:#a8d4bc;--green-text:#1a5c35;
+    --yellow:#7a6010;--yellow-bg:#fdf8eb;--yellow-border:#e0cc88;--yellow-text:#6b5210;
+    --red:#8b2e2e;--red-bg:#fdf0f0;--red-border:#daa8a8;--red-text:#7a2828;
+    --serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+  }
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;}
+
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px;}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:0.6rem;}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{font-size:0.82rem;font-weight:400;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color 0.15s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink);}
+
+  .breadcrumb{max-width:1100px;margin:0 auto;padding:1.25rem 2.5rem 0;display:flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.06em;color:var(--ink-4);}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none;transition:color 0.15s;}
+  .breadcrumb a:hover{color:var(--ink-3);}
+  .breadcrumb-sep{color:var(--border-strong);}
+
+  .page-wrap{max-width:1100px;margin:0 auto;padding:2rem 2.5rem 6rem;display:grid;grid-template-columns:1fr 300px;gap:4rem;align-items:start;}
+
+  /* HERO */
+  .food-hero{margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border);}
+  .food-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;margin-bottom:1rem;flex-wrap:wrap;}
+  h1{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.1;color:var(--ink);}
+  .evidence-pill{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;border-radius:2px;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;flex-shrink:0;margin-top:0.4rem;}
+  .pill-emerging{background:var(--yellow-bg);color:var(--yellow-text);border:1px solid var(--yellow-border);}
+  .pill-strong{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);}
+  .pill-limited{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border);}
+  .pill-dot{width:7px;height:7px;border-radius:50%;}
+  .pill-emerging .pill-dot{background:#c9a020;}
+  .pill-strong .pill-dot{background:var(--green);}
+  .pill-limited .pill-dot{background:var(--red);}
+  .food-summary{font-size:1.05rem;font-weight:300;color:var(--ink-2);line-height:1.85;margin-bottom:1.25rem;}
+  .food-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+  .tag{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.05em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:2px;}
+
+  /* SECTIONS */
+  .content-section{margin-bottom:2.75rem;padding-bottom:2.75rem;border-bottom:1px solid var(--border);}
+  .content-section:last-of-type{border-bottom:none;margin-bottom:0;}
+  .section-heading{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;}
+  .section-heading h2{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--ink);}
+  .section-num{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--ink-4);background:var(--bg2);border:1px solid var(--border);padding:2px 7px;border-radius:2px;}
+  .body-text{font-size:0.95rem;color:var(--ink-2);line-height:1.9;margin-bottom:1rem;}
+  .body-text:last-child{margin-bottom:0;}
+
+  /* INLINE CITATION */
+  .cite{font-family:var(--mono);font-size:0.62rem;color:var(--amber);text-decoration:none;vertical-align:super;line-height:0;margin-left:1px;transition:color 0.15s;}
+  .cite:hover{color:var(--amber-light,#d4751f);}
+
+  /* EFFECTS LIST */
+  .effects-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+  .effect-row{background:var(--surface);padding:1.1rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;}
+  .effect-icon{width:28px;height:28px;border-radius:50%;background:var(--yellow-bg);border:1px solid var(--yellow-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:11px;color:var(--yellow);}
+  .effect-content h3{font-family:var(--serif);font-size:0.98rem;font-weight:400;color:var(--ink);margin-bottom:0.25rem;}
+  .effect-content p{font-size:0.84rem;color:var(--ink-3);line-height:1.65;}
+
+  /* MECHANISM STEPS */
+  .mechanism-steps{display:flex;flex-direction:column;gap:0;}
+  .mechanism-step{display:flex;gap:1.25rem;padding:0 0 1.75rem 0;position:relative;}
+  .mechanism-step:last-child{padding-bottom:0;}
+  .step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+  .step-num-circle{width:30px;height:30px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.65rem;color:var(--ink-3);z-index:1;}
+  .step-line{width:1px;background:var(--border);flex:1;margin-top:4px;}
+  .mechanism-step:last-child .step-line{display:none;}
+  .step-content{padding-top:4px;}
+  .step-content h3{font-family:var(--serif);font-size:0.98rem;font-weight:400;color:var(--ink);margin-bottom:0.3rem;}
+  .step-content p{font-size:0.84rem;color:var(--ink-3);line-height:1.65;}
+
+  /* CAVEATS */
+  .caveat-list{display:flex;flex-direction:column;gap:0.75rem;}
+  .caveat-item{display:flex;align-items:flex-start;gap:0.85rem;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem;}
+  .caveat-marker{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:2px 7px;border-radius:2px;flex-shrink:0;margin-top:2px;}
+  .caveat-item p{font-size:0.85rem;color:var(--ink-3);line-height:1.65;}
+
+  /* CITATIONS */
+  .citations-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+  .citation-row{background:var(--surface);padding:1rem 1.25rem;display:flex;gap:1rem;align-items:flex-start;}
+  .citation-num{font-family:var(--mono);font-size:0.7rem;color:var(--amber);flex-shrink:0;min-width:20px;margin-top:2px;}
+  .citation-content{flex:1;}
+  .citation-title{font-size:0.85rem;color:var(--ink-2);line-height:1.6;margin-bottom:0.25rem;}
+  .citation-meta{font-family:var(--mono);font-size:0.68rem;color:var(--ink-4);display:flex;gap:1rem;flex-wrap:wrap;}
+  .citation-link{color:var(--amber);text-decoration:none;transition:color 0.15s;font-family:var(--mono);font-size:0.68rem;}
+  .citation-link:hover{text-decoration:underline;}
+  .study-type-badge{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.07em;text-transform:uppercase;padding:1px 6px;border-radius:2px;background:var(--bg2);color:var(--ink-4);border:1px solid var(--border);}
+
+  /* SIDEBAR */
+  .sidebar{position:sticky;top:80px;}
+  .sidebar-card{background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:1.25rem;}
+  .sidebar-card-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0.75rem 1.25rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);}
+  .sidebar-card-body{padding:1.25rem;}
+  .score-rows{display:flex;flex-direction:column;gap:0.85rem;}
+  .score-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;}
+  .score-row-label{font-size:0.8rem;color:var(--ink-3);}
+  .score-row-val{font-family:var(--mono);font-size:0.75rem;color:var(--ink-2);}
+  .score-bar{height:4px;background:var(--bg2);border-radius:2px;overflow:hidden;}
+  .score-fill{height:100%;background:var(--green);border-radius:2px;}
+  .score-fill.mid{background:#c9a020;}
+  .score-fill.low{background:var(--red);}
+  .overall-verdict{margin-top:1.1rem;padding-top:1.1rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .verdict-label{font-size:0.8rem;color:var(--ink-3);}
+  .quick-facts{display:flex;flex-direction:column;gap:0;}
+  .fact-row{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 0;border-bottom:1px solid var(--border);gap:0.75rem;}
+  .fact-row:last-child{border-bottom:none;padding-bottom:0;}
+  .fact-row:first-child{padding-top:0;}
+  .fact-label{font-size:0.78rem;color:var(--ink-4);flex-shrink:0;}
+  .fact-value{font-size:0.82rem;color:var(--ink-2);text-align:right;}
+  .similar-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:2px;overflow:hidden;}
+  .similar-item{background:var(--surface);padding:0.85rem 1rem;text-decoration:none;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s;}
+  .similar-item:hover{background:var(--bg);}
+  .similar-left{display:flex;align-items:center;gap:0.6rem;}
+  .similar-pip{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .similar-name{font-family:var(--serif);font-size:0.95rem;color:var(--ink);}
+  .similar-badge{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;border-radius:2px;}
+  .similar-arrow{font-size:0.75rem;color:var(--ink-4);}
+
+  /* CALLOUT, for important standalone findings */
+  .callout-finding{margin:1.25rem 0;border:1px solid var(--yellow-border);border-left:3px solid #c9a020;background:var(--yellow-bg);padding:1rem 1.25rem;border-radius:0 3px 3px 0;}
+  .callout-finding-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:0.4rem;}
+  .callout-finding p{font-size:0.85rem;color:var(--ink-2);line-height:1.65;margin:0;}
+
+  .page-footnote{max-width:1100px;margin:0 auto;padding:0 2.5rem 2rem;font-size:0.78rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border);padding-top:1.5rem;}
+
+  footer{background:var(--ink);color:rgba(255,255,255,0.45);padding:3.5rem 2.5rem;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap;}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,0.85);margin-bottom:0.6rem;}
+  .footer-note{font-size:0.78rem;line-height:1.75;max-width:300px;}
+  .footer-col h4{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:0.75rem;}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.4rem;}
+  .footer-col a{font-size:0.82rem;color:rgba(255,255,255,0.4);text-decoration:none;transition:color 0.15s;}
+  .footer-col a:hover{color:rgba(255,255,255,0.75);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .food-hero{animation:fadeUp 0.4s ease both;}
+
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;gap:2.5rem;}.sidebar{position:static;}.nav-links{display:none;}}
+
+
+
+/* overall verdict strip */
+.overall-verdict-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: .85rem 1.1rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--ink-4);
+  background: var(--bg2);
+  margin-bottom: 1.5rem;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+.verdict-dot-lg {
+  display: none;
+}
+.verdict-text-wrap strong {
+  font-weight: 500;
+  display: block;
+  margin-bottom: .15rem;
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.verdict-text-wrap {
+  color: var(--ink-2);
+}
+
+
+
+
+
+/* Glossary tooltips */
+.gloss-link {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--amber);
+  color: inherit;
+  cursor: help;
+}
+.gloss-link .gloss-tip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: rgba(255,255,255,0.9);
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 300;
+  line-height: 1.55;
+  padding: 0.6rem 0.85rem;
+  border-radius: 4px;
+  width: 240px;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  z-index: 9999;
+  white-space: normal;
+  text-decoration: none;
+}
+.gloss-link .gloss-tip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--ink);
+}
+.gloss-link:hover .gloss-tip,
+.gloss-link:focus .gloss-tip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Glossary term underlines + tooltips */
+.gloss-term{color:inherit;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:#b8611a;cursor:help;position:relative;}
+.gloss-term .gloss-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a1916;color:rgba(255,255,255,0.9);font-family:'Inter',system-ui,sans-serif;font-size:0.78rem;font-weight:300;line-height:1.55;padding:0.6rem 0.85rem;border-radius:4px;width:240px;max-width:min(240px,90vw);box-shadow:0 4px 16px rgba(0,0,0,.25);pointer-events:none;z-index:9999;white-space:normal;text-decoration:none;}
+.gloss-term .gloss-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a1916;}
+.gloss-term:hover .gloss-tip{display:block;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html" class="active">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><a href="foods.html">Foods</a><span class="breadcrumb-sep">/</span><span>Whole Grains</span></div>
+
+<div class="page-wrap">
+<mai</span>
+
+  <!-- HERO -->
+  <div class="food-hero">
+    <div class="food-hero-top">
+      <h1>Whole Grains</h1>
+      <div class="evidence-pill pill-emerging">
+        <div class="pill-dot"></div>Emerging evidence
+      </div>
+    </div>
+    <p class="food-summary">Whole grains like wheat, rye, barley, and brown rice contain fiber and plant compounds that survive digestion in the small intestine and arrive in the colon, where gut bacteria ferment them. Research shows that switching from refined to whole grains shifts the microbiome toward more beneficial bacteria and away from harmful ones. Effects depend heavily on which whole grains are eaten and in what form. A landmark 17-week clinical trial found that a high-fiber diet increased microbiome diversity over time, though the fermented food group in the same trial showed stronger effects.</p>
+    <div class="food-tags">
+      <span class="tag">arabinoxylan</span><span class="tag">beta-glucan</span><span class="tag</span>
+      <span class="tag">Bifidobacterium</span><span class="tag">prebiotic</span><span class="tag">individual variability</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: KEY EFFECTS -->
+  <div class="overall-verdict-strip"><div class="verdict-dot-lg"></div><div class="verdict-text-wrap"><strong>Generally positive effect on gut microbiome health</strong>Generally beneficial, with fiber-mediated increases in butyrate-producing bacteria and microbiome diversity.</div></div>
+      </div>
+
+      <div class="citation-row" id="ref-2">
+        <span class="citation-num">[2]</span>
+        <div class="citation-content">
+          <div class="citation-title">Martínez I, Lattimer JM, Hubach KL, et al. microbiome>Gut microbiome</a> composition is linked to whole grain-induced immunological improvements. <em>ISME Journal</em>, 2013; 7(2), 269–280.</div>
+          <div class="citation-meta"><span class="study-type-badge</span><span>n = 28</span><a href="https://doi.org/10.1038/ismej.2012.104" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-3">
+        <span class="citation-num">[3]</span>
+        <div class="citation-content">
+          <div class="citation-title">Seal CJ, Courtin CM, Venema K, de Vries J. Health benefits of whole grain: Effects on dietary carbohydrate quality, the microbiomecitation-meta"><span class="study-type-badge">Comprehensive review</span><a href="https://doi.org/10.1111/1541-4337.12728" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-4">
+        <span class="citation-num">[4]</span>
+        <div class="citation-content">
+          <div class="citation-title">Um CY, Peters BA, Choi HS, Canzian F. Grain, gluten, and fibercitation-meta"><span class="study-type-badge">Cross-sectional</span><span>n = 779</span><a href="https://doi.org/10.1158/2767-9764.CRC-22-0154" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-5">
+        <span class="citation-num">[5]</span>
+        <div class="citation-content">
+          <div class="citation-title">Roager HM, Vogt JK, Kristensen M, et al. Whole grain-rich diet reduces body weight and systemic low-grade inflammation without inducing major changes of the microbiomecitation-meta"><span class="study-type-badge</span><span>n = 60</span><a href="https://doi.org/10.1136/gutjnl-2017-314786" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-6">
+        <span class="citation-num">[6]</span>
+        <div class="citation-content">
+          <div class="citation-title">Sugino KY, Paneth N, Comstock SS. Impact of a dietary wheat intervention on the gut microbiota of adult humans. <em>Nutrients</em>, 2021; 13(7), 2348.</div>
+          <div class="citation-meta"><span class="study-type-badge">4-week crossover trial</span><span>n = 28</span><a href="https://doi.org/10.3390/nu13072348" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-7">
+        <span class="citation-num">[7]</span>
+        <div class="citation-content">
+          <div class="citation-title">Eriksen AK, Hansen TH, Brunius C, et al. Gut microbiota features associated with Clostridiaceae and Eubacterium hallii in humans with and without rye intervention. <em>Nutrients</em>, 2020; 12(4), 834.</div>
+          <div class="citation-meta"><span class="study-type-badge</span><a href="https://doi.org/10.3390/nu12040834" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-8">
+        <span class="citation-num">[8]</span>
+        <div class="citation-content">
+          <div class="citation-title">Costabile A, Klinder A, Fava F, et al. Whole-grain wheat breakfast cereal has a prebiotic effect on the human gut microbiota: A double-blind, placebo-controlled, crossover study. <em>British Journal of Nutrition</em>, 2008; 99(1), 110–120.</div>
+          <div class="citation-meta"><span class="study-type-badge</span><a href="https://doi.org/10.1017/S0007114507793923" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-9">
+        <span class="citation-num">[9]</span>
+        <div class="citation-content">
+          <div class="citation-title">Bird AR, Conlon MA, Christophersen CT, Topping DL. Resistant starch, large bowel fermentation and a broader perspective of prebiotic style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"citation-meta"><span class="study-type-badge">Review</span><a href="https://doi.org/10.3920/BM2010.0041" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+      <div class="citation-row" id="ref-10">
+        <span class="citation-num">[10]</span>
+        <div class="citation-content">
+          <div class="citation-title">Foerster J, Maskarinec G, Reichardt N, et al. The influence of whole grain products and red meat on intestinal microbiota composition in normal weight adults: A randomized crossover intervention trial. <em>PLOS ONE</em>, 2014; 9(10), e109606.</div>
+          <div class="citation-meta"><span class="study-type-badge</span><a href="https://doi.org/10.1371/journal.pone.0109606" class="citation-link" target="_blank</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+<div class="section-heading"><span class="section-num">01</span><h2>Key effects on the microbiome</h2></div>
+
+    <div class="effects-list">
+
+      <div class="effect-row">
+        <div class="effect-icon">↑</div>
+        <div class="effect-content">
+          <h3>Increases Bifidobacterium abundance</h3>
+          <p>Multiple human studies link whole grain intake, particularly wheat and rye, to increased <em>Bifidobacterium</em>. A 12-week RCT in postmenopausal women found whole grain wheat produced a significant bifidogenic effect.<a href="#ref-8" class="cite">[8]</a> A cross-sectional analysis of 779 participants confirmed higher whole grain intake was significantly associated with <em>Bifidobacterium plebeius</em>.<a href="#ref-4" class="cite">[4]</a> Conversely, removing whole grains from the diet (as in gluten-free diet studies) consistently decreases <em>Bifidobacterium</em> and <em>Lactobacillus</em>.</p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon">↑</div>
+        <div class="effect-content">
+          <h3>Whole-grain barley enriches butyrate-producing taxa and reduces inflammation</h3>
+          <p>A randomized crossover trial (n = 28) found whole-grain barley specifically enriched <em>Roseburia</em>, <em>Bifidobacterium</em>, <em>Dialister</em>, and <em>Eubacterium rectale</em>, major butyrate producers. Crucially, blood IL-6 was significantly reduced only in the barley arm, correlated directly with microbiome-specific changes (r = −0.42, p &lt; 0.05), making this one of the few human trials to directly link microbiome changes to an immune outcome.<a href="#ref-2" class="cite">[2]</a></p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon">↑</div>
+        <div class="effect-content">
+          <h3>Upregulates carbohydrate-active enzymes (CAZymes) rather than expanding diversity</h3>
+          <p>The most rigorous human trial, a 17-week RCT (n = 36), found that a high-fiber diet including whole grains significantly increased microbiome-encoded CAZymes (the functional tools bacteria use to ferment dietary fiber) without producing a cohort-wide increase in alpha-diversity.<a href="#ref-1" class="cite">[1]</a> This suggests functional upregulation within the existing community rather than community expansion, an important nuance for how "whole grain benefits" should be communicated.</p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon">↑</div>
+        <div class="effect-content">
+          <h3>Rye outperforms wheat for Bifidobacterium enrichment and Clostridium reduction</h3>
+          <p>Multiple crossover RCTs comparing grain types found whole-grain rye consistently outperformed whole-grain wheat for <em>Bifidobacterium</em> enrichment, and also significantly reduced the genus <em>Clostridium</em> vs. wheat.<a href="#ref-7" class="cite">[7]</a><a href="#ref-3" class="cite">[3]</a> This is attributed to rye's particularly high arabinoxylan content, which is preferentially fermented by beneficial taxa. Not all whole grains are equivalent, fiber composition drives differential effects.</p>
+        </div>
+      </div>
+
+      <div class="effect-row">
+        <div class="effect-icon">~</div>
+        <div class="effect-content">
+          <h3>Highly variable individual response, baseline microbiome is predictive</h3>
+          <p>A 4-week crossover study (n = 28) found that while <em>Bifidobacterium</em> changed over time, overall community structure remained similar for most participants. A subset of 6 responders showed increased alpha-diversity, and 4 changed enterotype, but this was not predictable by diet alone.<a href="#ref-6" class="cite">[6]</a> Baseline microbiota composition appears to be the key predictor of whole grain response magnitude.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout-finding" style="margin-top:1.25rem;">
+      <div class="callout-finding-label">Notable finding</div>
+      <p>The landmark Wastyk/Sonnenburg et al. (2021) RCT found that in the same study, a high-fermented-food diet outperformed high-fiber (including whole grains) for microbiome diversity increases, a counterintuitive result now widely cited in the field.<a href="#ref-1" class="cite">[1]</a></p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: MECHANISMS -->
+  <div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">02</span><h2>Mechanisms</h2></div>
+
+    <p class="body-text">The microbiome effects of whole grains are driven primarily by indigestible carbohydrates in the bran and germ layers, removed during refining. The main fermentable fibers are arabinoxylan (dominant in wheat and rye), beta-glucan (dominant in barley and oats), and resistant starch. Grain polyphenol style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"mechanism-steps">
+
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">01</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Indigestible carbohydrates reach the colon intact</h3>
+          <p>Arabinoxylan, beta-glucan, and resistant starch escape small intestinal digestion, no human enzyme can cleave their β-linkages. They enter the colon as the primary energy source for colonic bacteria. The fiber structure and composition differs significantly by grain type: rye and barley contain more fermentable arabinoxylans and beta-glucan than white wheat; this explains why "whole grain" is not a uniform category in terms of microbiome effects.<a href="#ref-3" class="cite">[3]</a></p>
+        </div>
+      </div>
+
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">02</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Bacteroides and Ruminococcus initiate complex fiber degradation</h3>
+          <p><em>Bacteroides</em> species deploy polysaccharide utilization loci (PULs) encoding extracellular xylanases to deconstruct arabinoxylans. <em>Ruminococcus bromii</em> and <em>R. champanellensis</em> are key degraders of crystalline resistant starch through cellulosome complexes. These primary degraders produce shorter oligosaccharides available to secondary fermenters, initiating a cross-feeding cascade.<a href="#ref-9" class="cite">[9]</a></p>
+        </div>
+      </div>
+
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">03</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Cross-feeding to Bifidobacterium and Roseburia drives SCFA production</h3>
+          <p>Oligosaccharides released by primary degraders feed <em>Bifidobacterium</em> (which produce acetate and lactate from xylooligosaccharides) and <em>Roseburia</em>/<em>Eubacterium</em> species (which cross-feed on acetate to produce butyrate). The ratio of acetate:propionate:butyrate varies by grain type: barley's beta-glucan drives a butyrate-enriched profile; wheat arabinoxylan drives more propionate through <em>Bacteroides</em> species.<a href="#ref-2" class="cite">[2]</a></p>
+        </div>
+      </div>
+
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">04</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>Grain polyphenol style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;cursor:pointer;"urolithin. Only ~60-70% of people can produce them.</span></a> are examples.</span></a>, lignans to enterolignans by <em>Coriobacteriaceae</em>, alkylresorcinols selectively inhibiting certain pathobiont style="text-decoration:underline;text-decoration-style:dotted;text-decoration-color:var(--amber);color:inherit;"#ref-3" class="cite">[3]</a></p>
+        </div>
+      </div>
+
+      <div class="mechanism-step">
+        <div class="step-left"><div class="step-num-circle">05</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h3>SCFA-mediated gut barrier and immune effects</h3>
+          <p>Butyrate from whole grain fermentation activates AMPK and inhibits HDACs in colonocytes, upregulating tight junction proteins (ZO-1, claudin-1, occludin). Propionate signals via hepatic GPR41/43 to reduce lipogenesis. The combined SCFA pool lowers colonic pH, creating an environment favoring acid-tolerant beneficial bacteria and inhibiting pH-sensitive pathogens, a self-reinforcing effect.<a href="#ref-1" class="cite">[1]</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: LIMITATIONS -->
+  <div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">03</span><h2>Limitations & caveats</h2></div>
+
+    <p class="body-text">Whole grains are among the more thoroughly studied food categories for microbiome effects, but the literature is complicated by definitional, methodological, and biological challenges that are not well-communicated in popular health content.</p>
+
+    <div class="caveat-list">
+
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">"Whole grain" is not a uniform category.</strong> Wheat, rye, barley, oats, brown rice, and maize each have fundamentally different fiber compositions and fermentation kinetics. Seal et al. (2021) explicitly note that conflicting results in the literature are "partly due to the fact that whole grains comprise a diverse group."<a href="#ref-3" class="cite">[3]</a> Furthermore, processing matters: extruded whole wheat has been found to have worse metabolic outcomes than whole wheat porridge due to different microbiome impacts. "Whole grain" bread and whole grain porridge are not equivalent.</p>
+      </div>
+
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">The landmark Sonnenburg/Wastyk RCT found no diversity increase from high-fiber diet.</strong> The most methodologically rigorous human trial (n = 36, 17 weeks) found that a high-fiber diet including whole grains failed to increase microbiota diversity despite sustained consumption. Three distinct immunological trajectories were observed, correlated with baseline diversity, meaning individuals who already lack diversity may not benefit as expected.<a href="#ref-1" class="cite">[1]</a> This finding receives little coverage in popular nutrition media.</p>
+      </div>
+
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">Short study durations and dietary confounding.</strong> Most RCTs last 4–8 weeks. A 12-week crossover trial (n = 60), one of the longer studies, found whole grain diets reduced body weight and systemic inflammation without inducing "major changes" in microbiome#ref-5" class="cite">[5]</a> Additionally, whole grain eaters typically have generally healthier diets, making it difficult to isolate grain-specific effects in observational studies.</p>
+      </div>
+
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">Confounding by gluten, not all whole grain effects are fiber effects.</strong> Gluten-free diet studies consistently show decreased <em>Bifidobacterium</em> when gluten is removed, but this may reflect loss of fermentable fiber rather than gluten itself. A cross-sectional analysis of 779 participants found that dietary fiber intake explained the majority of whole grain associations with microbiome#ref-4" class="cite">[4]</a></p>
+      </div>
+
+      <div class="caveat-item">
+        <span class="caveat-marker">Note</span>
+        <p><strong style="font-weight:500;">Substantial individual variability in response.</strong> Baseline microbiome diversity, background diet quality, and potentially enterotype all predict the magnitude of whole grain microbiome response. Recommending whole grains as universally beneficial for gut microbiome health overestimates the evidence for non-responders, particularly in individuals who already consume high-quality diets.<a href="#ref-6" class="cite">[6]</a><a href="#ref-1" class="cite">[1]</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 4: CITATIONS -->
+  <div style="border-bottom:none;margin-bottom:0;padding-bottom:0;">
+    <div class="section-heading"><span class="section-num">04</span><h2>Sources</h2></div>
+    <div class="citations-list">
+
+      <div class="citation-row" id="ref-1">
+        <span class="citation-num">[1]</span>
+        <div class="citation-content">
+          <div class="citation-title">Wastyk HC, Fragiadakis GK, Perelman D, et al. Gut-microbiota-targeted diets modulate human immune status. <em>Cell</em>, 2021; 184(16), 4137–4153.</div>
+          <div class="citation-meta"><span class="study-type-badge">17-week parallel RCT</span><span>n = 36</span><a href="https://doi.org/10.1016/j.cell.2021.06.019" class="citation-link" target="_blank</div>
+</mai</span>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">Evidence quality</div>
+    <div class="sidebar-card-body">
+      <div class="score-rows">
+        <div>
+          <div class="score-row-top"><span class="score-row-label">Study quality</span><span class="score-row-val">Moderate (55)</span></div>
+          <div class="score-bar"><div class="score-fill mid" style="width:55%"></div></div>
+        </div>
+        <div>
+          <div class="score-row-top"><span class="score-row-label">Consistency</span><span class="score-row-val">Low–Moderate (42)</span></div>
+          <div class="score-bar"><div class="score-fill low" style="width:42%"></div></div>
+        </div>
+        <div>
+          <div class="score-row-top"><span class="score-row-label">Human evidence</span><span class="score-row-val">Moderate (58)</span></div>
+          <div class="score-bar"><div class="score-fill mid" style="width:58%"></div></div>
+        </div>
+        <div>
+          <div class="score-row-top"><span class="score-row-label">Effect size</span><span class="score-row-val">Low–Moderate (40)</span></div>
+          <div class="score-bar"><div class="score-fill low" style="width:40%"></div></div>
+        </div>
+        <div>
+          <div class="score-row-top"><span class="score-row-label">Mechanistic support</span><span class="score-row-val">Moderate–High (68)</span></div>
+          <div class="score-bar"><div class="score-fill mid" style="width:68%"></div></div>
+        </div>
+      </div>
+      <div class="overall-verdict">
+        <span class="verdict-label">Overall verdict</span>
+        <span class="evidence-pill pill-emerging" style="font-size:0.65rem;padding:4px 10px;margin-top:0;">Emerging</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">Quick facts</div>
+    <div class="sidebar-card-body">
+      <div class="quick-facts">
+        <div class="fact-row"><span class="fact-label">Grain types covered</span><span class="fact-value">Wheat, rye, barley, brown rice, maize</span></div>
+        <div class="fact-row"><span class="fact-label">Primary fibers</span><span class="fact-value">Arabinoxylan, beta-glucan, resistant starch</span></div>
+        <div class="fact-row"><span class="fact-label">Key taxa affected</span><span class="fact-value">Bifidobacterium, Roseburia, Eubacterium</span></div>
+        <div class="fact-row"><span class="fact-label">Strongest evidence</span><span class="fact-value">Barley > Rye > Wheat > Rice</span></div>
+        <div class="fact-row"><span class="fact-label">Studies reviewed</span><span class="fact-value">10</span></div>
+        <div class="fact-row"><span class="fact-label">Last updated</span><span class="fact-value">2025</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <div class="sidebar-card-header">Similar foods</div>
+    <div class="sidebar-card-body" style="padding:0;">
+      <div class="similar-list">
+        <a href="food-oats.html" class="similar-item">
+          <div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Oats</span></div>
+          <div style="display:flex;align-items:center;gap:0.5rem;"><span class="similar-badge" style="background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">Strong</span><span class="similar-arrow">→</span></div>
+        </a>
+        <a href="food-barley.html" class="similar-item">
+          <div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Barley</span></div>
+          <div style="display:flex;align-items:center;gap:0.5rem;"><span class="similar-badge" style="background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">Strong</span><span class="similar-arrow">→</span></div>
+        </a>
+        <a href="food-legumes.html" class="similar-item">
+          <div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Legumes</span></div>
+          <div style="display:flex;align-items:center;gap:0.5rem;"><span class="similar-badge" style="background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">Strong</span><span class="similar-arrow">→</span></div>
+        </a>
+        <a href="food-resistant-starch.html" class="similar-item">
+          <div class="similar-left"><div class="similar-pip" style="background:var(--green)"></div><span class="similar-name">Resistant Starch</span></div>
+          <div style="display:flex;align-items:center;gap:0.5rem;"><span class="similar-badge" style="background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border);">Strong</span><span class="similar-arrow">→</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</aside>
+</div>
+
+
+<div class="page-footnote">
+  This page is for educational and science literacy purposes only. It does not constitute medical or dietary advice. Individual responses to dietary changes vary significantly. Consult a qualified clinician before making changes to your diet based on microbiome research.
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div><div class="footer-logo">You are what <em>they</em> eat</div><p class="footer-note">An independent science communication project. All information is based on peer-reviewed literature and is intended for educational purposes only.</p></div>
+    <div class="footer-col">      <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">Not medical advice</a></li><li><a href="#">Data sources</a></li></ul></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+var TERMS=[
+    ["alpha-diversity", "term-alpha-diversity", "A measure of how many different types of bacteria live in one person's gut."],
+    ["anthocyanins", "term-anthocyanin", "The blue/purple/red pigments in berries. Most reach the colon where gut bacteria transform them."],
+    ["anthocyanin", "term-anthocyanin", "A blue/purple/red pigment in berries that reaches the colon where gut bacteria transform it."],
+    ["beta-diversity", "term-beta-diversity", "A measure of how similar or different the gut bacterial communities of two or more people are."],
+    ["beta-glucan", "term-beta-glucan", "A soluble fiber in oats and barley that gut bacteria ferment, selectively feeding Bifidobacterium."],
+    ["bifidogenic", "term-bifidogenic", "Promotes the growth of Bifidobacterium \u2014 bacteria that produce beneficial short-chain fatty acids."],
+    ["butyrate", "term-butyrate", "A short-chain fatty acid produced when gut bacteria ferment fiber. The main fuel for colon cells and a key anti-inflammatory signal."],
+    ["clinical trials", "term-clinical-trial", "Research studies in human participants. The gold standard for human evidence."],
+    ["clinical trial", "term-clinical-trial", "A research study in human participants. The gold standard for human evidence."],
+    ["crossover trial", "term-crossover-trial", "A trial where each participant receives both the test intervention and the control at different times."],
+    ["dysbiosis", "term-dysbiosis", "An imbalance in gut bacteria where harmful species increase and beneficial ones decrease."],
+    ["ellagitannins", "term-ellagitannin", "Polyphenols in pomegranates and walnuts converted by gut bacteria to urolithins \u2014 only in people who carry the right bacteria."],
+    ["ellagitannin", "term-ellagitannin", "A polyphenol in pomegranates and walnuts that gut bacteria convert to urolithins."],
+    ["enterotypes", "term-enterotype", "Broad categories of gut bacterial community type \u2014 Bacteroides-dominant and Prevotella-dominant are the two most studied."],
+    ["enterotype", "term-enterotype", "A broad category describing the general type of gut bacterial community a person carries."],
+    ["ex vivo", "term-ex-vivo", "Studies using bacteria from living organisms tested in a lab setting. More relevant than animal studies but not the same as a human trial."],
+    ["fermentation", "term-fermentation", "The process by which gut bacteria break down fiber, producing short-chain fatty acids and other compounds."],
+    ["glucosinolates", "term-glucosinolate", "Compounds in cruciferous vegetables converted by enzymes and gut bacteria into sulforaphane."],
+    ["glucosinolate", "term-glucosinolate", "A compound in cruciferous vegetables converted into sulforaphane by plant enzymes and gut bacteria."],
+    ["gut barrier", "term-gut-barrier", "The single-cell lining of the intestine that lets nutrients through while keeping bacteria and toxins out."],
+    ["gut microbiome", "term-gut-microbiome", "The community of trillions of bacteria and other microorganisms living in the human gut."],
+    ["inflammatory bowel disease", "term-ibd-inflammatory-bowel-disease", "Crohn's disease and ulcerative colitis \u2014 conditions where the immune system attacks the gut lining."],
+    ["in vitro", "term-in-vitro", "Studies in lab dishes or test tubes. Results often do not transfer directly to humans."],
+    ["in vivo", "term-in-vivo", "Studies in living organisms. Human in vivo studies are clinical trials."],
+    ["keystone species", "term-keystone-species", "A species with disproportionately large effects on its ecosystem. In the gut, Ruminococcus bromii is a keystone for resistant starch breakdown."],
+    ["lactic acid bacteria", "term-lactic-acid-bacteria", "Bacteria that produce lactic acid during fermentation. Found in yogurt, kimchi, and kefir."],
+    ["lachnospiraceae", "term-lachnospiraceae", "A family of gut bacteria that are major butyrate producers. Reduced in IBD; enriched by high-fiber diets."],
+    ["meta-analyses", "term-meta-analysis", "Statistical methods combining results of multiple studies \u2014 considered the highest level of research evidence."],
+    ["meta-analysis", "term-meta-analysis", "A statistical method combining results of multiple studies into one overall estimate."],
+    ["metabolites", "term-metabolite", "Small molecules produced by bacteria or human cells during digestion. SCFAs and urolithins are examples."],
+    ["metabolite", "term-metabolite", "A small molecule produced during metabolism by human cells or gut bacteria."],
+    ["metabotypes", "term-metabotype", "Categories describing what metabolites a person's gut bacteria produce from a given food."],
+    ["metabotype", "term-metabotype", "A category describing what metabolites a person's gut bacteria produce from a given food."],
+    ["microbiome", "term-microbiome", "The community of microorganisms in a given environment. The gut microbiome refers to those in the digestive tract."],
+    ["microbiota", "term-microbiota", "The living microorganisms \u2014 mainly bacteria \u2014 in the gut. Often used interchangeably with microbiome."],
+    ["mucus layer", "term-mucus-layer", "The protective coating on the intestinal wall forming a barrier between gut contents and intestinal cells."],
+    ["pathobionts", "term-pathobiont", "Microorganisms normally harmless in small amounts that become problematic when gut balance shifts."],
+    ["pathobiont", "term-pathobiont", "A microorganism normally harmless in small amounts that becomes problematic when gut balance shifts."],
+    ["pectin", "term-pectin", "A soluble fiber in fruit cell walls that gut bacteria ferment, specifically feeding Lachnospira and Faecalibacterium."],
+    ["prebiotic fiber", "term-prebiotic", "Fiber that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotics", "term-prebiotic", "Compounds that selectively feed beneficial gut bacteria without being digested by human enzymes."],
+    ["prebiotic", "term-prebiotic", "A compound that selectively feeds beneficial gut bacteria without being digested by human enzymes."],
+    ["polyphenols", "term-polyphenol", "Plant compounds in berries, tea, and chocolate. Most reach the colon where gut bacteria transform them into anti-inflammatory molecules."],
+    ["polyphenol", "term-polyphenol", "A plant compound found in berries, tea, and chocolate. Most reaches the colon where gut bacteria transform it."],
+    ["probiotics", "term-probiotic", "Live bacteria that may benefit gut health. Found in fermented foods and supplements."],
+    ["probiotic", "term-probiotic", "Live bacteria that may benefit gut health when consumed in sufficient amounts."],
+    ["propionate", "term-propionate", "A short-chain fatty acid produced by gut bacteria from fiber. Travels to the liver to help regulate blood sugar."],
+    ["randomized controlled trial", "term-randomized-controlled-trial", "The gold-standard study design where participants are randomly assigned to intervention or control groups."],
+    ["resistant starch", "term-resistant-starch", "Starch that human enzymes cannot digest, reaching the colon where bacteria ferment it to produce butyrate."],
+    ["ruminococcus bromii", "term-ruminococcus-bromii", "A keystone gut bacterium that initiates resistant starch breakdown, making it accessible to other bacteria."],
+    ["saccharolytic fermentation", "term-saccharolytic-fermentation", "Bacterial fermentation of carbohydrates (fiber), producing beneficial short-chain fatty acids."],
+    ["short-chain fatty acids", "term-scfa-short-chain-fatty-acid", "Small molecules \u2014 butyrate, propionate, acetate \u2014 produced when gut bacteria ferment fiber."],
+    ["short-chain fatty acid", "term-scfa-short-chain-fatty-acid", "A small molecule produced when gut bacteria ferment fiber. Butyrate, propionate, and acetate are the main ones."],
+    ["sulforaphane", "term-sulforaphane", "An anti-inflammatory compound produced from cruciferous vegetables by plant enzymes and gut bacteria."],
+    ["synbiotics", "term-synbiotic", "Combinations of probiotics and prebiotics in one food or supplement."],
+    ["synbiotic", "term-synbiotic", "A combination of a probiotic and a prebiotic in one food or supplement."],
+    ["systematic reviews", "term-systematic-review", "Comprehensive, reproducible reviews of all existing research on a specific question."],
+    ["systematic review", "term-systematic-review", "A comprehensive, reproducible review of all existing research on a specific question."],
+    ["tight junctions", "term-tight-junctions", "Protein structures holding intestinal cells together, forming the gut barrier."],
+    ["tmao", "term-tmao", "A compound produced when gut bacteria process L-carnitine (red meat) and choline. Linked to cardiovascular risk in some studies."],
+    ["urolithins", "term-urolithin", "Compounds produced by gut bacteria from pomegranate and walnut ellagitannins. Only about 60-70% of people can produce them."],
+    ["urolithin", "term-urolithin", "A compound produced by gut bacteria from ellagitannins in pomegranates and walnuts."],
+    ["proteolytic fermentation", "term-proteolytic-fermentation", "Bacterial breakdown of proteins rather than fiber, producing compounds that can damage the gut lining at high levels."],
+    ["dietary fiber", "term-fiber", "Parts of plant foods that human enzymes cannot digest. Travels to the colon where gut bacteria ferment it."],
+    ["faecalibacterium prausnitzii", "term-faecalibacterium-prausnitzii", "One of the most beneficial gut bacteria. A major butyrate producer; depleted in IBD and metabolic disease."]
+];
+TERMS.sort(function(a,b){return b[0].length-a[0].length;});
+var linked={};
+var SEL=['.body-text','.effect-content p','.effect-content h3','.step-content p','.step-content h3','.caveat-item p','.callout p'];
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function makeLink(term,anchor,tip,text){
+  var a=document.createElement('a');
+  a.href='glossary.html#'+anchor;
+  a.className='gloss-term';
+  a.setAttribute('title',tip);
+  a.textContent=text;
+  var sp=document.createElement('span');
+  sp.className='gloss-tip';
+  sp.textContent=tip;
+  a.appendChild(sp);
+  return a;
+}
+function walkNode(node){
+  if(!node||node.nodeType!==1)return;
+  var tag=node.tagName?node.tagName.toLowerCase():'';
+  if(tag==='a'||tag==='script'||tag==='style'||tag==='code')return;
+  if(node.className&&node.className.indexOf&&node.className.indexOf('gloss-term')>=0)return;
+  Array.prototype.slice.call(node.childNodes).forEach(function(child){
+    if(child.nodeType===3){processText(child);}
+    else if(child.nodeType===1){walkNode(child);}
+  });
+}
+function processText(tn){
+  var txt=tn.nodeValue;
+  for(var i=0;i<TERMS.length;i++){
+    var t=TERMS[i][0],a=TERMS[i][1],d=TERMS[i][2];
+    if(linked[t])continue;
+    var re=new RegExp('\\b('+esc(t)+')\\b','i');
+    var m=re.exec(txt);
+    if(!m)continue;
+    linked[t]=true;
+    var before=txt.slice(0,m.index);
+    var after=txt.slice(m.index+m[0].length);
+    var parent=tn.parentNode;
+    var frag=document.createDocumentFragment();
+    if(before)frag.appendChild(document.createTextNode(before));
+    frag.appendChild(makeLink(t,a,d,m[0]));
+    if(after)frag.appendChild(document.createTextNode(after));
+    parent.replaceChild(frag,tn);
+    // Continue processing the 'after' text node
+    if(after){
+      var newTn=parent.lastChild;
+      if(newTn&&newTn.nodeType===3)processText(newTn);
+    }
+    return;
+  }
+}
+function init(){
+  SEL.forEach(function(sel){
+    document.querySelectorAll(sel).forEach(function(el){walkNode(el);});
+  });
+}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+})();
+</script>
+</body>
+</html>

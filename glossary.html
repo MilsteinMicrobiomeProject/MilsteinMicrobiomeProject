@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossary &mdash; You are what they eat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#faf9f6;--bg2:#f3f1ec;--surface:#ffffff;--border:#e2dfd7;--ink:#1a1916;--ink-2:#3d3b36;--ink-3:#6b6860;--ink-4:#9e9b94;--amber:#b8611a;--amber-bg:#fdf3ea;--amber-border:#e8c49a;--serif:'Playfair Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'Inter',system-ui,sans-serif}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.75}
+  nav{position:sticky;top:0;z-index:100;background:rgba(250,249,246,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;height:58px}
+  .nav-logo{font-family:var(--serif);font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+  .nav-pip{width:6px;height:6px;background:var(--amber);border-radius:50%}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{font-size:.82rem;font-weight:400;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);text-decoration:none;transition:color .15s}
+  .nav-links a:hover,.nav-links a.active{color:var(--ink)}
+  .breadcrumb{max-width:900px;margin:0 auto;padding:1.25rem 2.5rem 0;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--ink-4)}
+  .breadcrumb a{color:var(--ink-4);text-decoration:none}
+  .breadcrumb-sep{margin:0 .4rem}
+
+  .page-hero{max-width:900px;margin:0 auto;padding:2.5rem 2.5rem 1.5rem}
+  .page-hero h1{font-family:var(--serif);font-size:clamp(2rem,4vw,2.8rem);font-weight:400;color:var(--ink);margin-bottom:.6rem}
+  .page-hero p{font-size:.95rem;color:var(--ink-3);max-width:600px;line-height:1.75}
+
+  /* Letter jump nav */
+  .letter-nav{max-width:900px;margin:0 auto;padding:.75rem 2.5rem 1.5rem;display:flex;flex-wrap:wrap;gap:.35rem}
+  .letter-btn{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:4px 9px;border-radius:2px;border:1px solid var(--border);color:var(--ink-3);text-decoration:none;background:var(--surface);transition:all .15s;cursor:pointer}
+  .letter-btn:hover{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+  .letter-btn.inactive{opacity:.3;pointer-events:none}
+
+  /* Search */
+  .gloss-search-wrap{max-width:900px;margin:0 auto;padding:0 2.5rem 1.5rem}
+  .gloss-search{width:100%;padding:.75rem 1rem;font-family:var(--sans);font-size:.95rem;font-weight:300;border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--ink);outline:none;transition:border-color .15s}
+  .gloss-search:focus{border-color:var(--amber)}
+  .gloss-search::placeholder{color:var(--ink-4)}
+
+  /* Terms */
+  .gloss-body{max-width:900px;margin:0 auto;padding:0 2.5rem 6rem}
+  .letter-group{margin-bottom:2.5rem}
+  .letter-heading{font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--border);border-bottom:1px solid var(--border);padding-bottom:.35rem;margin-bottom:1.1rem}
+  .term-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:3px;overflow:hidden}
+  .term-row{background:var(--surface);padding:1rem 1.25rem;display:grid;grid-template-columns:200px 1fr;gap:1.5rem;align-items:start}
+  .term-row:hover{background:var(--bg2)}
+  .term-name{font-family:var(--serif);font-size:.95rem;font-weight:400;color:var(--ink)}
+  .term-abbr{font-family:var(--mono);font-size:.62rem;color:var(--ink-4);display:block;margin-top:2px}
+  .term-def{font-size:.87rem;color:var(--ink-2);line-height:1.7}
+  .term-def em{color:var(--ink-3);font-style:italic}
+
+  .no-results{padding:2rem 0;text-align:center;font-size:.9rem;color:var(--ink-4);display:none}
+
+  .page-footnote{max-width:900px;margin:0 auto;padding:1.5rem 2.5rem 2rem;font-size:.76rem;color:var(--ink-4);line-height:1.7;border-top:1px solid var(--border)}
+  footer{background:var(--ink);color:rgba(255,255,255,.45);padding:3.5rem 2.5rem}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:3rem;flex-wrap:wrap}
+  .footer-logo{font-family:var(--serif);font-size:1.1rem;color:rgba(255,255,255,.85);margin-bottom:.6rem}
+  .footer-note{font-size:.78rem;line-height:1.75;max-width:300px}
+  .footer-col h4{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+  .footer-col a{font-size:.82rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .15s}
+  .footer-col a:hover{color:rgba(255,255,255,.75)}
+  @media(max-width:700px){.term-row{grid-template-columns:1fr;gap:.5rem}.nav-links{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-pip"></span>You are what <em>they</em> eat</a>
+  <ul class="nav-links">
+    <li><a href="foods.html">Foods</a></li>
+    <li><a href="how-to-read.html">Guide</a></li>
+    <li><a href="glossary.html" class="active">Glossary</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+</nav>
+<div class="breadcrumb"><a href="index.html">Home</a><span class="breadcrumb-sep">/</span><span>Glossary</span></div>
+
+<div class="page-hero">
+  <h1>Glossary</h1>
+  <p>Plain-language definitions of the scientific terms used across this site. No background knowledge required.</p>
+</div>
+
+<div class="gloss-search-wrap">
+  <input class="gloss-search" type="text" placeholder="Search terms..." id="glossSearch" autocomplete="off">
+</div>
+
+<div class="letter-nav" id="letterNav">
+  <a class="letter-btn" href="#A">A</a><a class="letter-btn" href="#B">B</a><a class="letter-btn" href="#C">C</a>
+  <a class="letter-btn" href="#D">D</a><a class="letter-btn" href="#E">E</a><a class="letter-btn" href="#F">F</a>
+  <a class="letter-btn" href="#G">G</a><a class="letter-btn" href="#H">H</a><a class="letter-btn" href="#I">I</a>
+  <a class="letter-btn" href="#K">K</a><a class="letter-btn" href="#L">L</a><a class="letter-btn" href="#M">M</a>
+  <a class="letter-btn" href="#N">N</a><a class="letter-btn" href="#P">P</a><a class="letter-btn" href="#R">R</a>
+  <a class="letter-btn" href="#S">S</a><a class="letter-btn" href="#T">T</a><a class="letter-btn" href="#U">U</a>
+</div>
+
+<div class="gloss-body" id="glossBody">
+<div class="no-results" id="noResults">No matching terms found.</div>
+
+<!-- A -->
+<div class="letter-group" id="A">
+  <div class="letter-heading">A</div>
+  <div class="term-list">
+    <div class="term-row" id="term-alpha-diversity">
+      <div><span class="term-name">Alpha-diversity</span></div>
+      <div class="term-def">A measure of how many different types of bacteria live in one person's gut. Higher alpha-diversity generally means more species are present and none are overwhelmingly dominant. Many researchers consider higher diversity to be associated with better gut health, though this relationship is more complicated than it first appears. Some healthy microbiome states actually involve <em>lower</em> diversity alongside specific beneficial species being enriched.</div>
+    </div>
+    <div class="term-row" id="term-anthocyanin">
+      <div><span class="term-name">Anthocyanin</span></div>
+      <div class="term-def">The pigment that gives blueberries, cherries, and red cabbage their deep blue, purple, and red colors. Anthocyanins are a type of polyphenol that most people absorb poorly in the small intestine, so most of what you eat arrives in the colon, where gut bacteria break them down into smaller molecules with anti-inflammatory effects.</div>
+    </div>
+    <div class="term-row" id="term-aryl-hydrocarbon-receptor">
+      <div><span class="term-name">Aryl hydrocarbon receptor</span><span class="term-abbr">AhR</span></div>
+      <div class="term-def">A protein inside cells that acts like a switch. When certain molecules produced by gut bacteria bind to it, it activates genes that regulate immune function, inflammation, and gut barrier repair. Some polyphenols and fermentation products trigger this switch, which is one mechanism by which diet can influence the immune system through the gut.</div>
+    </div>
+  </div>
+</div>
+
+<!-- B -->
+<div class="letter-group" id="B">
+  <div class="letter-heading">B</div>
+  <div class="term-list">
+    <div class="term-row" id="term-bacteria">
+      <div><span class="term-name">Bacteria</span></div>
+      <div class="term-def">Single-celled living organisms that are far too small to see without a microscope. Your gut contains trillions of them, representing hundreds of different species. Most of them are not harmful. Many are essential for digestion, immune function, and producing vitamins. When people talk about the "gut microbiome," bacteria are the main focus.</div>
+    </div>
+    <div class="term-row" id="term-beta-diversity">
+      <div><span class="term-name">Beta-diversity</span></div>
+      <div class="term-def">A measure of how similar or different the gut bacterial communities of two or more people are. If a study says a food changed beta-diversity, it means that after eating that food, the participants' gut communities became more like each other than they were before. It is a way of measuring whether an intervention causes a consistent, predictable shift across a group of people.</div>
+    </div>
+    <div class="term-row" id="term-beta-glucan">
+      <div><span class="term-name">Beta-glucan</span></div>
+      <div class="term-def">A type of soluble fiber found in oats and barley. Gut bacteria ferment it in the large intestine, producing short-chain fatty acids. Beta-glucan is one of the best-studied prebiotic compounds in human nutrition, with consistent evidence showing it increases beneficial bacteria like Bifidobacterium.</div>
+    </div>
+    <div class="term-row" id="term-bifidogenic">
+      <div><span class="term-name">Bifidogenic</span></div>
+      <div class="term-def">A word that means "promotes the growth of Bifidobacterium." A bifidogenic food or supplement selectively feeds Bifidobacterium bacteria in the colon. This is considered beneficial because Bifidobacterium produce short-chain fatty acids and help maintain a healthy gut environment. FOS fiber, inulin, and beta-glucan are all considered bifidogenic.</div>
+    </div>
+    <div class="term-row" id="term-bifidobacterium">
+      <div><span class="term-name">Bifidobacterium</span></div>
+      <div class="term-def">A group of bacteria that live in the large intestine and are generally considered beneficial. They ferment fiber, produce acetate and lactate, and help maintain an acidic environment in the colon that discourages harmful bacteria. Bifidobacterium are frequently used as probiotic supplements and are consistently enriched by prebiotic fibers like FOS and inulin.</div>
+    </div>
+    <div class="term-row" id="term-butyrate">
+      <div><span class="term-name">Butyrate</span></div>
+      <div class="term-def">A short-chain fatty acid produced when gut bacteria ferment fiber. It is the main fuel source for the cells that line the colon. Butyrate also acts as a signaling molecule: it reduces inflammation, supports the immune system, and helps maintain the gut barrier. Diets rich in plant fiber tend to produce more butyrate. Low butyrate levels are associated with inflammatory bowel disease and colorectal cancer risk.</div>
+    </div>
+  </div>
+</div>
+
+<!-- C -->
+<div class="letter-group" id="C">
+  <div class="letter-heading">C</div>
+  <div class="term-list">
+    <div class="term-row" id="term-clinical-trial">
+      <div><span class="term-name">Clinical trial</span></div>
+      <div class="term-def">A research study conducted in human participants to test whether a treatment, food, or intervention has an effect. Clinical trials are the gold standard for determining whether something actually works in people, as opposed to in lab dishes or in animals. The quality of a clinical trial depends on how well it was designed, how many people participated, and how carefully confounding factors were controlled.</div>
+    </div>
+    <div class="term-row" id="term-cohort-study">
+      <div><span class="term-name">Cohort study</span></div>
+      <div class="term-def">A type of observational research that follows a group of people over time and looks for associations between what they eat and what happens to their health. Unlike a clinical trial, the researchers do not assign people to specific diets. Instead, they observe what people naturally choose to eat. Cohort studies can find associations but cannot prove causation. For example, a cohort study might show that people who eat more fiber tend to have lower cancer rates, but it cannot prove that the fiber is causing the lower rates.</div>
+    </div>
+    <div class="term-row" id="term-colon">
+      <div><span class="term-name">Colon</span></div>
+      <div class="term-def">The large intestine, the final major section of the digestive tract. Most gut bacteria live here. After the small intestine absorbs nutrients, anything left over, including fiber and some proteins, travels to the colon, where bacteria ferment it. This fermentation produces short-chain fatty acids and other compounds that affect health.</div>
+    </div>
+    <div class="term-row" id="term-cross-sectional-study">
+      <div><span class="term-name">Cross-sectional study</span></div>
+      <div class="term-def">A study that takes a snapshot of a group of people at one point in time, comparing different groups to look for associations. For example, a cross-sectional study might compare the gut microbiomes of people who eat a lot of fiber versus those who do not. This type of study cannot tell you what changed over time or what caused any differences. It is useful for generating hypotheses but weaker than studies that follow people over time.</div>
+    </div>
+    <div class="term-row" id="term-crossover-trial">
+      <div><span class="term-name">Crossover trial</span></div>
+      <div class="term-def">A type of clinical trial where each participant receives both the test intervention and a control, but at different times. For example, in a crossover diet study, a participant might eat a high-fiber diet for six weeks, then switch to a low-fiber diet for another six weeks. Each person serves as their own comparison, which helps account for individual differences. Crossover trials are considered a strong study design for nutrition research.</div>
+    </div>
+  </div>
+</div>
+
+<!-- D -->
+<div class="letter-group" id="D">
+  <div class="letter-heading">D</div>
+  <div class="term-list">
+    <div class="term-row" id="term-dysbiosis">
+      <div><span class="term-name">Dysbiosis</span></div>
+      <div class="term-def">An imbalance in the gut microbial community, where the proportion of harmful or pro-inflammatory bacteria increases and beneficial bacteria decrease. Dysbiosis has been associated with a wide range of conditions including inflammatory bowel disease, obesity, type 2 diabetes, and colorectal cancer. Diet is one of the most powerful factors known to shift the microbiome toward or away from dysbiosis.</div>
+    </div>
+  </div>
+</div>
+
+<!-- E -->
+<div class="letter-group" id="E">
+  <div class="letter-heading">E</div>
+  <div class="term-list">
+    <div class="term-row" id="term-effect-size">
+      <div><span class="term-name">Effect size</span></div>
+      <div class="term-def">A measure of how large or meaningful a study's finding is. A result can be statistically significant (meaning it is unlikely to be due to chance) but still have a very small effect size, meaning the real-world impact is minimal. On this site, effect size is one of the five dimensions used to score the evidence quality for each food.</div>
+    </div>
+    <div class="term-row" id="term-ellagitannin">
+      <div><span class="term-name">Ellagitannin</span></div>
+      <div class="term-def">A type of polyphenol found in pomegranates, walnuts, and some berries. On their own, ellagitannins have limited biological activity. Their health effects depend on gut bacteria converting them into smaller molecules called urolithins. Because different people carry different gut bacteria, some people convert ellagitannins efficiently and some do not, making the health impact of ellagitannin-rich foods highly individual.</div>
+    </div>
+    <div class="term-row" id="term-enterotype">
+      <div><span class="term-name">Enterotype</span></div>
+      <div class="term-def">A broad category used to describe the general "type" of gut bacterial community a person carries. The two most studied enterotypes are Bacteroides-dominant and Prevotella-dominant, named after the most abundant bacterial group in each type. Research suggests that your enterotype influences how your gut responds to different prebiotic foods. For example, some studies show that unripe banana significantly shifts the microbiome in Prevotella-dominant people but not in Bacteroides-dominant people.</div>
+    </div>
+    <div class="term-row" id="term-ex-vivo">
+      <div><span class="term-name">Ex vivo</span></div>
+      <div class="term-def">Latin for "outside the living body." Ex vivo studies take cells, tissues, or bacteria from living organisms and test them in a lab setting. For gut microbiome research, this often means taking fecal samples from human donors and fermenting food compounds with them in a lab dish or bioreactor. Ex vivo studies use real human bacteria, making them more relevant than animal studies, but they still do not replicate the conditions of a living human gut.</div>
+    </div>
+  </div>
+</div>
+
+<!-- F -->
+<div class="letter-group" id="F">
+  <div class="letter-heading">F</div>
+  <div class="term-list">
+    <div class="term-row" id="term-faecalibacterium-prausnitzii">
+      <div><span class="term-name">Faecalibacterium prausnitzii</span></div>
+      <div class="term-def">One of the most abundant and well-studied beneficial bacteria in the human gut. It is a major producer of butyrate, the compound that fuels colon cells and reduces inflammation. Faecalibacterium prausnitzii is consistently depleted in people with inflammatory bowel disease (Crohn's disease and ulcerative colitis) and is considered a marker of gut health. High-fiber diets tend to support its abundance.</div>
+    </div>
+    <div class="term-row" id="term-fermentation">
+      <div><span class="term-name">Fermentation</span></div>
+      <div class="term-def">The process by which bacteria break down carbohydrates (and sometimes proteins) in the absence of oxygen. In the colon, gut bacteria ferment fiber, resistant starch, and other undigested food components, producing short-chain fatty acids, gases, and other metabolites. Fermentation in the gut is generally beneficial when the bacteria doing it are beneficial species. The fermentation of plant fiber is the primary mechanism by which diet shapes the microbiome.</div>
+    </div>
+    <div class="term-row" id="term-fiber">
+      <div><span class="term-name">Fiber</span></div>
+      <div class="term-def">Parts of plant foods that human digestive enzymes cannot break down. Fiber passes through the stomach and small intestine intact and arrives in the colon, where gut bacteria ferment it. There are two main types: soluble fiber dissolves in water and forms a gel (found in oats, apples, and legumes), and insoluble fiber does not dissolve (found in whole grains and vegetables). Both feed gut bacteria, but soluble fiber tends to be more rapidly fermented and has stronger prebiotic effects.</div>
+    </div>
+    <div class="term-row" id="term-fos-inulin">
+      <div><span class="term-name">FOS / Inulin</span></div>
+      <div class="term-def">Fructooligosaccharides (FOS) and inulin are types of prebiotic fiber found in garlic, onions, leeks, asparagus, and Jerusalem artichoke. They are chains of fructose sugars linked in a way that human enzymes cannot break down. When they reach the colon, gut bacteria ferment them, and Bifidobacterium is particularly good at this process. FOS and inulin are among the most studied prebiotic compounds in human nutrition.</div>
+    </div>
+    <div class="term-row" id="term-functional-food">
+      <div><span class="term-name">Functional food</span></div>
+      <div class="term-def">A food that is claimed to have health benefits beyond basic nutrition. The term is used loosely in marketing and does not have a standard scientific or regulatory definition. On this site, foods are not described as "functional" but are instead evaluated based on the specific, evidenced effects they appear to have on the gut microbiome.</div>
+    </div>
+  </div>
+</div>
+
+<!-- G -->
+<div class="letter-group" id="G">
+  <div class="letter-heading">G</div>
+  <div class="term-list">
+    <div class="term-row" id="term-glucosinolate">
+      <div><span class="term-name">Glucosinolate</span></div>
+      <div class="term-def">A type of compound found in cruciferous vegetables like broccoli, cabbage, and Brussels sprouts. Glucosinolates are converted by plant enzymes and by gut bacteria into smaller molecules including sulforaphane, which has anti-inflammatory and potentially cancer-protective effects. Cooking destroys the plant enzymes that do this conversion, so cooked cruciferous vegetables rely more on gut bacteria to produce sulforaphane.</div>
+    </div>
+    <div class="term-row" id="term-gut-barrier">
+      <div><span class="term-name">Gut barrier</span></div>
+      <div class="term-def">The lining of the intestine, which acts like a selective filter. It allows nutrients to pass into the bloodstream while keeping bacteria and potentially harmful substances inside the gut. The gut barrier consists of a single layer of cells held together by proteins called tight junctions. A damaged or "leaky" gut barrier allows bacteria and their byproducts to enter the bloodstream, which can trigger widespread inflammation. Butyrate is one of the most important nutrients for maintaining a healthy gut barrier.</div>
+    </div>
+    <div class="term-row" id="term-gut-microbiome">
+      <div><span class="term-name">Gut microbiome</span></div>
+      <div class="term-def">The entire community of microorganisms, mainly bacteria, that live in the human digestive tract, along with their genes, metabolites, and the environment they create. The term "microbiota" refers specifically to the organisms themselves, while "microbiome" technically refers to the organisms plus their genetic material and environment, though the two terms are often used interchangeably. Each person's gut microbiome is unique, like a fingerprint, and is shaped by genetics, birth history, diet, medications, and lifestyle.</div>
+    </div>
+  </div>
+</div>
+
+<!-- H -->
+<div class="letter-group" id="H">
+  <div class="letter-heading">H</div>
+  <div class="term-list">
+    <div class="term-row" id="term-hdac-inhibition">
+      <div><span class="term-name">HDAC inhibition</span></div>
+      <div class="term-def">HDAC stands for histone deacetylase, an enzyme involved in gene regulation. Butyrate inhibits HDACs, which changes which genes are switched on or off in colon cells. The result is reduced inflammation and improved immune function. This is one reason why butyrate, the fermentation product of plant fiber, has protective effects in the colon beyond just being a fuel source.</div>
+    </div>
+  </div>
+</div>
+
+<!-- I -->
+<div class="letter-group" id="I">
+  <div class="letter-heading">I</div>
+  <div class="term-list">
+    <div class="term-row" id="term-ibd-inflammatory-bowel-disease">
+      <div><span class="term-name">IBD (Inflammatory Bowel Disease)</span></div>
+      <div class="term-def">A group of conditions in which the immune system attacks the lining of the digestive tract, causing chronic inflammation. The two main forms are Crohn's disease (which can affect any part of the digestive tract) and ulcerative colitis (which affects the colon). People with IBD consistently show a depleted gut microbiome, with lower Faecalibacterium prausnitzii and Akkermansia muciniphila. Diet can influence IBD symptoms and microbiome composition, though it does not cure the disease.</div>
+    </div>
+    <div class="term-row" id="term-in-vitro">
+      <div><span class="term-name">In vitro</span></div>
+      <div class="term-def">Latin for "in glass." In vitro studies are conducted in lab dishes, test tubes, or bioreactors rather than in living organisms. They are useful for understanding mechanisms, but results often do not translate to what happens inside a living body. When this site describes an in vitro finding, it means the effect was observed in a lab setting and has not yet been confirmed in people.</div>
+    </div>
+    <div class="term-row" id="term-in-vivo">
+      <div><span class="term-name">In vivo</span></div>
+      <div class="term-def">Latin for "within the living." In vivo studies are conducted in living organisms, either humans or animals. A human in vivo study is a clinical trial. An animal in vivo study is a study conducted in mice, rats, or other animals. In vivo findings are considered more meaningful than in vitro findings, but animal in vivo findings do not always predict what will happen in people.</div>
+    </div>
+  </div>
+</div>
+
+<!-- K -->
+<div class="letter-group" id="K">
+  <div class="letter-heading">K</div>
+  <div class="term-list">
+    <div class="term-row" id="term-keystone-species">
+      <div><span class="term-name">Keystone species</span></div>
+      <div class="term-def">A species that has a disproportionately large effect on its ecosystem relative to its abundance. In the gut microbiome, Ruminococcus bromii is considered a keystone species for resistant starch fermentation: it initiates the breakdown of resistant starch granules, and without it, other bacteria cannot access the starch either. Akkermansia muciniphila is sometimes described as a keystone species for gut barrier maintenance.</div>
+    </div>
+  </div>
+</div>
+
+<!-- L -->
+<div class="letter-group" id="L">
+  <div class="letter-heading">L</div>
+  <div class="term-list">
+    <div class="term-row" id="term-lactic-acid-bacteria">
+      <div><span class="term-name">Lactic acid bacteria</span><span class="term-abbr">LAB</span></div>
+      <div class="term-def">A group of bacteria that produce lactic acid as a byproduct of fermentation. They include Lactobacillus, Streptococcus thermophilus, Leuconostoc, and others. LAB are the bacteria responsible for fermenting yogurt, cheese, kimchi, sauerkraut, and kefir. When consumed in fermented foods, they can survive the journey to the gut, where they interact with the resident microbiome. They are generally considered beneficial and are the most common type of probiotic bacteria.</div>
+    </div>
+    <div class="term-row" id="term-lachnospiraceae">
+      <div><span class="term-name">Lachnospiraceae</span></div>
+      <div class="term-def">A family of gut bacteria that are important producers of butyrate and other short-chain fatty acids. They are generally considered part of a healthy gut microbiome. Several members, including Roseburia and Eubacterium rectale, are reduced in people with IBD and are enriched by high-fiber diets. The name comes from the Greek word for "fringe," referring to the hair-like structures on some members of this group.</div>
+    </div>
+  </div>
+</div>
+
+<!-- M -->
+<div class="letter-group" id="M">
+  <div class="letter-heading">M</div>
+  <div class="term-list">
+    <div class="term-row" id="term-meta-analysis">
+      <div><span class="term-name">Meta-analysis</span></div>
+      <div class="term-def">A statistical method that combines the results of multiple separate studies into one overall estimate. Instead of asking what a single trial found, a meta-analysis asks what the combined evidence shows across many trials Meta-analyses are considered the highest level of evidence in medical research because they reduce the chance that a single unusual result is driving the conclusion. Findings from meta-analyses are given the most weight on this site.</div>
+    </div>
+    <div class="term-row" id="term-metabolite">
+      <div><span class="term-name">Metabolite</span></div>
+      <div class="term-def">A small molecule produced during metabolism, either by human cells or by bacteria. Short-chain fatty acids, urolithins, TMAO, and phenolic acids are all examples of metabolites produced by gut bacteria from the food you eat. Metabolites are often the actual biologically active molecules, even when the original food compound is not.</div>
+    </div>
+    <div class="term-row" id="term-metabotype">
+      <div><span class="term-name">Metabotype</span></div>
+      <div class="term-def">A category describing what metabolites a person's gut microbiome produces from a given food compound. The most studied example is the urolithin metabotype: some people (UM-A) convert pomegranate compounds into bioactive urolithin A, some (UM-B) produce a different mix, and some (UM-0) cannot convert them at all. Metabotype is determined largely by which gut bacteria a person carries and is not directly observable without testing.</div>
+    </div>
+    <div class="term-row" id="term-microbiome">
+      <div><span class="term-name">Microbiome</span></div>
+      <div class="term-def">See <em>Gut microbiome</em>.</div>
+    </div>
+    <div class="term-row" id="term-microbiota">
+      <div><span class="term-name">Microbiota</span></div>
+      <div class="term-def">The community of living microorganisms (mainly bacteria) in the gut. Technically, microbiota refers to the organisms themselves, while microbiome refers to the organisms plus their genetic material and local environment. In practice, the terms are often used interchangeably.</div>
+    </div>
+    <div class="term-row" id="term-mucus-layer">
+      <div><span class="term-name">Mucus layer</span></div>
+      <div class="term-def">A protective coating on the inside of the intestinal wall, produced by specialized cells called goblet cells. The mucus layer forms a physical barrier between the gut contents and the intestinal cells. Some bacteria, like Akkermansia muciniphila, live in and feed on this mucus layer. A healthy, thick mucus layer is associated with better gut barrier function and reduced inflammation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- N -->
+<div class="letter-group" id="N">
+  <div class="letter-heading">N</div>
+  <div class="term-list">
+    <div class="term-row" id="term-nrf2">
+      <div><span class="term-name">Nrf2</span></div>
+      <div class="term-def">A protein that acts as a master switch for the body's antioxidant defenses. When Nrf2 is activated, it turns on genes that protect cells from oxidative damage. Sulforaphane, produced when cruciferous vegetables are digested, is one of the most potent known activators of Nrf2. This is one proposed mechanism by which broccoli and related vegetables may have cancer-protective effects.</div>
+    </div>
+  </div>
+</div>
+
+<!-- P -->
+<div class="letter-group" id="P">
+  <div class="letter-heading">P</div>
+  <div class="term-list">
+    <div class="term-row" id="term-pathobiont">
+      <div><span class="term-name">Pathobiont</span></div>
+      <div class="term-def">A microorganism that is normally present in the gut in small amounts without causing harm, but can become harmful when the balance of the gut community shifts. Bilophila wadsworthia is an example: it is present in most people's guts but is associated with inflammation when its levels increase, which can happen with high-fat, high-meat diets. Pathobionts are different from pathogens, which are microorganisms that cause disease regardless of context.</div>
+    </div>
+    <div class="term-row" id="term-pectin">
+      <div><span class="term-name">Pectin</span></div>
+      <div class="term-def">A type of soluble fiber found in the cell walls of fruits and vegetables, especially apples, citrus, and berries. In the colon, gut bacteria ferment pectin, producing short-chain fatty acids. Pectin is particularly good at feeding Lachnospira and Faecalibacterium, two butyrate-producing bacteria that are not as strongly stimulated by other fiber types.</div>
+    </div>
+    <div class="term-row" id="term-permanova">
+      <div><span class="term-name">PERMANOVA</span></div>
+      <div class="term-def">A statistical test used to determine whether two or more groups of microbial communities are significantly different from each other. It is commonly used in microbiome studies to test whether a dietary intervention caused a meaningful overall shift in the gut bacterial community. When a study reports a PERMANOVA p-value, it is saying: "the gut communities of these groups are more different from each other than chance alone would produce."</div>
+    </div>
+    <div class="term-row" id="term-placebo">
+      <div><span class="term-name">Placebo</span></div>
+      <div class="term-def">An inactive substance or treatment given to the control group in a clinical trial, designed to look identical to the real intervention. Placebos are used to account for the "placebo effect," where people feel or behave differently simply because they believe they are receiving treatment. In nutrition research, creating a convincing placebo is difficult because people can often taste or smell a real food. This is one reason why nutrition trials are harder to design than drug trials.</div>
+    </div>
+    <div class="term-row" id="term-polyphenol">
+      <div><span class="term-name">Polyphenol</span></div>
+      <div class="term-def">A large family of plant compounds that give fruits, vegetables, tea, coffee, and dark chocolate their color, flavor, and bitterness. Most polyphenols are not well-absorbed in the small intestine. Instead, they arrive in the colon, where gut bacteria transform them into smaller molecules with anti-inflammatory effects. Examples include anthocyanins in blueberries, ellagitannins in pomegranates, quercetin in onions and apples, and catechins in green tea.</div>
+    </div>
+    <div class="term-row" id="term-prebiotic">
+      <div><span class="term-name">Prebiotic</span></div>
+      <div class="term-def">A compound, usually a type of fiber, that selectively feeds beneficial gut bacteria. Prebiotics are not digested by human enzymes; instead, they reach the colon intact and serve as food specifically for beneficial microorganisms. Common prebiotics include FOS, inulin, beta-glucan, and resistant starch. Unlike probiotics, prebiotics do not introduce new bacteria; they feed the ones already present.</div>
+    </div>
+    <div class="term-row" id="term-probiotic">
+      <div><span class="term-name">Probiotic</span></div>
+      <div class="term-def">Live bacteria that, when consumed in sufficient amounts, are thought to confer a health benefit. Probiotics are found in fermented foods like yogurt, kefir, and kimchi, and are also sold as supplements. The key distinction from prebiotics: probiotics add new bacteria, while prebiotics feed existing ones. Whether probiotic bacteria from food or supplements actually survive to the gut and establish lasting colonies is debated, and effects tend to be temporary.</div>
+    </div>
+    <div class="term-row" id="term-propionate">
+      <div><span class="term-name">Propionate</span></div>
+      <div class="term-def">A short-chain fatty acid produced by certain gut bacteria during fiber fermentation. It travels to the liver, where it participates in glucose regulation, and signals through receptors in the gut wall to release hormones that reduce appetite. Propionate is particularly produced by Bacteroides and Akkermansia muciniphila from pectin and other fibers.</div>
+    </div>
+    <div class="term-row" id="term-proteolytic-fermentation">
+      <div><span class="term-name">Proteolytic fermentation</span></div>
+      <div class="term-def">Fermentation of proteins (rather than carbohydrates) by gut bacteria. This happens mainly in the distal (far end) colon when carbohydrate substrate runs out. Proteolytic fermentation produces byproducts including ammonia, hydrogen sulfide, phenols, and p-cresol, which at high levels can damage the intestinal lining. High-meat, low-fiber diets tend to shift fermentation toward the proteolytic end. Prebiotic fibers shift it back toward the carbohydrate end.</div>
+    </div>
+  </div>
+</div>
+
+<!-- R -->
+<div class="letter-group" id="R">
+  <div class="letter-heading">R</div>
+  <div class="term-list">
+    <div class="term-row" id="term-randomized-controlled-trial">
+      <div><span class="term-name">Randomized controlled trial</span><span class="term-abbr">RCT</span></div>
+      <div class="term-def">A study design considered the gold standard in medical and nutrition research. Participants are randomly assigned to either receive the intervention (the food or compound being tested) or a control (usually a placebo or comparison food). Random assignment means the groups start out similar, so any differences at the end are more likely to be caused by the intervention. An RCT with many participants, conducted over a long period, with a carefully designed placebo, is the strongest type of evidence this site relies on.</div>
+    </div>
+    <div class="term-row" id="term-resistant-starch">
+      <div><span class="term-name">Resistant starch</span></div>
+      <div class="term-def">A type of starch that human digestive enzymes cannot break down. Instead of being absorbed in the small intestine, it reaches the large intestine intact, where gut bacteria ferment it. Resistant starch is found in unripe bananas, cooked-and-cooled potatoes and rice, legumes, and some whole grains. It is one of the best-evidenced prebiotic compounds, reliably increasing Bifidobacterium and butyrate-producing bacteria in human trials.</div>
+    </div>
+    <div class="term-row" id="term-ruminococcus-bromii">
+      <div><span class="term-name">Ruminococcus bromii</span></div>
+      <div class="term-def">A bacterium considered a keystone species for resistant starch fermentation in the human gut. It produces enzymes that break down the crystalline structure of resistant starch granules, making the starch accessible to other bacteria. Without Ruminococcus bromii, resistant starch fermentation is severely limited, and people who lack this species may respond poorly to resistant starch as a prebiotic.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S -->
+<div class="letter-group" id="S">
+  <div class="letter-heading">S</div>
+  <div class="term-list">
+    <div class="term-row" id="term-saccharolytic-fermentation">
+      <div><span class="term-name">Saccharolytic fermentation</span></div>
+      <div class="term-def">Fermentation of carbohydrates (sugars and fibers) by gut bacteria, as opposed to proteolytic fermentation (of proteins). Saccharolytic fermentation is generally considered the healthier form: it produces short-chain fatty acids like butyrate, propionate, and acetate, and occurs at a lower, more acidic pH that discourages harmful bacteria. Diets rich in plant fiber promote saccharolytic fermentation; low-fiber, high-protein diets shift the balance toward proteolytic fermentation.</div>
+    </div>
+    <div class="term-row" id="term-scfa-short-chain-fatty-acid">
+      <div><span class="term-name">SCFA (Short-chain fatty acid)</span></div>
+      <div class="term-def">Small molecules produced when gut bacteria ferment fiber. The three main SCFAs are butyrate, propionate, and acetate. Butyrate feeds colon cells and reduces inflammation. Propionate travels to the liver and helps regulate blood sugar. Acetate enters the bloodstream and is used as energy by muscle and other tissues. SCFAs are one of the primary mechanisms by which a high-fiber diet benefits health, acting as a communication link between gut bacteria and the rest of the body.</div>
+    </div>
+    <div class="term-row" id="term-16s-rrna-sequencing">
+      <div><span class="term-name">16S rRNA sequencing</span></div>
+      <div class="term-def">The most common method used to identify which bacteria are present in a gut sample. Every bacterium has a gene called 16S rRNA that has a unique sequence, like a barcode. By reading these barcodes from a fecal sample, researchers can determine which species are present and in what proportions. It is relatively affordable and fast. Its limitation is that it identifies who is there but not necessarily what they are doing. See also: <em>Shotgun metagenomics</em>.</div>
+    </div>
+    <div class="term-row" id="term-shotgun-metagenomics">
+      <div><span class="term-name">Shotgun metagenomics</span></div>
+      <div class="term-def">A more detailed method of sequencing DNA from a gut sample than 16S rRNA. Instead of reading one specific gene, shotgun metagenomics reads all the DNA present, identifying not only which bacteria are there but also what genes they carry and what functions they might perform. It provides a fuller picture of the microbiome but is more expensive and computationally intensive. Studies using shotgun metagenomics are generally considered more informative than 16S-only studies.</div>
+    </div>
+    <div class="term-row" id="term-sulforaphane">
+      <div><span class="term-name">Sulforaphane</span></div>
+      <div class="term-def">A compound produced from glucosinolates in cruciferous vegetables like broccoli, cabbage, and Brussels sprouts. It activates Nrf2, the body's antioxidant response system, and has been studied for potential cancer-protective effects. Whether you produce sulforaphane from broccoli depends partly on your gut bacteria: some convert glucosinolates to sulforaphane, while others divert the process to inactive compounds. Cooking method also matters, since heat destroys the plant enzymes that start the conversion.</div>
+    </div>
+    <div class="term-row" id="term-synbiotic">
+      <div><span class="term-name">Synbiotic</span></div>
+      <div class="term-def">A combination of a probiotic (live bacteria) and a prebiotic (fiber that feeds them) in one food or supplement. Some fermented foods are natural synbiotics: kimchi, for example, contains live lactic acid bacteria alongside garlic and cabbage fiber that feed them. The idea is that the prebiotic feeds the probiotic bacteria, giving them a better chance of surviving and thriving in the gut.</div>
+    </div>
+    <div class="term-row" id="term-systematic-review">
+      <div><span class="term-name">Systematic review</span></div>
+      <div class="term-def">A comprehensive review of all existing research on a specific question, using a defined, reproducible method to find, evaluate, and summarize the evidence. Unlike a narrative review (which reflects the author's interpretation), a systematic review specifies in advance which studies will be included and how they will be assessed. A systematic review that also combines the data statistically is called a meta-analysis. Together, systematic reviews and meta-analyses sit at the top of the evidence hierarchy.</div>
+    </div>
+  </div>
+</div>
+
+<!-- T -->
+<div class="letter-group" id="T">
+  <div class="letter-heading">T</div>
+  <div class="term-list">
+    <div class="term-row" id="term-taxon-taxa">
+      <div><span class="term-name">Taxon / Taxa</span></div>
+      <div class="term-def">A taxon (plural: taxa) is a group of organisms classified together at any level of the biological hierarchy: species, genus, family, order, and so on. In microbiome research, "taxa" is often used loosely to mean any identifiable group of bacteria, whether at the species level (Bifidobacterium longum) or the genus level (Bifidobacterium). When a study says a food "increased specific taxa," it means the relative abundance of certain bacterial groups increased.</div>
+    </div>
+    <div class="term-row" id="term-tight-junctions">
+      <div><span class="term-name">Tight junctions</span></div>
+      <div class="term-def">Protein structures that act like glue between the cells lining the intestine, holding them tightly together to form the gut barrier. When tight junctions are damaged or loosened, bacteria and their byproducts can slip through into the bloodstream, triggering inflammation. This is what is sometimes called a "leaky gut." Butyrate, produced by gut bacteria from fiber fermentation, helps maintain tight junction integrity.</div>
+    </div>
+    <div class="term-row" id="term-tmao">
+      <div><span class="term-name">TMAO</span></div>
+      <div class="term-def">Trimethylamine N-oxide. A compound produced when gut bacteria convert nutrients like L-carnitine (found in red meat) and choline (found in eggs and fish) into trimethylamine (TMA), which the liver then converts to TMAO. Some studies link higher blood TMAO levels to increased cardiovascular risk, though whether TMAO is a cause of disease or simply a marker is debated. Importantly, the same food can produce very different TMAO levels in different people, depending on which bacteria they carry.</div>
+    </div>
+  </div>
+</div>
+
+<!-- U -->
+<div class="letter-group" id="U">
+  <div class="letter-heading">U</div>
+  <div class="term-list">
+    <div class="term-row" id="term-urolithin">
+      <div><span class="term-name">Urolithin</span></div>
+      <div class="term-def">A compound produced by gut bacteria from ellagitannins, the polyphenols found in pomegranates and walnuts. Urolithin A is the most studied form and has anti-inflammatory effects, supports the gut lining, and promotes a cellular cleanup process called mitophagy. Whether you produce urolithins depends on which gut bacteria you carry. About 30 to 40 percent of adults in Western countries cannot produce urolithins at all and are called UM-0 non-producers.</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end gloss-body -->
+
+<div class="page-footnote">Term definitions are written for educational purposes and are simplified to be accessible to a general audience. For full scientific context, see the cited literature on each food page.</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">You are what <em>they</em> eat</div>
+      <p class="footer-note">An independent science communication project based on peer-reviewed literature.</p>
+    </div>
+    <div class="footer-col">
+            <h4>Pages</h4>
+      <ul>
+        <li><a href="foods.html">Foods</a></li>
+        <li><a href="how-to-read.html">Guide</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+const searchInput = document.getElementById('glossSearch');
+const groups = document.querySelectorAll('.letter-group');
+const noResults = document.getElementById('noResults');
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  let anyVisible = false;
+
+  groups.forEach(group => {
+    const rows = group.querySelectorAll('.term-row');
+    let groupVisible = false;
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const match = !q || text.includes(q);
+      row.style.display = match ? '' : 'none';
+      if (match) groupVisible = true;
+    });
+    group.style.display = groupVisible ? '' : 'none';
+    if (groupVisible) anyVisible = true;
+  });
+
+  noResults.style.display = anyVisible ? 'none' : 'block';
+  document.getElementById('letterNav').style.display = q ? 'none' : 'flex';
+});
+</script>
+</body>
+</html>
